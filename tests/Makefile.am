@@ -1,6 +1,6 @@
 ## tests/Makefile.am -- Process this file with automake to produce Makefile.in
 ##
-## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2020, 2022 INRIA
+## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022 INRIA
 ##
 ## This file is part of GNU MPC.
 ##
@@ -43,7 +43,8 @@ check_PROGRAMS = tabs tacos tacosh tadd tadd_fr tadd_si tadd_ui tagm	\
   tpow_d tpow_fr tpow_ld tpow_si tpow_ui tpow_z tprec tproj treal	\
   treimref trootofunity                                                 \
   tset tsin tsin_cos tsinh tsqr tsqrt tstrtoc tsub tsub_fr	        \
-  tsub_ui tsum tswap ttan ttanh tui_div tui_ui_sub tget_version exceptions
+  tsub_ui tsum tswap ttan ttanh tui_div tui_ui_sub tget_version exceptions \
+  tballs
 
 check_LTLIBRARIES=libmpc-tests.la
 libmpc_tests_la_SOURCES = mpc-tests.h check_data.c clear_parameters.c	\

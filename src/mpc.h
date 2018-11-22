@@ -108,6 +108,16 @@ typedef __mpc_struct mpc_t[1];
 typedef __mpc_struct *mpc_ptr;
 typedef const __mpc_struct *mpc_srcptr;
 
+typedef struct {
+  mpc_t  c;
+  double r;
+}
+__mpcb_struct;
+
+typedef __mpcb_struct mpcb_t [1];
+typedef __mpcb_struct *mpcb_ptr;
+typedef const __mpcb_struct *mpcb_srcptr;
+
 /* Support for WINDOWS DLL, see
    https://sympa.inria.fr/sympa/arc/mpc-discuss/2011-11/ ;
    when building the DLL, export symbols, otherwise behave as GMP           */
@@ -239,6 +249,19 @@ __MPC_DECLSPEC long double _Complex mpc_get_ldc (mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int mpc_inp_str    (mpc_ptr, FILE *, size_t *, int, mpc_rnd_t);
 __MPC_DECLSPEC size_t mpc_out_str (FILE *, int, size_t, mpc_srcptr, mpc_rnd_t);
 #endif
+
+__MPC_DECLSPEC void mpcb_print (mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_init (mpcb_ptr);
+__MPC_DECLSPEC void mpcb_clear (mpcb_ptr);
+__MPC_DECLSPEC mpfr_prec_t mpcb_get_prec (mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_set_prec (mpcb_ptr, mpfr_prec_t);
+__MPC_DECLSPEC void mpcb_set (mpcb_ptr, mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_set_c (mpcb_ptr, mpc_srcptr);
+__MPC_DECLSPEC void mpcb_init_set_c (mpcb_ptr, mpc_srcptr);
+__MPC_DECLSPEC void mpcb_mul (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_add (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_sqrt (mpcb_ptr, mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_div_2ui (mpcb_ptr, mpcb_srcptr, unsigned long int);
 
 #if defined (__cplusplus)
 }
