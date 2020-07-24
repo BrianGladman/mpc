@@ -25,7 +25,7 @@ Creating a new release
    Check that the executables are not read-only
    (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html)
 3) Check that NEWS, BUGS and TODO are up to date, and that the minimal
-   version numbers of gmp and mpfr in configure.ac, INSTALL and
+   version numbers of gmp and mpfr in configure.ac, README and
    doc/mpc.texi are correct.
 4) Execute "autoreconf -vfi; touch doc/mpc.texi; make distcheck".
    This updates the files in build-aux and the date and version number in
