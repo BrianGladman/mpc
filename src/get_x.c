@@ -101,10 +101,10 @@ prettify (const char *str, const mpfr_exp_t expo, int base, int special)
   sign = (str[0] == '-' || str[0] == '+');
 
   x = expo - 1; /* expo is the exponent value with decimal point BEFORE
-                   the first digit, we wants decimal point AFTER the first
+                   the first digit, we want decimal point AFTER the first
                    digit */
   if (base == 16)
-    x <<= 2; /* the output exponent is a binary exponent */
+    x *= 4; /* the output exponent is a binary exponent */
 
   ++sz; /* + decimal point */
 

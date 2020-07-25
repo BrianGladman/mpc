@@ -420,6 +420,7 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     ex = mpfr_get_exp (mpc_realref(z1));
     mpfr_ui_sub (mpc_realref(z1), 1, mpc_realref(z1), MPFR_RNDN);
     mpfr_neg (mpc_imagref(z1), mpc_imagref(z1), MPFR_RNDN);
+    MPC_ASSERT(!mpfr_zero_p (mpc_realref(z1)));
     ex = ex - mpfr_get_exp (mpc_realref(z1));
     ex = (ex <= 0) ? 0 : ex;
     /* err(x) <= 2^ex * ulp(x) */
