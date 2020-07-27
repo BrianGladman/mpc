@@ -420,7 +420,9 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     ex = mpfr_get_exp (mpc_realref(z1));
     mpfr_ui_sub (mpc_realref(z1), 1, mpc_realref(z1), MPFR_RNDN);
     mpfr_neg (mpc_imagref(z1), mpc_imagref(z1), MPFR_RNDN);
-    MPC_ASSERT(!mpfr_zero_p (mpc_realref(z1)));
+    /* if Re(z1) = 0, we can't determine the relative error */
+    if (mpfr_zero_p (mpc_realref(z1)))
+      continue;
     ex = ex - mpfr_get_exp (mpc_realref(z1));
     ex = (ex <= 0) ? 0 : ex;
     /* err(x) <= 2^ex * ulp(x) */
@@ -449,7 +451,7 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     ey = mpfr_get_exp (mpc_imagref(z1));
     mpfr_sub (mpc_realref(z1), mpc_realref(z1), mpc_imagref(op), MPFR_RNDN);
     mpfr_add (mpc_imagref(z1), mpc_imagref(z1), mpc_realref(op), MPFR_RNDN);
-    if (mpfr_cmp_ui (mpc_realref(z1), 0) == 0 || mpfr_cmp_ui (mpc_imagref(z1), 0) == 0)
+    if (mpfr_zero_p (mpc_realref(z1)) || mpfr_zero_p (mpc_imagref(z1)))
       continue;
     ex -= mpfr_get_exp (mpc_realref(z1)); /* cancellation in x */
     ey -= mpfr_get_exp (mpc_imagref(z1)); /* cancellation in y */
