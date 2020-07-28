@@ -33,9 +33,10 @@ mpc_dot (mpc_ptr res, const mpc_ptr *x, const mpc_ptr *y,
   mpfr_t re_res;
 
   z = (mpfr_t *) malloc (2 * n * sizeof (mpfr_t));
-  MPC_ASSERT(z != NULL);
+  /* warning: when n=0, malloc() might return NULL (e.g., gcc119) */
+  MPC_ASSERT(n == 0 || z != NULL);
   t = (mpfr_ptr *) malloc (2 * n * sizeof(mpfr_ptr));
-  MPC_ASSERT(t != NULL);
+  MPC_ASSERT(n == 0 || t != NULL);
   for (i = 0; i < 2 * n; i++)
     t[i] = z[i];
   /* we first store in z[i] the value of Re(x[i])*Re(y[i])

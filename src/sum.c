@@ -29,7 +29,8 @@ mpc_sum (mpc_ptr sum, const mpc_ptr *z, unsigned long n, mpc_rnd_t rnd)
   unsigned long i;
 
   t = (mpfr_ptr *) malloc (n * sizeof(mpfr_t));
-  MPC_ASSERT(t != NULL);
+  /* warning: when n=0, malloc() might return NULL (e.g., gcc119) */
+  MPC_ASSERT(n == 0 || t != NULL);
   for (i = 0; i < n; i++)
     t[i] = mpc_realref (z[i]);
   inex_re = mpfr_sum (mpc_realref (sum), t, n, MPC_RND_RE (rnd));
