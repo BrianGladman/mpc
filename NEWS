@@ -1,11 +1,11 @@
-Changes in version 1.2.0:
+Changes in version 1.2.0 ("Hyacinthus orientalis"):
   - Minimally required library version: MPFR 4.1.0
   - New functions: mpc_sum, mpc_dot
   - Several functions are more robust with a reduced exponent range
     (for example corresponding to IEEE 754 binary formats)
   - New tool mpcheck.
 
-Changes in version 1.1.0:
+Changes in version 1.1.0 ("Gladiolus palustris"):
   - Minimally required library versions: GMP 5.0.0 and MPFR 3.0.0
   - Fixed issues with MPFR 4.0.0
   - New functions: mpc_cmp_abs, mpc_rootofunity
@@ -37,7 +37,7 @@ Changes in version 1.0.1:
   - Fixed case of intermediate zero real or imaginary part in mpc_fma,
     found by hydra with GMP_CHECK_RANDOMIZE=1346362345
 
-Changes in version 1.0:
+Changes in version 1.0 ("Fagus silvatica"):
   - First release as a GNU package
   - License change: LGPLv3+ for code, GFDLv1.3+ (with no invariant sections)
     for documentation
@@ -59,7 +59,7 @@ Changes in version 1.0:
       infinite part and equals output variable is corrected
     - mpc_fr_sub: Wrong return value for imaginary part is corrected
 
-Changes in version 0.9:
+Changes in version 0.9 ("Epilobium montanum"):
   - New functions:
     - mpc_set_dc, mpc_set_ldc, mpc_get_dc, mpc_get_ldc for converting
       between mpc type variables and C variables of type double _Complex

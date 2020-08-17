@@ -24,6 +24,8 @@ Creating a new release
 2) Verify that the ABI version in src/Makefile.am is correct.
    Check that the executables are not read-only
    (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html)
+   Replace the two occurrences of /gnu/store/.../bin/sh in build-aux/ltmain.sh
+   by /bin/sh.
 3) Check that NEWS, BUGS and TODO are up to date, and that the minimal
    version numbers of gmp and mpfr in configure.ac, README and
    doc/mpc.texi are correct.
@@ -32,11 +34,9 @@ Creating a new release
    doc/version.texi and creates the tarball for distribution.
 5) Upload to GNU ftp server.
 6) Update the web page on the server.
-   The html documentation is created with
-      makeinfo --html --no-split mpc.texi
-   and the resulting mpc.html is copied to content_html.php.
 7) Create a git tag:
    git tag VERSION
+   git push --tags
 8) After the release, update the version number in configure.ac, INSTALL,
    src/get_version.c, src/mpc.h and Makefile.vc.
 9) Commit the changes to git.
