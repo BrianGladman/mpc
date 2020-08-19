@@ -1046,7 +1046,7 @@ rounded according to @var{rnd_cos} with the precision of @var{rop_cos}.
 @deftypefun int mpc_sinh (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_cosh (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_tanh (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
-Set @var{rop} to the hyperbolic sine, cosine, tangent of @var{op},
+Set @var{rop} to the hyperbolic sine, hyperbolic cosine, hyperbolic tangent of @var{op},
 rounded according to @var{rnd} with the precision of @var{rop}.
 @end deftypefun
 
