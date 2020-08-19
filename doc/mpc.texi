@@ -1167,12 +1167,12 @@ of the real and imaginary parts of a complex number.
 
 @item
 Torbj@"orn Granlund et al.
-@code{gmp} -- GNU multiprecision library.
-Version 6.2.0, @url{http://gmplib.org/}.
+@code{GMP} -- GNU multiprecision library.
+Version 6.2.0, @url{http://gmplib.org}.
 
 @item
 Guillaume Hanrot, Vincent Lef@`evre, Patrick P@'elissier, Paul Zimmermann et al.
-@code{mpfr} -- A library for multiple-precision floating-point computations with exact rounding.
+@code{MPFR} -- A library for multiple-precision floating-point computations with exact rounding.
 Version 4.1.0, @url{http://www.mpfr.org}.
 
 @item
