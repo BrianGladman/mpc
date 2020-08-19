@@ -1063,7 +1063,7 @@ rounded according to @var{rnd} with the precision of @var{rop}.
 Set @var{rop} to the inverse hyperbolic sine, inverse hyperbolic cosine,
 inverse hyperbolic tangent of @var{op},
 rounded according to @var{rnd} with the precision of @var{rop}.
-The branch cut of @var{mpc_acosh} is
+The branch cut of @code{mpc_acosh} is
 @iftex
 @math{(-\infty, 1)}.
 @end iftex
