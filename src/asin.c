@@ -19,6 +19,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
 #include <stdio.h>
+#include <limits.h> /* for ULONG_MAX */
 #include "mpc-impl.h"
 
 /* Special case op = 1 + i*y for tiny y (see algorithms.tex).
