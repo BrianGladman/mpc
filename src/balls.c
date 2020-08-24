@@ -1,6 +1,6 @@
 /* balls -- Functions for complex ball arithmetic.
 
-Copyright (C) 2018 INRIA
+Copyright (C) 2018, 2020 INRIA
 
 This file is part of GNU MPC.
 
@@ -110,32 +110,32 @@ void
 mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 /* FIXME: For the time being, we assume that z is different from z1 and from z2 */
 {
-   double r, r1, r2;
+   double r, denom, x, y;
    mpfr_prec_t p = mpc_get_prec (z1->c);
 
    mpcb_set_prec (z, p);
-   mpc_add (z->c, z1->c, z2->c, MPC_RNDNN);
+   mpc_add (z->c, z1->c, z2->c, MPC_RNDZZ);
+      /* rounding towards 0 makes the generic error easier to compute,
+         but incurs a tiny penalty for the rounding error */
 
+   /* generic error of addition:
+      r <= (|z1|*r1 + |z2|*r2) / |z1+z2|
+        <= (|z1|*r1 + |z2|*r2) / |z| since we rounded towards 0 */
+   fesetround (FE_TOWARDZERO);
+   x = mpfr_get_d (mpc_realref (z->c), MPFR_RNDZ);
+   y = mpfr_get_d (mpc_imagref (z->c), MPFR_RNDZ);
+   denom = sqrt (x*x + y*y);
    fesetround (FE_UPWARD);
-   /* absolute error of z1 and z2, divided by sqrt(2) */
-   r1 = ldexp (z1->r, MPC_MAX (mpfr_get_exp (mpc_realref (z1->c)),
-                               mpfr_get_exp (mpc_imagref (z1->c))));
-   r2 = ldexp (z2->r, MPC_MAX (mpfr_get_exp (mpc_realref (z2->c)),
-                               mpfr_get_exp (mpc_imagref (z2->c))));
-   /* absolute error of z, divided by sqrt(2) */
-   r = r1 + r2;
-   /* relative error of z; the sqrt(2), which come from the approximation
-      of complex norms by powers of 2, cancel out */
-   r = ldexp (r, - (MPC_MIN (mpfr_get_exp (mpc_realref (z->c)),
-                             mpfr_get_exp (mpc_imagref (z->c)))
-                    - 1));
-      /* The -1 comes from taking the lower bound of 1/2 for the mantissa
-         of c, whereas above we used the upper bound of 1 for r1 and r2.
-         So we may lose a factor of 2 here, for instance when z1==z2.
-         To prevent this, we would need to work with an approximation
-         of z, z1 and z2 in the type of r. */
-   /* error of rounding to nearest */
-   r += ldexp (1 + r, -p);
+   x = mpfr_get_d (mpc_realref (z1->c), MPFR_RNDA);
+   y = mpfr_get_d (mpc_imagref (z1->c), MPFR_RNDA);
+   r = sqrt (x*x + y*y) * z1->r;
+   x = mpfr_get_d (mpc_realref (z2->c), MPFR_RNDA);
+   y = mpfr_get_d (mpc_imagref (z2->c), MPFR_RNDA);
+   r += sqrt (x*x + y*y) * z2->r;
+   r /= denom;
+
+   /* error of directed rounding */
+   r += ldexp (1 + r, 1-p);
    z->r = r;
 }
 
