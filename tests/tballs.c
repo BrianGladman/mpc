@@ -73,11 +73,11 @@ test_agm (void)
    int i, n;
 
    p = 100;
-   n = 100;
+   n = 10;
    mpc_init2 (c, p);
-   mpc_set_si_si (c, 1, 0, MPC_RNDNN);
+   mpc_set_si_si (c, -1000000001414213562, 0, MPC_RNDNN);
    mpcb_init_set_c (a, c);
-   mpc_set_si_si (c, 0, 1, MPC_RNDNN);
+   mpc_set_si_si (c, -999999998585786438, 0, MPC_RNDNN);
    mpcb_init_set_c (b, c);
    mpcb_init (a1);
    mpcb_init (b1);
