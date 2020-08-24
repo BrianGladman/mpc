@@ -20,7 +20,8 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #include "mpc-tests.h"
 
-int
+#if 0
+static int
 test_exp (void)
 {
    mpfr_prec_t p;
@@ -63,8 +64,10 @@ test_exp (void)
 
    return -1;
 }
+#endif
 
-int
+
+static int
 test_agm (void)
 {
    mpfr_prec_t p;
@@ -105,6 +108,7 @@ test_agm (void)
 
    return -1;
 }
+
 
 int
 main (void)
