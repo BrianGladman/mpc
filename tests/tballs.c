@@ -72,8 +72,8 @@ test_agm (void)
    mpcb_t a, b, a1, b1;
    int i, n;
 
-   p = 20;
-   n = 10;
+   p = 100;
+   n = 5;
    mpc_init2 (c, p);
    mpc_set_si_si (c, 1, 0, MPC_RNDNN);
    mpcb_init_set_c (a, c);

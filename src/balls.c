@@ -26,7 +26,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 void mpcb_print (mpcb_srcptr op)
 {
    mpc_out_str (stdout, 10, 0, op->c, MPC_RNDNN);
-   printf (" %g\n", op->r);
+   printf (" %.20g\n", op->r);
 }
 
 
@@ -141,11 +141,23 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
-/* FIXME: Actually compute the error instead of assuming it is the same... */
 /* FIXME: For the time being, we assume that z is different from z1 */
 {
+   double r;
+   mpfr_prec_t p = mpc_get_prec (z1->c);
+
+   mpcb_set_prec (z, p);
    mpc_sqrt (z->c, z1->c, MPC_RNDNN);
-   z->r = z1->r;
+
+   fesetround (FE_UPWARD);
+   /* generic error of square root for z->r <= 0.5:
+      0.5*epsilon1 + (sqrt(2)-1) * epsilon1^2
+      see eq:propsqrt in algorithms.tex, together with a Taylor
+      expansion of 1/sqrt(1-epsilon1) */
+   r = ldexp (z1->r, -1) + 0.415 * z1->r * z1->r;
+   /* error of rounding to nearest */
+   r += ldexp (1 + r, -p);
+   z->r = r;
 }
 
 void
