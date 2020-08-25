@@ -28,7 +28,8 @@ Creating a new release
    by /bin/sh.
 3) Check that NEWS, BUGS and TODO are up to date, and that the minimal
    version numbers of gmp and mpfr in configure.ac, README and
-   doc/mpc.texi are correct.
+   doc/mpc.texi are correct (and check that make and make check work
+   with these minimal versions).
 4) Execute "autoreconf -vfi; touch doc/mpc.texi; make distcheck".
    This updates the files in build-aux and the date and version number in
    doc/version.texi and creates the tarball for distribution.
