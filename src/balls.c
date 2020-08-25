@@ -139,6 +139,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    z->r = r;
 }
 
+
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
 /* FIXME: For the time being, we assume that z is different from z1 */
@@ -160,10 +161,60 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
    z->r = r;
 }
 
+
 void
 mpcb_div_2ui (mpcb_ptr z, mpcb_srcptr z1, unsigned long int e)
 {
    mpc_div_2ui (z->c, z1->c, e, MPC_RNDNN);
    z->r = z1->r;
+}
+
+
+int
+mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
+{
+   mpfr_srcptr re, im;
+   mpfr_exp_t exp_re, exp_im, exp_err;
+   int exp_int;
+   double err;
+
+   re = mpc_realref (op->c);
+   im = mpc_imagref (op->c);
+   /* The question makes sense only if neither the real nor the imaginary
+      part of the centre are 0: Otherwise, we can either round this part
+      to 0 or we cannot round. But to round to 0, we need to have an
+      absolute error that is less than the smallest representable number;
+      otherwise said, the precision needs to be about as big as the negative
+      of the minimal exponent, which is astronomically large. */
+   if (mpfr_zero_p (re) || mpfr_zero_p (im))
+      return 0;
+
+   exp_re = mpfr_get_exp (re);
+   exp_im = mpfr_get_exp (im);
+
+   fesetround (FE_UPWARD);
+   /* Bound on the relative error of the real part. */
+   err = (1 + ldexp (1.0, exp_im - exp_re + 1)) * op->r;
+   /* Absolute error. */
+   err *= fabs (mpfr_get_d (re, MPFR_RNDA));
+   /* Exponent of the error as a power of 2, rounded up. */
+   frexp (err, &exp_int);
+   exp_err = exp_int;
+   if (!mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN, prec_re))
+      return 0;
+
+   err = (1 + ldexp (1.0, exp_re - exp_im + 1)) * op->r;
+   err *= fabs (mpfr_get_d (im, MPFR_RNDA));
+   frexp (err, &exp_int);
+   exp_err = exp_int;
+   return mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN, MPFR_RNDN, prec_im);
+}
+
+
+void
+mpcb_round (mpc_ptr rop, mpcb_srcptr op)
+{
+   mpfr_set (mpc_realref (rop), mpc_realref (op->c), MPFR_RNDN);
+   mpfr_set (mpc_imagref (rop), mpc_imagref (op->c), MPFR_RNDN);
 }
 

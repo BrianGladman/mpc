@@ -70,13 +70,16 @@ test_exp (void)
 static int
 test_agm (void)
 {
-   mpfr_prec_t p;
+   mpfr_prec_t p, target;
    mpc_t c;
    mpcb_t a, b, a1, b1;
+   mpc_t agma, agmb;
    int i, n;
 
    p = 100;
-   n = 10;
+   target = 34; /* some loss of precision in the first few iterations
+                   until the complex numbers are in the same quadrant */
+   n = 20;
    mpc_init2 (c, p);
    mpc_set_si_si (c, -1000000001414213562, 0, MPC_RNDNN);
    mpcb_init_set_c (a, c);
@@ -84,6 +87,8 @@ test_agm (void)
    mpcb_init_set_c (b, c);
    mpcb_init (a1);
    mpcb_init (b1);
+   mpc_init2 (agma, target);
+   mpc_init2 (agmb, target);
 
    printf ("0 ");
    mpcb_print (a);
@@ -94,10 +99,19 @@ test_agm (void)
       mpcb_mul (b1, a, b);
       mpcb_div_2ui (a, a1, 1);
       mpcb_sqrt (b, b1);
-      printf ("%i ", i);
+      printf ("%2i ", i);
       mpcb_print (a);
-      printf ("  ");
+      printf ("   ");
       mpcb_print (b);
+      if (   mpcb_can_round (a, target, target)
+          && mpcb_can_round (b, target, target)) {
+         mpcb_round (agma, a);
+         printf ("   "); mpc_out_str (stdout, 10, 0, agma, MPC_RNDNN); printf ("\n");
+         mpcb_round (agmb, b);
+         printf ("   "); mpc_out_str (stdout, 10, 0, agmb, MPC_RNDNN); printf ("\n");
+         if (!mpc_cmp (agma, agmb))
+            break;
+      }
    }
 
    mpc_clear (c);
@@ -105,6 +119,8 @@ test_agm (void)
    mpcb_clear (b);
    mpcb_clear (a1);
    mpcb_clear (b1);
+   mpc_clear (agma);
+   mpc_clear (agmb);
 
    return -1;
 }
