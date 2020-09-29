@@ -159,7 +159,10 @@ mpc_asin_series (mpc_srcptr rop, mpc_ptr s, mpc_srcptr z, mpc_rnd_t rnd)
         ex --;
       }
   else /* multiply kx by 2^(e-(ex+1)) */
-    kx <<= e - (ex+1);
+    {
+      MPC_ASSERT(e - (ex+1) < sizeof (unsigned long) * CHAR_BIT);
+      kx <<= e - (ex+1);
+    }
   /* now the rounding error is bounded by kx*ulp(Re(s)), add the
      mathematical error which is bounded by ulp(Re(s)): the first neglected
      term is less than 1/2*ulp(Re(s)), and each term decreases by at least
