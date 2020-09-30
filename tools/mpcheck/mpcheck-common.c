@@ -69,12 +69,16 @@ ulp_error (mpfr_t x, mpfr_t y)
   mpfr_abs (z, z, MPFR_RNDN);
   /* divide by ulp(y) = 2^(EXP(y) - p) */
   if (!mpfr_zero_p (y))
-    e = mpfr_get_exp (y) - p;
+    {
+      /* avoid underflow and take into account subnormals:
+         smallest number is 2^(emin-1) */
+      if (mpfr_get_exp (y) < emin - 1 + p)
+        e = emin - 1;
+      else
+        e = mpfr_get_exp (y) - p;
+    }
   else
     e = emin - 1; /* we consider ulp(0) = 2^(emin-1) */
-  /* take into account subnormals: smallest number is 2^(emin-1) */
-  if (e < emin - 1)
-    e = emin - 1;
   mpfr_div_2si (z, z, e, MPFR_RNDN);
   n = mpfr_get_ui (z, MPFR_RNDZ);
   mpfr_clear (z);
