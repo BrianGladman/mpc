@@ -1,3 +1,8 @@
+Changes in version 1.2.1, released in October 2020:
+  - Bug fixes:
+    - Fix an incompatibility problem with GMP 6.0 and before.
+    - Fix an intermediate overflow in asin.
+
 Changes in version 1.2.0 ("Hyacinthus orientalis"), released in August 2020:
   - Minimally required library version: MPFR 4.1.0
   - New functions: mpc_sum, mpc_dot
