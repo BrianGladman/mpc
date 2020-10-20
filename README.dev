@@ -21,25 +21,32 @@ Creating a new release
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
    README, src/get_version.c, src/mpc.h (remove suffix "dev" in
    MPC_VERSION_STRING) and Makefile.vc.
-   Check there are no compiler warnings with -Wuninitialized.
-2) Verify that the ABI version in src/Makefile.am is correct.
-   Check that the executables are not read-only
-   (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html)
-   Replace the two occurrences of /gnu/store/.../bin/sh in build-aux/ltmain.sh
-   by /bin/sh.
-3) Check that NEWS, BUGS and TODO are up to date, and that the minimal
+   Check that there are no compiler warnings with
+      CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all" ./configure; make check
+2) Check that NEWS, BUGS and TODO are up to date, and that the minimal
    version numbers of gmp and mpfr in configure.ac, README and
    doc/mpc.texi are correct (and check that make and make check work
    with these minimal versions).
-4) Execute "autoreconf -vfi; touch doc/mpc.texi; make distcheck".
-   This updates the files in build-aux and the date and version number in
+3) Update the ABI version in src/Makefile.am, see
+      https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+4) Execute
+      autoreconf -vfi
+   This updates the files in build-aux.
    doc/version.texi and creates the tarball for distribution.
-5) Upload to GNU ftp server.
-6) Update the web page on the server.
-7) Create a git tag:
+   Check that the executables in build-aux are not read-only
+   (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html)
+   Replace the two occurrences of /gnu/store/.../bin/sh in build-aux/ltmain.sh
+   by /bin/sh.
+5) Execute
+      touch doc/mpc.texi; make distcheck
+   This updates doc/version.texi and creates the tarball for distribution.
+6) Upload to GNU ftp server, see
+      https://www.gnu.org/prep/maintain/html_node/Automated-Upload-Procedure.html
+7) Update the web page on the server.
+8) Create a git tag:
    git tag VERSION
    git push --tags
-8) After the release, update the version number in configure.ac, README,
+9) After the release, update the version number in configure.ac, README,
    src/get_version.c, src/mpc.h and Makefile.vc.
-9) Commit the changes to git.
+10) Commit the changes to git.
 
