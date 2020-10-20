@@ -32,9 +32,8 @@ Creating a new release
 4) Execute
       autoreconf -vfi
    This updates the files in build-aux.
-   doc/version.texi and creates the tarball for distribution.
    Check that the executables in build-aux are not read-only
-   (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html)
+   (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html).
    Replace the two occurrences of /gnu/store/.../bin/sh in build-aux/ltmain.sh
    by /bin/sh.
 5) Execute
