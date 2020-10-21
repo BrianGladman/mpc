@@ -21,7 +21,7 @@ Creating a new release
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
    README, src/get_version.c, src/mpc.h (remove suffix "dev" in
    MPC_VERSION_STRING) and Makefile.vc.
-   Check there are no compiler warnings with -Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all.
+   Check there are no compiler warnings with -Wuninitialized.
 2) Verify that the ABI version in src/Makefile.am is correct.
    Check that the executables are not read-only
    (https://lists.gforge.inria.fr/pipermail/mpc-discuss/2020-June/001539.html)
