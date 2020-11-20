@@ -1,3 +1,6 @@
+From Thomas Henlich on 20 February 2020:
+Implement the cotangent function.
+
 From Andreas Enge 22 July 2016:
 Now that mpfr-3 is the minimum version requirement, support the
 MPFR_RNDA rounding mode.
