@@ -867,7 +867,7 @@ with real numbers instead of complex numbers, their complexity should
 essentially be the same as with the GNU MPFR library, with only a marginal
 overhead due to the GNU MPC layer.
 
-For functions taking as input in integer argument
+For functions taking as input an integer argument
 (for example @code{mpc_add_ui}), when this argument is zero,
 it is considered as an
 unsigned zero, and we follow the MPFR conventions:
