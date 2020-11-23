@@ -867,6 +867,14 @@ with real numbers instead of complex numbers, their complexity should
 essentially be the same as with the GNU MPFR library, with only a marginal
 overhead due to the GNU MPC layer.
 
+For functions taking as input in integer argument
+(for example @code{mpc_add_ui}), when this argument is zero,
+it is considered as an
+unsigned zero, and we follow the MPFR conventions:
+(0) + (+0) = +0, (0) - (+0) = -0, (0) - (+0) = -0, (0) - (-0) = +0.
+The same applies for the imaginary part of the @code{mpfr_t} input of
+@code{mpc_add_fr} which is implicitly zero.
+
 @deftypefun int mpc_add (mpc_t @var{rop}, const mpc_t @var{op1}, const mpc_t @var{op2}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_add_ui (mpc_t @var{rop}, const mpc_t @var{op1}, unsigned long int @var{op2}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_add_fr (mpc_t @var{rop}, const mpc_t @var{op1}, const mpfr_t @var{op2}, mpc_rnd_t @var{rnd})
