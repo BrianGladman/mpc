@@ -869,11 +869,12 @@ overhead due to the GNU MPC layer.
 
 For functions taking as input an integer argument
 (for example @code{mpc_add_ui}), when this argument is zero,
-it is considered as an
-unsigned zero, and we follow the MPFR conventions:
+it is considered as an unsigned (that is, exact in this context)
+zero, and we follow the MPFR conventions:
 (0) + (+0) = +0, (0) - (+0) = -0, (0) - (+0) = -0, (0) - (-0) = +0.
-The same applies for the imaginary part of the @code{mpfr_t} input of
-@code{mpc_add_fr} which is implicitly zero.
+The same applies for functions taking an argument of type @code{mpfr_t},
+such as @code{mpc_add_fr}, of which the imaginary part is considered
+to be an exact, unsigned zero.
 
 @deftypefun int mpc_add (mpc_t @var{rop}, const mpc_t @var{op1}, const mpc_t @var{op2}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_add_ui (mpc_t @var{rop}, const mpc_t @var{op1}, unsigned long int @var{op2}, mpc_rnd_t @var{rnd})
