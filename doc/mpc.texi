@@ -138,7 +138,7 @@ To build GNU MPC, you first have to install GNU MP (version @value{MINGMP} or hi
 GNU MPFR (version @value{MINMPFR} or higher) on your computer.  You need a C compiler;
 GCC version 4.4 or higher is recommended, since GNU MPC may trigger a bug in previous
 versions, see the thread at
-@uref{http://lists.gforge.inria.fr/pipermail/mpc-discuss/2011-February/000823.html}.
+@uref{https://sympa.inria.fr/sympa/arc/mpc-discuss/2011-02/msg00024.html}.
 And you need a
 standard Unix @samp{make} program, plus some other standard Unix utility
 programs.
@@ -210,7 +210,7 @@ This compiles GNU MPC in the working directory.
 This will make sure GNU MPC was built correctly.
 
 If you get error messages, please report them to
-@samp{mpc-discuss@@lists.gforge.inria.fr} (@xref{Reporting Bugs}, for
+@samp{mpc-discuss@@inria.fr} (@xref{Reporting Bugs}, for
 information on what to include in useful bug reports).
 
 @item
@@ -289,7 +289,7 @@ This has been tested with the C compiler IBM XL C/C++ Enterprise Edition
 V8.0 for AIX, version: 08.00.0000.0021, GMP 4.2.4 and GNU MPFR 2.4.1.
 
 Please report any other problems you encounter to
-@samp{mpc-discuss@@lists.gforge.inria.fr}.
+@samp{mpc-discuss@@inria.fr}.
 @xref{Reporting Bugs}.
 
 @node Reporting Bugs
@@ -319,7 +319,7 @@ If your bug report is good, we will do our best to help you to get a corrected
 version of the library; if the bug report is poor, we will not do anything about
 it (aside of chiding you to send better bug reports).
 
-Send your bug report to: @samp{mpc-discuss@@lists.gforge.inria.fr}.
+Send your bug report to: @samp{mpc-discuss@@inria.fr}.
 
 If you think something in this manual is unclear, or downright incorrect, or if
 the language needs to be improved, please send a note to the same address.

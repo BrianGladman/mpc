@@ -6,7 +6,7 @@ Now that mpfr-3 is the minimum version requirement, support the
 MPFR_RNDA rounding mode.
 
 From Joseph Myers 12 Apr 2015:
-http://lists.gforge.inria.fr/pipermail/mpc-discuss/2015-April/001347.html
+https://sympa.inria.fr/sympa/arc/mpc-discuss/2015-04/msg00009.html
 Try implementing tan z = (sin 2x + i sinh 2y) / (cos 2x + cosh 2y) or
 (sin(x)*cos(x) + i*sinh(y)*cosh(y))/(cos(x)^2 + sinh(y)^2) as in glibc.
 
@@ -17,7 +17,7 @@ Cf http://arxiv.org/abs/1309.2877
 From Andreas Enge 27 August 2012:
 Implement im(atan(x+i*y)) as
 1/4 * [log1p (4y / (x^2 +(1-y)^2))]
-(see http://lists.gforge.inria.fr/pipermail/mpc-discuss/2012-August/001196.html)
+(see https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-08/msg00002.html)
 
 From Andreas Enge 23 July 2012:
 go through tests and move them to the data files if possible
@@ -31,9 +31,9 @@ requires analysis of error propagation
 From Andreas Enge and Paul Zimmermann 6 July 2012:
 Improve speed of Im (atan) for x+i*y with small y, for instance by using
 the Taylor series directly. See also the discussion
-http://lists.gforge.inria.fr/pipermail/mpc-discuss/2012-August/001196.html
+https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-08/msg00002.html
 and the timing program on
-http://lists.gforge.inria.fr/pipermail/mpc-discuss/2013-August/001254.html
+https://sympa.inria.fr/sympa/arc/mpc-discuss/2013-08/msg00005.html
 
 For example with Sage 5.11:
 sage: %timeit atan(MPComplexField()(1,1))
@@ -73,7 +73,7 @@ Bench:
 New functions to implement:
 - from Joseph S. Myers <joseph at codesourcery dot com> 19 Mar 2012: mpc_erf,
   mpc_erfc, mpc_exp2, mpc_expm1, mpc_log1p, mpc_log2, mpc_lgamma, mpc_tgamma
-  http://lists.gforge.inria.fr/pipermail/mpc-discuss/2012-March/001090.html
+  https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-03/msg00009.html
   See the article by Pascal Molin (hal.archives-ouvertes.fr/hal-00580855).
 - from Andreas Enge and Philippe Théveny 17 July 2008
   agm (and complex logarithm with agm ?). For the error analysis, one can

@@ -38,8 +38,7 @@ This is for the impatient, for deeper explanations see the chapter
       make check
 
    If any error occurs, please report it on the mailing list
-   <mpc-discuss@lists.gforge.inria.fr>, or file a bug at the bug tracker
-   <https://gforge.inria.fr/tracker/?atid=607&group_id=131&func=browse> .
+   <mpc-discuss@inria.fr>.
 
 3. To install the GNU MPC library, type
 
@@ -60,7 +59,7 @@ This is for the impatient, for deeper explanations see the chapter
    This requires the Texinfo package (version 4.2 at least).
 
 In case of difficulties, please send a description of the problem to
-<mpc-discuss@lists.gforge.inria.fr>.
+<mpc-discuss@inria.fr>.
 
 ##############################################################################
 

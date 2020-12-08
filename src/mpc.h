@@ -109,7 +109,7 @@ typedef __mpc_struct *mpc_ptr;
 typedef const __mpc_struct *mpc_srcptr;
 
 /* Support for WINDOWS DLL, see
-   http://lists.gforge.inria.fr/pipermail/mpc-discuss/2011-November/000990.html;
+   https://sympa.inria.fr/sympa/arc/mpc-discuss/2011-11/ ;
    when building the DLL, export symbols, otherwise behave as GMP           */
 #if defined (__MPC_LIBRARY_BUILD) && __GMP_LIBGMP_DLL
 #define __MPC_DECLSPEC __GMP_DECLSPEC_EXPORT

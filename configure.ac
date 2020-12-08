@@ -20,7 +20,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(mpc, 1.2.2dev, mpc-discuss@lists.gforge.inria.fr)
+AC_INIT(mpc, 1.2.2dev, mpc-discuss@inria.fr)
 AC_CONFIG_SRCDIR([src/mpc-impl.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADER([config.h])
@@ -98,7 +98,7 @@ AC_ARG_ENABLE([valgrind-tests],
 
 # Check for CC and CFLAGS in gmp.h unless the user specified one of them
 # look for EGREP and SED here, see continued problem
-# at http://lists.gforge.inria.fr/pipermail/mpc-discuss/2012-January/001056.html
+# at https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-01/msg00001.html
 AC_PROG_EGREP
 AC_PROG_SED
 if test -z "$USER_CC" && test -z "$USER_CFLAGS"; then
@@ -128,7 +128,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 # flags and add them to CFLAGS
 # Note: don't do this if the user defined CFLAGS, since adding new flags
 # might override the user's settings, see
-# http://lists.gforge.inria.fr/pipermail/mpc-discuss/2012-May/001115.html
+# https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-05/msg00009.html
 if test -z "$USER_CFLAGS"; then
    MPC_C_CHECK_WARNINGCFLAGS
 fi

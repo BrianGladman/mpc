@@ -15,25 +15,25 @@ Changes in version 1.1.0 ("Gladiolus palustris"), released in January 2018:
   - Fixed issues with MPFR 4.0.0
   - New functions: mpc_cmp_abs, mpc_rootofunity
   - Improved speed for corner cases of mpc_asin, mpc_sin, see
-    http://lists.gforge.inria.fr/pipermail/mpc-discuss/2013-December/001266.html
+    https://sympa.inria.fr/sympa/arc/mpc-discuss/2013-12/msg00001.html
   - Rewrite of the testing framework
   - New mpcbench tool, used with "make bench"
   - Fixed handling of over- and underflows with directed rounding in the
     "other direction" for mpc_cos, mpc_sin, mpc_exp and mpc_pow, see
-    http://lists.gforge.inria.fr/pipermail/mpc-discuss/2015-March/001336.html
+    https://sympa.inria.fr/sympa/arc/mpc-discuss/2015-03/msg00003.html
   - Fixed a bug in mpc_atan(0,y) with |y| near 1, see
-    http://lists.gforge.inria.fr/pipermail/mpc-discuss/2017-March/001404.html
+    https://sympa.inria.fr/sympa/arc/mpc-discuss/2017-03/msg00000.html
 
 Changes in version 1.0.3, released in February 2015:
   - Fixed mpc_pow, see
-    http://lists.gforge.inria.fr/pipermail/mpc-discuss/2014-October/001315.html
+    https://sympa.inria.fr/sympa/arc/mpc-discuss/2014-10/msg00005.html
   - #18257: Switched to libtool 2.4.5.
 
 Changes in version 1.0.2, released in January 2014:
   - Fixed mpc_atan, mpc_atanh for (+-0, +-1), see
     http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57994#c7
   - Fixed mpc_log10 for purely imaginary argument, see
-    http://lists.gforge.inria.fr/pipermail/mpc-discuss/2012-September/001208.html
+    https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-09/msg00001.html
 
 Changes in version 1.0.1, released in September 2012:
   - Switched to automake 1.11.6, see
