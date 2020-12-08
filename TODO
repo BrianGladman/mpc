@@ -77,7 +77,9 @@ New functions to implement:
   See the article by Pascal Molin (hal.archives-ouvertes.fr/hal-00580855).
 - from Andreas Enge and Philippe Théveny 17 July 2008
   agm (and complex logarithm with agm ?). For the error analysis, one can
-  start from Theorem 1 of http://www.lix.polytechnique.fr/Labo/Regis.Dupont/preprints/Dupont_FastEvalMod.ps.gz, and probably the best is to compute AGM(a,b)
+  start from Theorem 1 of
+    https://www.ams.org/journals/mcom/2011-80-275/S0025-5718-2011-01880-6/S0025-5718-2011-01880-6.pdf
+  and probably the best is to compute AGM(a,b)
   as a*AGM(1,b/a) with |b/a| <= 1. In such a way, after one step all values
   are in the same quadrant, and no cancellation occurs any more.
 - implement a root-finding algorithm using the Durand-Kerner method
