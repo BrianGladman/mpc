@@ -97,7 +97,7 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 /* FIXME: For the time being, we assume that z is different from z1 and from z2 */
 {
    double r;
-   mpfr_prec_t p = mpc_get_prec (z1->c);
+   mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
 
    mpcb_set_prec (z, p);
    mpc_mul (z->c, z1->c, z2->c, MPC_RNDNN);
@@ -118,7 +118,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 /* FIXME: For the time being, we assume that z is different from z1 and from z2 */
 {
    double r, denom, x, y;
-   mpfr_prec_t p = mpc_get_prec (z1->c);
+   mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
 
    mpcb_set_prec (z, p);
    mpc_add (z->c, z1->c, z2->c, MPC_RNDZZ);
