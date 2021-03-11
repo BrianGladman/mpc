@@ -1,6 +1,6 @@
 /* balls -- Functions for complex ball arithmetic.
 
-Copyright (C) 2018, 2020 INRIA
+Copyright (C) 2018, 2020, 2021 INRIA
 
 This file is part of GNU MPC.
 
@@ -21,7 +21,12 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include <stdio.h>
 #include <math.h>
 #include <fenv.h>
+#include <assert.h>
 #include "mpc-impl.h"
+
+#define FE_ERROR (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW)
+#define FE_CLEARERROR feclearexcept (FE_ERROR);
+#define FE_TESTERROR assert (!fetestexcept(FE_ERROR));
 
 void mpcb_print (mpcb_srcptr op)
 {
@@ -97,12 +102,14 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    mpcb_set_prec (z, p);
    mpc_mul (z->c, z1->c, z2->c, MPC_RNDNN);
 
+   FE_CLEARERROR
    fesetround (FE_UPWARD);
    /* generic error of multiplication */
    r = z1->r + z2->r + z1->r * z2->r;
    /* error of rounding to nearest */
    r += ldexp (1 + r, -p);
    z->r = r;
+   FE_TESTERROR
 }
 
 
@@ -121,6 +128,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    /* generic error of addition:
       r <= (|z1|*r1 + |z2|*r2) / |z1+z2|
         <= (|z1|*r1 + |z2|*r2) / |z| since we rounded towards 0 */
+   FE_CLEARERROR
    fesetround (FE_TOWARDZERO);
    x = mpfr_get_d (mpc_realref (z->c), MPFR_RNDZ);
    y = mpfr_get_d (mpc_imagref (z->c), MPFR_RNDZ);
@@ -137,6 +145,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    /* error of directed rounding */
    r += ldexp (1 + r, 1-p);
    z->r = r;
+   FE_TESTERROR
 }
 
 
@@ -150,6 +159,7 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
    mpcb_set_prec (z, p);
    mpc_sqrt (z->c, z1->c, MPC_RNDNN);
 
+   FE_CLEARERROR
    fesetround (FE_UPWARD);
    /* generic error of square root for z->r <= 0.5:
       0.5*epsilon1 + (sqrt(2)-1) * epsilon1^2
@@ -159,6 +169,7 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
    /* error of rounding to nearest */
    r += ldexp (1 + r, -p);
    z->r = r;
+   FE_TESTERROR
 }
 
 

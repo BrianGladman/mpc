@@ -1,6 +1,6 @@
 ## tests/Makefile.am -- Process this file with automake to produce Makefile.in
 ##
-## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022 INRIA
+## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2021, 2022 INRIA
 ##
 ## This file is part of GNU MPC.
 ##
@@ -35,16 +35,17 @@ LOADLIBES=$(DEFS) $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS)	\
   $(top_builddir)/tests/.libs/libmpc-tests.a		\
   $(top_builddir)/src/.libs/libmpc.a $(LIBS)
 
-check_PROGRAMS = tabs tacos tacosh tadd tadd_fr tadd_si tadd_ui tagm	\
-  targ tasin tasinh tatan tatanh tcmp_abs tconj tcos tcosh              \
+check_PROGRAMS = tballs                                                 \
+  tabs tacos tacosh tadd tadd_fr tadd_si tadd_ui tagm targ              \
+  tasin tasinh tatan tatanh tcmp_abs tconj tcos tcosh                   \
   tdiv tdiv_2si tdiv_2ui tdiv_fr tdiv_ui tdot texp tfma tfr_div tfr_sub \
   timag tio_str tlog tlog10						\
   tmul tmul_2si tmul_2ui tmul_fr tmul_i tmul_si tmul_ui tneg tnorm tpow	\
   tpow_d tpow_fr tpow_ld tpow_si tpow_ui tpow_z tprec tproj treal	\
   treimref trootofunity                                                 \
   tset tsin tsin_cos tsinh tsqr tsqrt tstrtoc tsub tsub_fr	        \
-  tsub_ui tsum tswap ttan ttanh tui_div tui_ui_sub tget_version exceptions \
-  tballs
+  tsub_ui tsum tswap ttan ttanh tui_div tui_ui_sub                      \
+  tget_version exceptions
 
 check_LTLIBRARIES=libmpc-tests.la
 libmpc_tests_la_SOURCES = mpc-tests.h check_data.c clear_parameters.c	\

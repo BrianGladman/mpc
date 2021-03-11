@@ -1,6 +1,6 @@
 /* tballs -- test file for complex ball arithmetic.
 
-Copyright (C) 2018, 2020 INRIA
+Copyright (C) 2018, 2020, 2021 INRIA
 
 This file is part of GNU MPC.
 
@@ -76,14 +76,14 @@ test_agm (void)
    mpc_t agma, agmb;
    int i, n;
 
-   p = 100;
-   target = 34; /* some loss of precision in the first few iterations
-                   until the complex numbers are in the same quadrant */
+   p = 510;
+   target = p - 9;
    n = 20;
+
    mpc_init2 (c, p);
-   mpc_set_si_si (c, -1000000001414213562, 0, MPC_RNDNN);
+   mpc_set_si_si (c, 1, 0, MPC_RNDNN);
    mpcb_init_set_c (a, c);
-   mpc_set_si_si (c, -999999998585786438, 0, MPC_RNDNN);
+   mpc_set_si_si (c, 0, 1, MPC_RNDNN);
    mpcb_init_set_c (b, c);
    mpcb_init (a1);
    mpcb_init (b1);
@@ -106,11 +106,9 @@ test_agm (void)
       if (   mpcb_can_round (a, target, target)
           && mpcb_can_round (b, target, target)) {
          mpcb_round (agma, a);
-         printf ("   "); mpc_out_str (stdout, 10, 0, agma, MPC_RNDNN); printf ("\n");
          mpcb_round (agmb, b);
-         printf ("   "); mpc_out_str (stdout, 10, 0, agmb, MPC_RNDNN); printf ("\n");
          if (!mpc_cmp (agma, agmb))
-            break;
+            return 0;
       }
    }
 
@@ -122,7 +120,7 @@ test_agm (void)
    mpc_clear (agma);
    mpc_clear (agmb);
 
-   return -1;
+   return 1;
 }
 
 
