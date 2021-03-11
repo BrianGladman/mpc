@@ -161,10 +161,11 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
 
    FE_CLEARERROR
    fesetround (FE_UPWARD);
-   /* generic error of square root for z->r <= 0.5:
+   /* generic error of square root for z1->r <= 0.5:
       0.5*epsilon1 + (sqrt(2)-1) * epsilon1^2
       see eq:propsqrt in algorithms.tex, together with a Taylor
       expansion of 1/sqrt(1-epsilon1) */
+   assert (z1->r <= 0.5);
    r = ldexp (z1->r, -1) + 0.415 * z1->r * z1->r;
    /* error of rounding to nearest */
    r += ldexp (1 + r, -p);
