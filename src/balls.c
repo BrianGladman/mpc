@@ -94,13 +94,22 @@ mpcb_init_set_c (mpcb_ptr rop, mpc_srcptr op)
 
 void
 mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
-/* FIXME: For the time being, we assume that z is different from z1 and from z2 */
 {
    double r;
    mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
+   int overlap = (z == z1 || z == z2);
+   mpc_t zc;
 
-   mpcb_set_prec (z, p);
-   mpc_mul (z->c, z1->c, z2->c, MPC_RNDNN);
+   if (overlap)
+      mpc_init2 (zc, p);
+   else {
+      zc [0] = z->c [0];
+      mpc_set_prec (zc, p);
+   }
+   mpc_mul (zc, z1->c, z2->c, MPC_RNDNN);
+   if (overlap)
+      mpc_clear (z->c);
+   z->c [0] = zc [0];
 
    FE_CLEARERROR
    fesetround (FE_UPWARD);
@@ -115,13 +124,19 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 
 void
 mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
-/* FIXME: For the time being, we assume that z is different from z1 and from z2 */
 {
    double r, denom, x, y;
    mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
+   int overlap = (z == z1 || z == z2);
+   mpc_t zc;
 
-   mpcb_set_prec (z, p);
-   mpc_add (z->c, z1->c, z2->c, MPC_RNDZZ);
+   if (overlap)
+      mpc_init2 (zc, p);
+   else {
+      zc [0] = z->c [0];
+      mpc_set_prec (zc, p);
+   }
+   mpc_add (zc, z1->c, z2->c, MPC_RNDZZ);
       /* rounding towards 0 makes the generic error easier to compute,
          but incurs a tiny penalty for the rounding error */
 
@@ -130,8 +145,8 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
         <= (|z1|*r1 + |z2|*r2) / |z| since we rounded towards 0 */
    FE_CLEARERROR
    fesetround (FE_TOWARDZERO);
-   x = mpfr_get_d (mpc_realref (z->c), MPFR_RNDZ);
-   y = mpfr_get_d (mpc_imagref (z->c), MPFR_RNDZ);
+   x = mpfr_get_d (mpc_realref (zc), MPFR_RNDZ);
+   y = mpfr_get_d (mpc_imagref (zc), MPFR_RNDZ);
    denom = sqrt (x*x + y*y);
    fesetround (FE_UPWARD);
    x = mpfr_get_d (mpc_realref (z1->c), MPFR_RNDA);
@@ -141,24 +156,25 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    y = mpfr_get_d (mpc_imagref (z2->c), MPFR_RNDA);
    r += sqrt (x*x + y*y) * z2->r;
    r /= denom;
-
    /* error of directed rounding */
    r += ldexp (1 + r, 1-p);
-   z->r = r;
    FE_TESTERROR
+
+   if (overlap)
+      mpc_clear (z->c);
+   z->c [0] = zc [0];
+   z->r = r;
 }
 
 
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
-/* FIXME: For the time being, we assume that z is different from z1 */
 {
    double r;
-   mpfr_prec_t p = mpc_get_prec (z1->c);
+   mpfr_prec_t p = mpcb_get_prec (z1);
+   int overlap = (z == z1);
 
-   mpcb_set_prec (z, p);
-   mpc_sqrt (z->c, z1->c, MPC_RNDNN);
-
+   /* Compute the error first in case there is overlap. */
    FE_CLEARERROR
    fesetround (FE_UPWARD);
    /* generic error of square root for z1->r <= 0.5:
@@ -169,8 +185,12 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
    r = ldexp (z1->r, -1) + 0.415 * z1->r * z1->r;
    /* error of rounding to nearest */
    r += ldexp (1 + r, -p);
-   z->r = r;
    FE_TESTERROR
+
+   if (!overlap)
+      mpcb_set_prec (z, p);
+   mpc_sqrt (z->c, z1->c, MPC_RNDNN);
+   z->r = r;
 }
 
 

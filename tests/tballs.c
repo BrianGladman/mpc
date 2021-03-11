@@ -72,7 +72,7 @@ test_agm (void)
 {
    mpfr_prec_t p, target;
    mpc_t c;
-   mpcb_t a, b, a1, b1;
+   mpcb_t a, b, a1;
    mpc_t agma, agmb;
    int i, n;
 
@@ -86,7 +86,6 @@ test_agm (void)
    mpc_set_si_si (c, 0, 1, MPC_RNDNN);
    mpcb_init_set_c (b, c);
    mpcb_init (a1);
-   mpcb_init (b1);
    mpc_init2 (agma, target);
    mpc_init2 (agmb, target);
 
@@ -96,9 +95,9 @@ test_agm (void)
    mpcb_print (b);
    for (i = 1; i <= n; i++) {
       mpcb_add (a1, a, b);
-      mpcb_mul (b1, a, b);
+      mpcb_mul (b, a, b);
       mpcb_div_2ui (a, a1, 1);
-      mpcb_sqrt (b, b1);
+      mpcb_sqrt (b, b);
       printf ("%2i ", i);
       mpcb_print (a);
       printf ("   ");
@@ -116,7 +115,6 @@ test_agm (void)
    mpcb_clear (a);
    mpcb_clear (b);
    mpcb_clear (a1);
-   mpcb_clear (b1);
    mpc_clear (agma);
    mpc_clear (agmb);
 
