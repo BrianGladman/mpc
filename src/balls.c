@@ -246,7 +246,6 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
 void
 mpcb_round (mpc_ptr rop, mpcb_srcptr op)
 {
-   mpfr_set (mpc_realref (rop), mpc_realref (op->c), MPFR_RNDN);
-   mpfr_set (mpc_imagref (rop), mpc_imagref (op->c), MPFR_RNDN);
+   mpc_set (rop, op->c, MPC_RNDNN);
 }
 
