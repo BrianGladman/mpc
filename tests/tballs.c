@@ -76,7 +76,7 @@ test_agm (void)
    mpc_t agma, agmb;
    int i, n;
 
-   p = 510;
+   p = 514;
    target = p - 9;
    n = 20;
 
@@ -89,7 +89,7 @@ test_agm (void)
    mpc_init2 (agma, target);
    mpc_init2 (agmb, target);
 
-   printf ("0 ");
+   printf (" 0 ");
    mpcb_print (a);
    printf ("  ");
    mpcb_print (b);
