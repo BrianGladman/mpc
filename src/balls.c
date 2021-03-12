@@ -254,7 +254,6 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
    mpfr_srcptr re, im;
    mpfr_exp_t exp_re, exp_im, exp_err;
    int exp_int;
-   radius_t err, s;
 
    re = mpc_realref (op->c);
    im = mpc_imagref (op->c);
@@ -270,30 +269,23 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
    exp_re = mpfr_get_exp (re);
    exp_im = mpfr_get_exp (im);
 
-   fesetround (FE_UPWARD);
-   /* Bound on the relative error of the real part. */
-   err = 1.0;
-   err = ldexp (err, exp_im - exp_re + 1);
-   err += 1.0;
-   err *= op->r;
-   /* Compute the absolute error; it will be given as |err|*2^exp_err. */
-   s = mpfr_get_d_2exp (&exp_err, re, MPFR_RNDA);
-   err *= s;
-   /* Exponent of the error as a power of 2, rounded up. */
-   frexp (err, &exp_int);
-   exp_err += exp_int;
-   if (!mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN, prec_re))
-      return 0;
+   /* Absolute error of the real part, as given in the proof of
+      prop:comrelerror of algorithms.tex:
+      |x-x~|  = |x~*theta_R - y~*theta_I|
+             <= |x~ - y~| * epsilon, where epsilon is the complex
+                                     relative error
+             <= (|x~|+|y~|) * epsilon
+             <= 2 * max (|x~|, |y~|) * epsilon
+      To call mpfr_can_round, we only need the exponent in base 2,
+      which is then bounded above by
+                1 + max (exp_re, exp_im) + exponent (epsilon) */
+   frexp (op->r, &exp_int);
+   exp_err = 1 + MPC_MAX (exp_re, exp_im) + exp_int;
 
-   err = 1.0;
-   err = ldexp (err, exp_re - exp_im + 1);
-   err += 1.0;
-   err *= op->r;
-   s = mpfr_get_d_2exp (&exp_err, im, MPFR_RNDA);
-   err *= s;
-   frexp (err, &exp_int);
-   exp_err += exp_int;
-   return mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN, MPFR_RNDN, prec_im);
+   return (   mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN,
+                              prec_re)
+           && mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN, MPFR_RNDN,
+                              prec_im));
 }
 
 
