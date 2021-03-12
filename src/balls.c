@@ -276,13 +276,12 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
    err = ldexp (err, exp_im - exp_re + 1);
    err += 1.0;
    err *= op->r;
-   /* Absolute error. */
-   s = mpfr_get_d (re, MPFR_RNDA);
-   s = fabs (s);
+   /* Compute the absolute error; it will be given as |err|*2^exp_err. */
+   s = mpfr_get_d_2exp (&exp_err, re, MPFR_RNDA);
    err *= s;
    /* Exponent of the error as a power of 2, rounded up. */
    frexp (err, &exp_int);
-   exp_err = exp_int;
+   exp_err += exp_int;
    if (!mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN, prec_re))
       return 0;
 
@@ -290,11 +289,10 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
    err = ldexp (err, exp_re - exp_im + 1);
    err += 1.0;
    err *= op->r;
-   s = mpfr_get_d (im, MPFR_RNDA);
-   s = fabs (s);
+   s = mpfr_get_d_2exp (&exp_err, im, MPFR_RNDA);
    err *= s;
    frexp (err, &exp_int);
-   exp_err = exp_int;
+   exp_err += exp_int;
    return mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN, MPFR_RNDN, prec_im);
 }
 
