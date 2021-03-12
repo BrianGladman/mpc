@@ -28,6 +28,43 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #define FE_CLEARERROR feclearexcept (FE_ERROR);
 #define FE_TESTERROR assert (!fetestexcept(FE_ERROR));
 
+static void radius_abs (radius_t *r, radius_t x, radius_t y)
+    /* Compute r = sqrt (x*x + y *y).
+       The rounding mode is set and floating point exceptions are handled
+       outside this function. */
+{
+   radius_t s, t;
+
+   s = x*x;
+   t = y*y;
+   s += t;
+   *r = sqrt (s);
+}
+
+
+static void add_rounding_error (radius_t *r, mpfr_prec_t p, mpfr_rnd_t rnd)
+   /* Replace r, radius of a complex ball, by the new radius obtained after
+      rounding both parts of the centre of the ball in direction rnd at
+      precision t.
+      Otherwise said:
+      r += ldexp (1 + r, -p) for rounding to nearest, adding 0.5ulp;
+      r += ldexp (1 + r, 1-p) for directed rounding, adding 1ulp.
+      It is assumed that the rounding mode is already set to FE_UPWARD
+      when this function is called, and that floating point exceptions
+      are handled outside the call.
+   */
+{
+   radius_t s;
+
+   s = 1 + *r;
+   if (rnd == MPFR_RNDN)
+      s = ldexp (s, -p);
+   else
+      s = ldexp (s, 1-p);
+   *r += s;
+}
+
+
 void mpcb_print (mpcb_srcptr op)
 {
    mpc_out_str (stdout, 10, 0, op->c, MPC_RNDNN);
@@ -95,7 +132,7 @@ mpcb_init_set_c (mpcb_ptr rop, mpc_srcptr op)
 void
 mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 {
-   double r;
+   radius_t r;
    mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
    int overlap = (z == z1 || z == z2);
    mpc_t zc;
@@ -114,9 +151,11 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    FE_CLEARERROR
    fesetround (FE_UPWARD);
    /* generic error of multiplication */
-   r = z1->r + z2->r + z1->r * z2->r;
+   r = z1->r * z2->r;
+   r += z1->r;
+   r += z2->r;
    /* error of rounding to nearest */
-   r += ldexp (1 + r, -p);
+   add_rounding_error (&r, p, MPFR_RNDN);
    z->r = r;
    FE_TESTERROR
 }
@@ -125,7 +164,7 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 void
 mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 {
-   double r, denom, x, y;
+   radius_t r, s, denom, x, y;
    mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
    int overlap = (z == z1 || z == z2);
    mpc_t zc;
@@ -147,17 +186,20 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    fesetround (FE_TOWARDZERO);
    x = mpfr_get_d (mpc_realref (zc), MPFR_RNDZ);
    y = mpfr_get_d (mpc_imagref (zc), MPFR_RNDZ);
-   denom = sqrt (x*x + y*y);
+   radius_abs (&denom, x, y);
    fesetround (FE_UPWARD);
    x = mpfr_get_d (mpc_realref (z1->c), MPFR_RNDA);
    y = mpfr_get_d (mpc_imagref (z1->c), MPFR_RNDA);
-   r = sqrt (x*x + y*y) * z1->r;
+   radius_abs (&r, x, y);
+   r *= z1->r;
    x = mpfr_get_d (mpc_realref (z2->c), MPFR_RNDA);
    y = mpfr_get_d (mpc_imagref (z2->c), MPFR_RNDA);
-   r += sqrt (x*x + y*y) * z2->r;
+   radius_abs (&s, x, y);
+   s *= z2->r;
+   r += s;
    r /= denom;
    /* error of directed rounding */
-   r += ldexp (1 + r, 1-p);
+   add_rounding_error (&r, p, MPFR_RNDZ);
    FE_TESTERROR
 
    if (overlap)
@@ -170,7 +212,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
 {
-   double r;
+   radius_t r, s;
    mpfr_prec_t p = mpcb_get_prec (z1);
    int overlap = (z == z1);
 
@@ -182,9 +224,13 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
       see eq:propsqrt in algorithms.tex, together with a Taylor
       expansion of 1/sqrt(1-epsilon1) */
    assert (z1->r <= 0.5);
-   r = ldexp (z1->r, -1) + 0.415 * z1->r * z1->r;
+   r = z1->r * z1->r;
+   s = 0.415;
+   r *= s;
+   s = ldexp (z1->r, -1);
+   r += s;
    /* error of rounding to nearest */
-   r += ldexp (1 + r, -p);
+   add_rounding_error (&r, p, MPFR_RNDN);
    FE_TESTERROR
 
    if (!overlap)
@@ -208,7 +254,7 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
    mpfr_srcptr re, im;
    mpfr_exp_t exp_re, exp_im, exp_err;
    int exp_int;
-   double err;
+   radius_t err, s;
 
    re = mpc_realref (op->c);
    im = mpc_imagref (op->c);
@@ -226,17 +272,27 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
 
    fesetround (FE_UPWARD);
    /* Bound on the relative error of the real part. */
-   err = (1 + ldexp (1.0, exp_im - exp_re + 1)) * op->r;
+   err = 1.0;
+   err = ldexp (err, exp_im - exp_re + 1);
+   err += 1.0;
+   err *= op->r;
    /* Absolute error. */
-   err *= fabs (mpfr_get_d (re, MPFR_RNDA));
+   s = mpfr_get_d (re, MPFR_RNDA);
+   s = fabs (s);
+   err *= s;
    /* Exponent of the error as a power of 2, rounded up. */
    frexp (err, &exp_int);
    exp_err = exp_int;
    if (!mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN, prec_re))
       return 0;
 
-   err = (1 + ldexp (1.0, exp_re - exp_im + 1)) * op->r;
-   err *= fabs (mpfr_get_d (im, MPFR_RNDA));
+   err = 1.0;
+   err = ldexp (err, exp_re - exp_im + 1);
+   err += 1.0;
+   err *= op->r;
+   s = mpfr_get_d (im, MPFR_RNDA);
+   s = fabs (s);
+   err *= s;
    frexp (err, &exp_int);
    exp_err = exp_int;
    return mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN, MPFR_RNDN, prec_im);
