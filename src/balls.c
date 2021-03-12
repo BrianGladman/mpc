@@ -212,7 +212,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
 {
-   radius_t r, s;
+   radius_t r;
    mpfr_prec_t p = mpcb_get_prec (z1);
    int overlap = (z == z1);
 
@@ -221,14 +221,13 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
    fesetround (FE_UPWARD);
    /* generic error of square root for z1->r <= 0.5:
       0.5*epsilon1 + (sqrt(2)-1) * epsilon1^2
+      <= 0.5 * epsilon1 * (1 + epsilon1),
       see eq:propsqrt in algorithms.tex, together with a Taylor
       expansion of 1/sqrt(1-epsilon1) */
    assert (z1->r <= 0.5);
-   r = z1->r * z1->r;
-   s = 0.415;
-   r *= s;
-   s = ldexp (z1->r, -1);
-   r += s;
+   r = 1 + z1->r;
+   r *= z1->r;
+   r = ldexp (r, -1);
    /* error of rounding to nearest */
    add_rounding_error (&r, p, MPFR_RNDN);
    FE_TESTERROR
