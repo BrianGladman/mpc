@@ -1,4 +1,4 @@
-# Copyright (C) 2008, 2009, 2010, 2011, 2012, 2014, 2016, 2017, 2018, 2020 INRIA
+# Copyright (C) 2008, 2009, 2010, 2011, 2012, 2014, 2016, 2017, 2018, 2020, 2022 INRIA
 #
 # This file is part of GNU MPC.
 #
@@ -19,11 +19,11 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.61)
-AC_INIT(mpc, 1.2.2dev, mpc-discuss@inria.fr)
+AC_PREREQ([2.69])
+AC_INIT([mpc],[1.2.2dev],[mpc-discuss@inria.fr])
 AC_CONFIG_SRCDIR([src/mpc-impl.h])
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
@@ -37,15 +37,15 @@ AC_CONFIG_MACRO_DIR([m4])
 
 # Extra arguments to configure
 AC_ARG_WITH([mpfr_include],
-            [AC_HELP_STRING([--with-mpfr-include=DIR],
+            [AS_HELP_STRING([--with-mpfr-include=DIR],
                             [MPFR include directory])],
             [CPPFLAGS="-I$withval $CPPFLAGS"])
 AC_ARG_WITH([mpfr_lib],
-            [AC_HELP_STRING([--with-mpfr-lib=DIR],
+            [AS_HELP_STRING([--with-mpfr-lib=DIR],
                             [MPFR lib directory])],
             [LDFLAGS="-L$withval $LDFLAGS"])
 AC_ARG_WITH([mpfr],
-            [AC_HELP_STRING([--with-mpfr=DIR],
+            [AS_HELP_STRING([--with-mpfr=DIR],
                            [MPFR install directory])],
             [
             if test -z "$with_mpfr_include" -a -z "$with_mpfr_lib" ; then
@@ -56,15 +56,15 @@ AC_ARG_WITH([mpfr],
             fi
             ])
 AC_ARG_WITH([gmp_include],
-            [AC_HELP_STRING([--with-gmp-include=DIR],
+            [AS_HELP_STRING([--with-gmp-include=DIR],
                             [GMP include directory])],
             [CPPFLAGS="-I$withval $CPPFLAGS"])
 AC_ARG_WITH([gmp_lib],
-            [AC_HELP_STRING([--with-gmp-lib=DIR],
+            [AS_HELP_STRING([--with-gmp-lib=DIR],
                             [GMP lib directory])],
             [LDFLAGS="-L$withval $LDFLAGS"])
 AC_ARG_WITH([gmp],
-            [AC_HELP_STRING([--with-gmp=DIR],
+            [AS_HELP_STRING([--with-gmp=DIR],
                            [GMP install directory])],
             [
             if test -z "$with_gmp_lib" -a -z "$with_gmp_include" ; then
@@ -75,7 +75,7 @@ AC_ARG_WITH([gmp],
             fi
             ])
 AC_ARG_ENABLE([logging],
-             [AC_HELP_STRING([--enable-logging],
+             [AS_HELP_STRING([--enable-logging],
                              [enable logging of function calls to stderr (default = no)])],
              [case $enableval in
                  yes) AS_IF([test "x$enable_shared" = "xno"],
@@ -86,7 +86,7 @@ AC_ARG_ENABLE([logging],
              ]
              )
 AC_ARG_ENABLE([valgrind-tests],
-             [AC_HELP_STRING([--enable-valgrind-tests],
+             [AS_HELP_STRING([--enable-valgrind-tests],
                              [run checks through valgrind (default = no)])],
              [case $enableval in
                  yes) gl_VALGRIND_TESTS ;;
@@ -113,7 +113,7 @@ AC_LANG(C)
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 # Set up LibTool
-LT_INIT
+LT_INIT(win32-dll)
 
 # Check GMP Header
 AC_MSG_CHECKING(for gmp.h)
@@ -135,9 +135,7 @@ fi
 
 
 # Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([locale.h inttypes.h stdint.h limits.h unistd.h sys/time.h sys/resource.h])
-AC_HEADER_TIME
+AC_CHECK_HEADERS([inttypes.h stdint.h sys/time.h])
 MPC_COMPLEX_H
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -223,7 +221,6 @@ AS_IF([test "x$enable_logging" = "xyes"],
 
 # Configs for Windows DLLs
 AC_SUBST(MPC_LDFLAGS)
-AC_LIBTOOL_WIN32_DLL
 case $host in
   *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2*)
      MPC_WINDOWS

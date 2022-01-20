@@ -1,6 +1,6 @@
 /* tset -- Test file for mpc_set_x and mpc_set_x_x functions.
 
-Copyright (C) 2009, 2010, 2011, 2012 INRIA
+Copyright (C) 2009, 2010, 2011, 2012, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -19,6 +19,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
 #include "config.h"
+#include <locale.h>
 #include <limits.h> /* for LONG_MAX */
 
 #ifdef HAVE_INTTYPES_H
@@ -31,10 +32,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #ifdef HAVE_COMPLEX_H
 # include <complex.h>
-#endif
-
-#ifdef HAVE_LOCALE_H
-#include <locale.h>
 #endif
 
 #include "mpc-tests.h"
