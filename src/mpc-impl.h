@@ -160,6 +160,7 @@ extern "C" {
 /* Function for radius arithmetic. */
 __MPC_DECLSPEC int mpcr_inf_p (mpcr_srcptr r);
 __MPC_DECLSPEC int mpcr_zero_p (mpcr_srcptr r);
+__MPC_DECLSPEC int mpcr_lt_half_p (mpcr_srcptr r);
 __MPC_DECLSPEC void mpcr_set_inf (mpcr_ptr r);
 __MPC_DECLSPEC void mpcr_set_zero (mpcr_ptr r);
 __MPC_DECLSPEC void mpcr_set_one (mpcr_ptr r);

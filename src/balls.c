@@ -255,18 +255,20 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
       <= 0.5 * epsilon1 * (1 + epsilon1),
       see eq:propsqrt in algorithms.tex, together with a Taylor
       expansion of 1/sqrt(1-epsilon1) */
-   assert (z1->r2 <= 0.5);
-   /* FIXME: TODO */
-   r2 = 1 + z1->r2;
-   r2 *= z1->r2;
-   r2 = ldexp (r2, -1);
-   mpcr_set_one (r);
-   mpcr_add (r, r, z1->r);
-   mpcr_mul (r, r, z1->r);
-   mpcr_div_2ui (r, r, 1);
-   /* error of rounding to nearest */
-   add_rounding_error (&r2, r, p, MPFR_RNDN);
-   FE_TESTERROR
+   if (!mpcr_lt_half_p (z1->r))
+      mpcr_set_inf (r);
+   else {
+      r2 = 1 + z1->r2;
+      r2 *= z1->r2;
+      r2 = ldexp (r2, -1);
+      mpcr_set_one (r);
+      mpcr_add (r, r, z1->r);
+      mpcr_mul (r, r, z1->r);
+      mpcr_div_2ui (r, r, 1);
+      /* error of rounding to nearest */
+      add_rounding_error (&r2, r, p, MPFR_RNDN);
+      FE_TESTERROR
+   }
 
    if (!overlap)
       mpcb_set_prec (z, p);

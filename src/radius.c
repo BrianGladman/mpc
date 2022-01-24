@@ -99,6 +99,13 @@ int mpcr_zero_p (mpcr_srcptr r)
 }
 
 
+int mpcr_lt_half_p (mpcr_srcptr r)
+   /* Return true if r < 1/2, false otherwise. */
+{
+   return MPCR_EXP (r) < -31;
+}
+
+
 void mpcr_set_inf (mpcr_ptr r)
 {
    MPCR_MANT (r) = -1;
