@@ -132,6 +132,13 @@ void mpcr_set (mpcr_ptr r, mpcr_srcptr s)
 }
 
 
+int64_t mpcr_get_exp (mpcr_srcptr r)
+   /* Return the exponent e such that r = m * 2^e with m such that
+      0.5 <= m < 1. */
+{
+   return MPCR_EXP (r) + 31;
+}
+
 void mpcr_out (mpcr_srcptr r)
 {
    if (mpcr_inf_p (r))

@@ -26,7 +26,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #define FE_ERROR (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW)
 #define FE_CLEARERROR feclearexcept (FE_ERROR);
-#define FE_TESTERROR assert (!fetestexcept(FE_ERROR));
+#define FE_TESTERROR
 
 static void radius_abs (radius2_t *r, radius2_t x, radius2_t y)
     /* Compute r = sqrt (x*x + y *y).
@@ -292,7 +292,6 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
 {
    mpfr_srcptr re, im;
    mpfr_exp_t exp_re, exp_im, exp_err;
-   int exp_int;
 
    re = mpc_realref (op->c);
    im = mpc_imagref (op->c);
@@ -318,9 +317,7 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
       To call mpfr_can_round, we only need the exponent in base 2,
       which is then bounded above by
                 1 + max (exp_re, exp_im) + exponent (epsilon) */
-   /* FIXME: TODO in terms of mpcr */
-   frexp (op->r2, &exp_int);
-   exp_err = 1 + MPC_MAX (exp_re, exp_im) + exp_int;
+   exp_err = 1 + MPC_MAX (exp_re, exp_im) + mpcr_get_exp (op->r);
 
    return (   mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN,
                               prec_re)

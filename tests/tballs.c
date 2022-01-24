@@ -1,6 +1,6 @@
 /* tballs -- test file for complex ball arithmetic.
 
-Copyright (C) 2018, 2020, 2021 INRIA
+Copyright (C) 2018, 2020, 2021, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -76,7 +76,7 @@ test_agm (void)
    mpc_t agma, agmb;
    int i, n;
 
-   p = 514;
+   p = 1000;
    target = p - 9;
    n = 20;
 
