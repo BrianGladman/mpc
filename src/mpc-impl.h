@@ -1,6 +1,6 @@
 /* mpc-impl.h -- Internal include file for mpc.
 
-Copyright (C) 2002, 2004, 2005, 2008, 2009, 2010, 2011, 2012, 2020 INRIA
+Copyright (C) 2002, 2004, 2005, 2008, 2009, 2010, 2011, 2012, 2020, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -157,7 +157,24 @@ do {                                                            \
 extern "C" {
 #endif
 
+/* Function for radius arithmetic. */
+__MPC_DECLSPEC int mpcr_inf_p (mpcr_srcptr r);
+__MPC_DECLSPEC int mpcr_zero_p (mpcr_srcptr r);
+__MPC_DECLSPEC void mpcr_set_inf (mpcr_ptr r);
+__MPC_DECLSPEC void mpcr_set_zero (mpcr_ptr r);
+__MPC_DECLSPEC void mpcr_set_one (mpcr_ptr r);
+__MPC_DECLSPEC void mpcr_set (mpcr_ptr r, mpcr_srcptr s);
+__MPC_DECLSPEC void mpcr_out (mpcr_srcptr r);
+__MPC_DECLSPEC void mpcr_mul (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
+__MPC_DECLSPEC void mpcr_sqr (mpcr_ptr r, mpcr_srcptr s);
+__MPC_DECLSPEC void mpcr_add (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
+__MPC_DECLSPEC void mpcr_div (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
+__MPC_DECLSPEC void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s,
+   const unsigned long int e);
+__MPC_DECLSPEC void mpcr_sqrt (mpcr_ptr r, mpcr_srcptr s);
+__MPC_DECLSPEC void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd);
 
+/* Functions for mpc. */
 __MPC_DECLSPEC int  mpc_mul_naive (mpc_ptr, mpc_srcptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_mul_karatsuba (mpc_ptr, mpc_srcptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_fma_naive (mpc_ptr, mpc_srcptr, mpc_srcptr, mpc_srcptr, mpc_rnd_t);

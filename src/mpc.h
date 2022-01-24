@@ -1,6 +1,6 @@
 /* mpc.h -- Include file for mpc.
 
-Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2016, 2017, 2018, 2020, 2021 INRIA
+Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2016, 2017, 2018, 2020, 2021, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -108,11 +108,21 @@ typedef __mpc_struct mpc_t[1];
 typedef __mpc_struct *mpc_ptr;
 typedef const __mpc_struct *mpc_srcptr;
 
-typedef double radius_t;
+typedef double radius2_t;
+typedef struct {
+   int64_t mant;
+   int64_t exp;
+}
+__mpcr_struct;
+
+typedef __mpcr_struct mpcr_t [1];
+typedef __mpcr_struct *mpcr_ptr;
+typedef const __mpcr_struct *mpcr_srcptr;
 
 typedef struct {
   mpc_t  c;
-  radius_t r;
+  mpcr_t r;
+  radius2_t r2;
 }
 __mpcb_struct;
 

@@ -1,6 +1,6 @@
 ## src/Makefile.am -- Process this file with automake to produce Makefile.in
 ##
-## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2016, 2018, 2020 INRIA
+## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2016, 2018, 2020, 2022 INRIA
 ##
 ## This file is part of GNU MPC.
 ##
@@ -32,6 +32,6 @@ libmpc_la_SOURCES = mpc-impl.h abs.c acos.c acosh.c add.c add_fr.c         \
   set_prec.c set_str.c set_x.c set_x_x.c sin.c sin_cos.c sinh.c sqr.c      \
   sqrt.c strtoc.c sub.c sub_fr.c sub_ui.c sum.c swap.c tan.c tanh.c        \
   uceil_log2.c ui_div.c ui_ui_sub.c \
-  balls.c
+  radius.c balls.c
 
 libmpc_la_LIBADD = @LTLIBOBJS@
