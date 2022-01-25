@@ -43,7 +43,7 @@ test_exp (void)
    mpcb_init (tmp);
    mpcb_init (factor);
 
-   mpcb_print (z);
+   mpcb_out_str (stdout, z);
    for (i = 1; i <= n; i++) {
       mpcb_add (tmp, z, minusone);
       printf (" +");
@@ -52,7 +52,7 @@ test_exp (void)
       mpcb_set_c (factor, c);
       mpcb_mul (z, tmp, factor);
       printf ("%3i ", i);
-      mpcb_print (z);
+      mpcb_out_str (stdout, z);
    }
 
    mpfr_clear (one);
@@ -90,18 +90,18 @@ test_agm (void)
    mpc_init2 (agmb, target);
 
    printf (" 0 ");
-   mpcb_print (a);
+   mpcb_out_str (stdout, a);
    printf ("  ");
-   mpcb_print (b);
+   mpcb_out_str (stdout, b);
    for (i = 1; i <= n; i++) {
       mpcb_add (a1, a, b);
       mpcb_mul (b, a, b);
       mpcb_div_2ui (a, a1, 1);
       mpcb_sqrt (b, b);
       printf ("%2i ", i);
-      mpcb_print (a);
+      mpcb_out_str (stdout, a);
       printf ("   ");
-      mpcb_print (b);
+      mpcb_out_str (stdout, b);
       if (   mpcb_can_round (a, target, target)
           && mpcb_can_round (b, target, target)) {
          mpcb_round (agma, a);

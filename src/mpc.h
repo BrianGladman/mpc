@@ -108,7 +108,6 @@ typedef __mpc_struct mpc_t[1];
 typedef __mpc_struct *mpc_ptr;
 typedef const __mpc_struct *mpc_srcptr;
 
-typedef double radius2_t;
 typedef struct {
    int64_t mant;
    int64_t exp;
@@ -122,7 +121,6 @@ typedef const __mpcr_struct *mpcr_srcptr;
 typedef struct {
   mpc_t  c;
   mpcr_t r;
-  radius2_t r2;
 }
 __mpcb_struct;
 
@@ -262,7 +260,7 @@ __MPC_DECLSPEC int mpc_inp_str    (mpc_ptr, FILE *, size_t *, int, mpc_rnd_t);
 __MPC_DECLSPEC size_t mpc_out_str (FILE *, int, size_t, mpc_srcptr, mpc_rnd_t);
 #endif
 
-__MPC_DECLSPEC void mpcb_print (mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_out_str (FILE *f, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_init (mpcb_ptr);
 __MPC_DECLSPEC void mpcb_clear (mpcb_ptr);
 __MPC_DECLSPEC mpfr_prec_t mpcb_get_prec (mpcb_srcptr);

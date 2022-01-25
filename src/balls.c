@@ -18,31 +18,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <fenv.h>
-#include <assert.h>
 #include "mpc-impl.h"
 
-#define FE_ERROR (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW)
-#define FE_CLEARERROR feclearexcept (FE_ERROR);
-#define FE_TESTERROR
 
-static void radius_abs (radius2_t *r, radius2_t x, radius2_t y)
-    /* Compute r = sqrt (x*x + y *y).
-       The rounding mode is set and floating point exceptions are handled
-       outside this function. */
-{
-   radius2_t s, t;
-
-   s = x*x;
-   t = y*y;
-   s += t;
-   *r = sqrt (s);
-}
-
-
-static void add_rounding_error (radius2_t *r2, mpcr_ptr r, mpfr_prec_t p, mpfr_rnd_t rnd)
+static void add_rounding_error (mpcr_ptr r, mpfr_prec_t p, mpfr_rnd_t rnd)
    /* Replace r, radius of a complex ball, by the new radius obtained after
       rounding both parts of the centre of the ball in direction rnd at
       precision t.
@@ -54,16 +33,8 @@ static void add_rounding_error (radius2_t *r2, mpcr_ptr r, mpfr_prec_t p, mpfr_r
       are handled outside the call.
    */
 {
-   radius2_t s2;
    mpcr_t s;
 
-   s2 = 1 + *r2;
-   if (rnd == MPFR_RNDN)
-      s2 = ldexp (s2, -p);
-   else
-      s2 = ldexp (s2, 1-p);
-   *r2 += s2;
-   /* FIXME: Round up. */
    mpcr_set_one (s);
    mpcr_add (s, s, r);
    if (rnd == MPFR_RNDN)
@@ -74,12 +45,12 @@ static void add_rounding_error (radius2_t *r2, mpcr_ptr r, mpfr_prec_t p, mpfr_r
 }
 
 
-void mpcb_print (mpcb_srcptr op)
+void mpcb_out_str (FILE *f, mpcb_srcptr op)
 {
-   mpc_out_str (stdout, 10, 0, op->c, MPC_RNDNN);
-   printf ("\n%.20g\n", op->r2);
-   mpcr_out (op->r);
-   printf ("\n");
+   mpc_out_str (f, 10, 0, op->c, MPC_RNDNN);
+   fprintf (f, " ");
+   mpcr_out_str (f, op->r);
+   fprintf (f, "\n");
 }
 
 
@@ -87,7 +58,6 @@ void
 mpcb_init (mpcb_ptr rop)
 {
    mpc_init2 (rop->c, 2);
-   rop->r2 = INFINITY;
    mpcr_set_inf (rop->r);
 }
 
@@ -110,7 +80,6 @@ void
 mpcb_set_prec (mpcb_ptr rop, mpfr_prec_t prec)
 {
    mpc_set_prec (rop->c, prec);
-   rop->r2 = INFINITY;
    mpcr_set_inf (rop->r);
 }
 
@@ -120,7 +89,6 @@ mpcb_set_c (mpcb_ptr rop, mpc_srcptr op)
 {
    mpc_set_prec (rop->c, MPC_MAX_PREC (op));
    mpc_set (rop->c, op, MPC_RNDNN);
-   rop->r2 = 0.0;
    mpcr_set_zero (rop->r);
 }
 
@@ -130,7 +98,6 @@ mpcb_set (mpcb_ptr rop, mpcb_srcptr op)
 {
    mpc_set_prec (rop->c, mpc_get_prec (op->c));
    mpc_set (rop->c, op->c, MPC_RNDNN);
-   rop->r2 = op->r2;
    mpcr_set (rop->r, op->r);
 }
 
@@ -140,7 +107,6 @@ mpcb_init_set_c (mpcb_ptr rop, mpc_srcptr op)
 {
    mpc_init2 (rop->c, MPC_MAX_PREC (op));
    mpc_set (rop->c, op, MPC_RNDNN);
-   rop->r2 = 0.0;
    mpcr_set_zero (rop->r);
 }
 
@@ -148,7 +114,6 @@ mpcb_init_set_c (mpcb_ptr rop, mpc_srcptr op)
 void
 mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 {
-   radius2_t r2;
    mpcr_t r;
    mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
    int overlap = (z == z1 || z == z2);
@@ -165,27 +130,19 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
       mpc_clear (z->c);
    z->c [0] = zc [0];
 
-   FE_CLEARERROR
-   fesetround (FE_UPWARD);
    /* generic error of multiplication */
-   r2 = z1->r2 * z2->r2;
-   r2 += z1->r2;
-   r2 += z2->r2;
    mpcr_mul (r, z1->r, z2->r);
    mpcr_add (r, r, z1->r);
    mpcr_add (r, r, z2->r);
    /* error of rounding to nearest */
-   add_rounding_error (&r2, r, p, MPFR_RNDN);
-   z->r2 = r2;
+   add_rounding_error (r, p, MPFR_RNDN);
    mpcr_set (z->r, r);
-   FE_TESTERROR
 }
 
 
 void
 mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 {
-   radius2_t r2, s2, denom2, x2, y2;
    mpcr_t r, s, denom;
    mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
    int overlap = (z == z1 || z == z2);
@@ -204,37 +161,19 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    /* generic error of addition:
       r <= (|z1|*r1 + |z2|*r2) / |z1+z2|
         <= (|z1|*r1 + |z2|*r2) / |z| since we rounded towards 0 */
-   FE_CLEARERROR
-   fesetround (FE_TOWARDZERO);
-   x2 = mpfr_get_d (mpc_realref (zc), MPFR_RNDZ);
-   y2 = mpfr_get_d (mpc_imagref (zc), MPFR_RNDZ);
-   radius_abs (&denom2, x2, y2);
    mpcr_mpc_abs (denom, zc, MPFR_RNDD);
-   fesetround (FE_UPWARD);
-   x2 = mpfr_get_d (mpc_realref (z1->c), MPFR_RNDA);
-   y2 = mpfr_get_d (mpc_imagref (z1->c), MPFR_RNDA);
-   radius_abs (&r2, x2, y2);
    mpcr_mpc_abs (r, z1->c, MPFR_RNDU);
-   r2 *= z1->r2;
    mpcr_mul (r, r, z1->r);
-   x2 = mpfr_get_d (mpc_realref (z2->c), MPFR_RNDA);
-   y2 = mpfr_get_d (mpc_imagref (z2->c), MPFR_RNDA);
-   radius_abs (&s2, x2, y2);
    mpcr_mpc_abs (s, z2->c, MPFR_RNDU);
-   s2 *= z2->r2;
-   r2 += s2;
-   r2 /= denom2;
    mpcr_mul (s, s, z2->r);
    mpcr_add (r, r, s);
    mpcr_div (r, r, denom);
    /* error of directed rounding */
-   add_rounding_error (&r2, r, p, MPFR_RNDZ);
-   FE_TESTERROR
+   add_rounding_error (r, p, MPFR_RNDZ);
 
    if (overlap)
       mpc_clear (z->c);
    z->c [0] = zc [0];
-   z->r2 = r2;
    mpcr_set (z->r, r);
 }
 
@@ -242,14 +181,11 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
 {
-   radius2_t r2;
    mpcr_t r;
    mpfr_prec_t p = mpcb_get_prec (z1);
    int overlap = (z == z1);
 
    /* Compute the error first in case there is overlap. */
-   FE_CLEARERROR
-   fesetround (FE_UPWARD);
    /* generic error of square root for z1->r <= 0.5:
       0.5*epsilon1 + (sqrt(2)-1) * epsilon1^2
       <= 0.5 * epsilon1 * (1 + epsilon1),
@@ -258,22 +194,17 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
    if (!mpcr_lt_half_p (z1->r))
       mpcr_set_inf (r);
    else {
-      r2 = 1 + z1->r2;
-      r2 *= z1->r2;
-      r2 = ldexp (r2, -1);
       mpcr_set_one (r);
       mpcr_add (r, r, z1->r);
       mpcr_mul (r, r, z1->r);
       mpcr_div_2ui (r, r, 1);
       /* error of rounding to nearest */
-      add_rounding_error (&r2, r, p, MPFR_RNDN);
-      FE_TESTERROR
+      add_rounding_error (r, p, MPFR_RNDN);
    }
 
    if (!overlap)
       mpcb_set_prec (z, p);
    mpc_sqrt (z->c, z1->c, MPC_RNDNN);
-   z->r2 = r2;
    mpcr_set (z->r, r);
 }
 
@@ -282,7 +213,6 @@ void
 mpcb_div_2ui (mpcb_ptr z, mpcb_srcptr z1, unsigned long int e)
 {
    mpc_div_2ui (z->c, z1->c, e, MPC_RNDNN);
-   z->r2 = z1->r2;
    mpcr_set (z->r, z1->r);
 }
 

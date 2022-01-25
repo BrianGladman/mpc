@@ -335,15 +335,14 @@ int64_t mpcr_get_exp (mpcr_srcptr r)
    return MPCR_EXP (r) + 31;
 }
 
-void mpcr_out (mpcr_srcptr r)
+void mpcr_out_str (FILE *f, mpcr_srcptr r)
 {
    if (mpcr_inf_p (r))
-      printf ("∞");
+      fprintf (f, "∞");
    else if (mpcr_zero_p (r))
-      printf ("Z");
+      fprintf (f, "0");
    else {
-      printf ("%.20g ", ldexp ((double) MPCR_MANT (r), MPCR_EXP (r)));
-      printf ("%li %li", MPCR_MANT (r), MPCR_EXP (r));
+      fprintf (f, "±(%li, %li)", MPCR_MANT (r), MPCR_EXP (r));
    }
 }
 
