@@ -52,28 +52,37 @@ static void mpcr_add_one_ulp (mpcr_ptr r)
 }
 
 
+static unsigned int leading_bit (int64_t n)
+   /* Assuming that n is a positive integer, return the position
+      (from 0 to 62) of the leading bit, that is, the k such that
+      n >= 2^k, but n < 2^(k+1). */
+{
+   unsigned int k;
+
+   for (k = 0; n >= 2; n /= 2, k++);
+
+   return k;
+}
+
+
 static void mpcr_normalise_rnd (mpcr_ptr r, mpfr_rnd_t rnd)
    /* The function computes a normalised value for the potentially
       unnormalised r; depending on whether rnd is MPFR_RNDU or MPFR_RNDD,
       the result is rounded up or down. */
 {
+   unsigned int k;
+
    if (mpcr_zero_p (r))
       MPCR_EXP (r) = 0;
    else if (!mpcr_inf_p (r)) {
-      if (MPCR_MANT (r) < MPCR_MANT_MIN) {
-         /* This is an unlikely case, since most of the time radii
-            increase. */
-         do {
-            MPCR_MANT (r) <<= 1;
-            MPCR_EXP (r)--;
-         } while (MPCR_MANT (r) < MPCR_MANT_MIN);
+      k = leading_bit (MPCR_MANT (r));
+      if (k <= 30) {
+         MPCR_MANT (r) <<= 30 - k;
+         MPCR_EXP (r) -= 30 - k;
       }
-      else if (MPCR_MANT (r) >= MPCR_MANT_MAX) {
-         do {
-         /* TODO: Search for the leading bit by binary search. */
-            MPCR_MANT (r) >>= 1;
-            MPCR_EXP (r)++;
-         } while (MPCR_MANT (r) >= MPCR_MANT_MAX);
+      else {
+         MPCR_MANT (r) >>= k - 30;
+         MPCR_EXP (r) += k - 30;
          if (rnd == MPFR_RNDU)
             mpcr_add_one_ulp (r);
       }
