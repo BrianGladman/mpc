@@ -20,6 +20,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #include <stdio.h>
 #include <math.h>
+#include <stdint.h>
 #include "mpc-impl.h"
 
 #define MPCR_MANT(r) ((r)->mant)
@@ -270,43 +271,58 @@ void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s, const unsigned long int e)
 }
 
 
+int64_t sqrt_int64 (int64_t n)
+   /* Assuming that 2^30 <= n < 2^32, return ceil (sqrt (n*2^30)). */
+{
+   uint64_t N, s, t;
+   int i;
+
+   /* We use the "Babylonian" method to compute an integer square root of N;
+      replacing the geometric mean sqrt (N) = sqrt (s * N/s) by the
+      arithmetic mean (s + N/s) / 2, rounded up, we obtain an upper bound
+      on the square root. */
+   N = ((uint64_t) n) << 30;
+   s = ((uint64_t) 1) << 31;
+   for (i = 0; i < 5; i++) {
+      t = s << 1;
+      s = (s * s + N + t - 1) / t;
+   }
+
+   /* Exhaustive search over all possible values of n shows that with
+      6 or more iterations, the method computes ceil (sqrt (N)) except
+      for squares N, where it stabilises on sqrt (N) + 1.
+      So we need to add a check for s-1; it turns out that then
+      5 iterations are enough. */
+   if ((s - 1) * (s - 1) >= N)
+      return s - 1;
+   else
+      return s;
+}
+
+
 static void mpcr_sqrt_rnd (mpcr_ptr r, mpcr_srcptr s, mpfr_rnd_t rnd)
     /* Set r to the square root of s, rounded according to whether rnd is
        MPFR_RNDU or MPFR_RNDD. */
 {
-   double root;
-   int e;
-
    if (mpcr_inf_p (s))
       mpcr_set_inf (r);
    else if (mpcr_zero_p (s))
       mpcr_set_zero (r);
    else {
-      /* We assume a correctly rounding floating point sqrt in arbitrary
-         rounding direction.
-         TODO: Replace by a 31-bit square root using Newton iterations. */
       if (MPCR_EXP (s) % 2 == 0) {
-         /* Go from 31 to 53 significant digits, compute the square root
-            with an error of at most 1ulp. */
-         root = sqrt ((double) (MPCR_MANT (s) << 22));
-         /* Transform the double number exactly into an int64_t. */
-         root = frexp (root, &e);
-         MPCR_MANT (r) = (int64_t) (root * (((int64_t) 1) << 53));
-         MPCR_EXP (r) = e - 53 + (MPCR_EXP (s) - 22) / 2;
+         MPCR_MANT (r) = sqrt_int64 (MPCR_MANT (s));
+         MPCR_EXP (r) = MPCR_EXP (s) / 2 - 15;
       }
       else {
-         root = sqrt ((double) (MPCR_MANT (s) << 21));
-         root = frexp (root, &e);
-         MPCR_MANT (r) = (int64_t) (root * (((int64_t) 1) << 53));
-         MPCR_EXP (r) = e - 53 + (MPCR_EXP (s) - 21) / 2;
+         MPCR_MANT (r) = sqrt_int64 (2 * MPCR_MANT (s));
+         MPCR_EXP (r) = (MPCR_EXP (s) - 1) / 2 - 15;
       }
-      /* Add or subtract 1ulp. If root were known with a directed rounding
-         mode, one of them could be dropped. */
-      if (rnd == MPFR_RNDU)
-         MPCR_MANT (r)++;
-      else
+      /* Now we have 2^30 <= r < 2^31, so r is normalised;
+         if r == 2^30, then furthermore the square root was exact,
+         so we do not need to subtract 1 ulp when rounding down and
+         preserve normalisation. */
+      if (rnd == MPFR_RNDD && MPCR_MANT (r) != ((int64_t) 1) << 30)
          MPCR_MANT (r)--;
-      mpcr_normalise_rnd (r, rnd);
    }
 }
 
