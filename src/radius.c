@@ -464,6 +464,41 @@ void mpcr_add (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 }
 
 
+void mpcr_sub_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t, mpfr_rnd_t rnd)
+   /* Set r to s - t, rounded according to whether rnd is MPFR_RNDU or
+       MPFR_RNDD.; if the result were negative, it is set to infinity. */
+{
+   int64_t d;
+   int cmp;
+
+   cmp = mpcr_cmp (s, t);
+   if (mpcr_inf_p (s) || mpcr_inf_p (t) || cmp < 0)
+      mpcr_set_inf (r);
+   else if (cmp == 0)
+      mpcr_set_zero (r);
+   else if (mpcr_zero_p (t))
+      mpcr_set (r, s);
+   else {
+      /* Now all numbers are positive and normalised, and s > t. */
+      d = MPCR_EXP (s) - MPCR_EXP (t);
+      if (d >= 64)
+         MPCR_MANT (r) = MPCR_MANT (s);
+      else
+         MPCR_MANT (r) = MPCR_MANT (s) - (MPCR_MANT (t) >> d);
+      MPCR_EXP (r) = MPCR_EXP (s);
+      if (rnd == MPFR_RNDD)
+         MPCR_MANT (r)--;
+      mpcr_normalise_rnd (r, rnd);
+   }
+}
+
+
+void mpcr_sub (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
+{
+   mpcr_sub_rnd (r, s, t, MPFR_RNDU);
+}
+
+
 void mpcr_div (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 {
    if (mpcr_inf_p (s) || mpcr_inf_p (t))
