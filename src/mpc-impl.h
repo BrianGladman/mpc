@@ -176,6 +176,8 @@ __MPC_DECLSPEC void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s,
    const unsigned long int e);
 __MPC_DECLSPEC int64_t sqrt_int64 (int64_t n);
 __MPC_DECLSPEC void mpcr_sqrt (mpcr_ptr r, mpcr_srcptr s);
+__MPC_DECLSPEC void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p,
+   mpfr_rnd_t rnd);
 __MPC_DECLSPEC void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd);
 
 /* Functions for mpc. */

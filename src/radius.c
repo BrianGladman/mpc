@@ -563,6 +563,27 @@ static void mpcr_mpfr_abs_rnd (mpcr_ptr r, mpfr_srcptr z, mpfr_rnd_t rnd)
 }
 
 
+void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p, mpfr_rnd_t rnd)
+   /* Replace r, radius of a complex ball, by the new radius obtained after
+      rounding both parts of the centre of the ball in direction rnd at
+      precision t.
+      Otherwise said:
+      r += ldexp (1 + r, -p) for rounding to nearest, adding 0.5ulp;
+      r += ldexp (1 + r, 1-p) for directed rounding, adding 1ulp.
+   */
+{
+   mpcr_t s;
+
+   mpcr_set_one (s);
+   mpcr_add (s, s, r);
+   if (rnd == MPFR_RNDN)
+      mpcr_div_2ui (s, s, p);
+   else
+      mpcr_div_2ui (s, s, p-1);
+   mpcr_add (r, r, s);
+}
+
+
 void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd)
     /* Compute a bound on mpc_abs (z) in r.
        rnd can take either of the values MPFR_RNDU and MPFR_RNDD, and

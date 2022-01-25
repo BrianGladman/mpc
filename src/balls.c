@@ -21,30 +21,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include "mpc-impl.h"
 
 
-static void add_rounding_error (mpcr_ptr r, mpfr_prec_t p, mpfr_rnd_t rnd)
-   /* Replace r, radius of a complex ball, by the new radius obtained after
-      rounding both parts of the centre of the ball in direction rnd at
-      precision t.
-      Otherwise said:
-      r += ldexp (1 + r, -p) for rounding to nearest, adding 0.5ulp;
-      r += ldexp (1 + r, 1-p) for directed rounding, adding 1ulp.
-      It is assumed that the rounding mode is already set to FE_UPWARD
-      when this function is called, and that floating point exceptions
-      are handled outside the call.
-   */
-{
-   mpcr_t s;
-
-   mpcr_set_one (s);
-   mpcr_add (s, s, r);
-   if (rnd == MPFR_RNDN)
-      mpcr_div_2ui (s, s, p);
-   else
-      mpcr_div_2ui (s, s, p-1);
-   mpcr_add (r, r, s);
-}
-
-
 void mpcb_out_str (FILE *f, mpcb_srcptr op)
 {
    mpc_out_str (f, 10, 0, op->c, MPC_RNDNN);
@@ -135,7 +111,7 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    mpcr_add (r, r, z1->r);
    mpcr_add (r, r, z2->r);
    /* error of rounding to nearest */
-   add_rounding_error (r, p, MPFR_RNDN);
+   mpcr_add_rounding_error (r, p, MPFR_RNDN);
    mpcr_set (z->r, r);
 }
 
@@ -169,7 +145,7 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    mpcr_add (r, r, s);
    mpcr_div (r, r, denom);
    /* error of directed rounding */
-   add_rounding_error (r, p, MPFR_RNDZ);
+   mpcr_add_rounding_error (r, p, MPFR_RNDZ);
 
    if (overlap)
       mpc_clear (z->c);
@@ -199,7 +175,7 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
       mpcr_mul (r, r, z1->r);
       mpcr_div_2ui (r, r, 1);
       /* error of rounding to nearest */
-      add_rounding_error (r, p, MPFR_RNDN);
+      mpcr_add_rounding_error (r, p, MPFR_RNDN);
    }
 
    if (!overlap)
