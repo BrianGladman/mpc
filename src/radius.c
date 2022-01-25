@@ -501,13 +501,10 @@ void mpcr_sub (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 
 void mpcr_div (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 {
-   if (mpcr_inf_p (s) || mpcr_inf_p (t))
+   if (mpcr_inf_p (s) || mpcr_inf_p (t) || mpcr_zero_p (t))
       mpcr_set_inf (r);
    else if (mpcr_zero_p (s))
-      if (mpcr_zero_p (t))
-         mpcr_set_inf (r);
-      else
-         mpcr_set_zero (r);
+      mpcr_set_zero (r);
    else {
       MPCR_MANT (r) = (MPCR_MANT (s) << 32) / MPCR_MANT (t) + 1;
       MPCR_EXP (r) = MPCR_EXP (s) - 32 - MPCR_EXP (t);
