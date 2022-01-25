@@ -271,6 +271,7 @@ __MPC_DECLSPEC void mpcb_init_set_c (mpcb_ptr, mpc_srcptr);
 __MPC_DECLSPEC void mpcb_mul (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_add (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_sqrt (mpcb_ptr, mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_div (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_div_2ui (mpcb_ptr, mpcb_srcptr, unsigned long int);
 __MPC_DECLSPEC int mpcb_can_round (mpcb_srcptr, mpfr_prec_t, mpfr_prec_t);
 __MPC_DECLSPEC void mpcb_round (mpc_ptr, mpcb_srcptr);

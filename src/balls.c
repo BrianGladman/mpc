@@ -186,6 +186,36 @@ mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
 
 
 void
+mpcb_div (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
+{
+   mpcr_t r, s;
+   mpfr_prec_t p = MPC_MIN (mpcb_get_prec (z1), mpcb_get_prec (z2));
+   int overlap = (z == z1 || z == z2);
+   mpc_t zc;
+
+   if (overlap)
+      mpc_init2 (zc, p);
+   else {
+      zc [0] = z->c [0];
+      mpc_set_prec (zc, p);
+   }
+   mpc_div (zc, z1->c, z2->c, MPC_RNDNN);
+   if (overlap)
+      mpc_clear (z->c);
+   z->c [0] = zc [0];
+
+   /* generic error of division */
+   mpcr_add (r, z1->r, z2->r);
+   mpcr_set_one (s);
+   mpcr_sub_rnd (s, s, z2->r, MPFR_RNDD);
+   mpcr_div (r, r, s);
+   /* error of rounding to nearest */
+   mpcr_add_rounding_error (r, p, MPFR_RNDN);
+   mpcr_set (z->r, r);
+}
+
+
+void
 mpcb_div_2ui (mpcb_ptr z, mpcb_srcptr z1, unsigned long int e)
 {
    mpc_div_2ui (z->c, z1->c, e, MPC_RNDNN);
