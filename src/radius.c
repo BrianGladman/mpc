@@ -59,7 +59,193 @@ static unsigned int leading_bit (int64_t n)
 {
    unsigned int k;
 
-   for (k = 0; n >= 2; n /= 2, k++);
+   if (n & (((uint64_t) 0x7fffffff) << 32))
+      if (n & (((uint64_t) 0x7fff) << 48))
+         if (n & (((uint64_t) 0x7f) << 56))
+            if (n & (((uint64_t) 0x7) << 60))
+               if (n & (((uint64_t) 0x1) << 62))
+                  k = 62;
+               else
+                  if (n & (((uint64_t) 0x1) << 61))
+                     k = 61;
+                  else
+                     k = 60;
+            else
+               if (n & (((uint64_t) 0x3) << 58))
+                  if (n & (((uint64_t) 0x1) << 59))
+                     k = 59;
+                  else
+                     k = 58;
+               else
+                  if (n & (((uint64_t) 0x1) << 57))
+                     k = 57;
+                  else
+                     k = 56;
+         else
+            if (n & (((uint64_t) 0xf) << 52))
+               if (n & (((uint64_t) 0x3) << 54))
+                  if (n & (((uint64_t) 0x1) << 55))
+                     k = 55;
+                  else
+                     k = 54;
+               else
+                  if (n & (((uint64_t) 0x1) << 53))
+                     k = 53;
+                  else
+                     k = 52;
+            else
+               if (n & (((uint64_t) 0x3) << 50))
+                  if (n & (((uint64_t) 0x1) << 51))
+                     k = 51;
+                  else
+                     k = 50;
+               else
+                  if (n & (((uint64_t) 0x1) << 49))
+                     k = 49;
+                  else
+                     k = 48;
+      else
+         if (n & (((uint64_t) 0xff) << 40))
+            if (n & (((uint64_t) 0xf) << 44))
+               if (n & (((uint64_t) 0x3) << 46))
+                  if (n & (((uint64_t) 0x1) << 47))
+                     k = 47;
+                  else
+                     k = 46;
+               else
+                  if (n & (((uint64_t) 0x1) << 45))
+                     k = 45;
+                  else
+                     k = 44;
+            else
+               if (n & (((uint64_t) 0x3) << 42))
+                  if (n & (((uint64_t) 0x1) << 43))
+                     k = 43;
+                  else
+                     k = 42;
+               else
+                  if (n & (((uint64_t) 0x1) << 41))
+                     k = 41;
+                  else
+                     k = 40;
+         else
+            if (n & (((uint64_t) 0xf) << 36))
+               if (n & (((uint64_t) 0x3) << 38))
+                  if (n & (((uint64_t) 0x1) << 39))
+                     k = 39;
+                  else
+                     k = 38;
+               else
+                  if (n & (((uint64_t) 0x1) << 37))
+                     k = 37;
+                  else
+                     k = 36;
+            else
+               if (n & (((uint64_t) 0x3) << 34))
+                  if (n & (((uint64_t) 0x1) << 35))
+                     k = 35;
+                  else
+                     k = 34;
+               else
+                  if (n & (((uint64_t) 0x1) << 33))
+                     k = 33;
+                  else
+                     k = 32;
+   else
+      if (n & (((uint64_t) 0xffff) << 16))
+         if (n & (((uint64_t) 0xff) << 24))
+            if (n & (((uint64_t) 0xf) << 28))
+               if (n & (((uint64_t) 0x3) << 30))
+                  if (n & (((uint64_t) 0x1) << 31))
+                     k = 31;
+                  else
+                     k = 30;
+               else
+                  if (n & (((uint64_t) 0x1) << 29))
+                     k = 29;
+                  else
+                     k = 28;
+            else
+               if (n & (((uint64_t) 0x3) << 26))
+                  if (n & (((uint64_t) 0x1) << 27))
+                     k = 27;
+                  else
+                     k = 26;
+               else
+                  if (n & (((uint64_t) 0x1) << 25))
+                     k = 25;
+                  else
+                     k = 24;
+         else
+            if (n & (((uint64_t) 0xf) << 20))
+               if (n & (((uint64_t) 0x3) << 22))
+                  if (n & (((uint64_t) 0x1) << 23))
+                     k = 23;
+                  else
+                     k = 22;
+               else
+                  if (n & (((uint64_t) 0x1) << 21))
+                     k = 21;
+                  else
+                     k = 20;
+            else
+               if (n & (((uint64_t) 0x3) << 18))
+                  if (n & (((uint64_t) 0x1) << 19))
+                     k = 19;
+                  else
+                     k = 18;
+               else
+                  if (n & (((uint64_t) 0x1) << 17))
+                     k = 17;
+                  else
+                     k = 16;
+      else
+         if (n & (((uint64_t) 0xff) << 8))
+            if (n & (((uint64_t) 0xf) << 12))
+               if (n & (((uint64_t) 0x3) << 14))
+                  if (n & (((uint64_t) 0x1) << 15))
+                     k = 15;
+                  else
+                     k = 14;
+               else
+                  if (n & (((uint64_t) 0x1) << 13))
+                     k = 13;
+                  else
+                     k = 12;
+            else
+               if (n & (((uint64_t) 0x3) << 10))
+                  if (n & (((uint64_t) 0x1) << 11))
+                     k = 11;
+                  else
+                     k = 10;
+               else
+                  if (n & (((uint64_t) 0x1) << 9))
+                     k = 9;
+                  else
+                     k = 8;
+         else
+            if (n & (((uint64_t) 0xf) << 4))
+               if (n & (((uint64_t) 0x3) << 6))
+                  if (n & (((uint64_t) 0x1) << 7))
+                     k = 7;
+                  else
+                     k = 6;
+               else
+                  if (n & (((uint64_t) 0x1) << 5))
+                     k = 5;
+                  else
+                     k = 4;
+            else
+               if (n & (((uint64_t) 0x3) << 2))
+                  if (n & (((uint64_t) 0x1) << 3))
+                     k = 3;
+                  else
+                     k = 2;
+               else
+                  if (n & (((uint64_t) 0x1) << 1))
+                     k = 1;
+                  else
+                     k = 0;
 
    return k;
 }
