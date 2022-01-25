@@ -268,6 +268,7 @@ __MPC_DECLSPEC void mpcb_set_prec (mpcb_ptr, mpfr_prec_t);
 __MPC_DECLSPEC void mpcb_set (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_set_c (mpcb_ptr, mpc_srcptr);
 __MPC_DECLSPEC void mpcb_init_set_c (mpcb_ptr, mpc_srcptr);
+__MPC_DECLSPEC void mpcb_neg (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_mul (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_add (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_sqrt (mpcb_ptr, mpcb_srcptr);

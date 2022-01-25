@@ -88,6 +88,23 @@ mpcb_init_set_c (mpcb_ptr rop, mpc_srcptr op)
 
 
 void
+mpcb_neg (mpcb_ptr z, mpcb_srcptr z1)
+{
+   mpfr_prec_t p;
+   int overlap = (z == z1);
+
+   if (!overlap) {
+      p = mpcb_get_prec (z1);
+      if (mpcb_get_prec (z) != p)
+         mpcb_set_prec (z, p);
+   }
+
+   mpc_neg (z->c, z1->c, MPC_RNDNN); /* exact */
+   mpcr_set (z->r, z1->r);
+}
+
+
+void
 mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 {
    mpcr_t r;
