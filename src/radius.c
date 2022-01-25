@@ -302,6 +302,35 @@ int mpcr_lt_half_p (mpcr_srcptr r)
 }
 
 
+int mpcr_cmp (mpcr_srcptr r, mpcr_srcptr s)
+{
+   if (mpcr_inf_p (r))
+      if (mpcr_inf_p (s))
+         return 0;
+      else
+         return +1;
+   else if (mpcr_inf_p (s))
+      return -1;
+   else if (mpcr_zero_p (r))
+      if (mpcr_zero_p (s))
+         return 0;
+      else
+         return -1;
+   else if (mpcr_zero_p (s))
+      return +1;
+   else if (MPCR_EXP (r) > MPCR_EXP (s))
+      return +1;
+   else if (MPCR_EXP (r) < MPCR_EXP (s))
+      return -1;
+   else if (MPCR_MANT (r) > MPCR_MANT (s))
+      return +1;
+   else if (MPCR_MANT (r) < MPCR_MANT (s))
+      return -1;
+   else
+      return 0;
+}
+
+
 void mpcr_set_inf (mpcr_ptr r)
 {
    MPCR_MANT (r) = -1;
