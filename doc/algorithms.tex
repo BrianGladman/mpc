@@ -2291,7 +2291,7 @@ a contradiction since the algorithm has proceeded beyond the second step.
 \end {proof}
 
 
-\subsection{\texttt {mpc\_agm}, \texttt {mpc\_agm1}}
+\subsection{\texttt {mpc\_agm}}
 
 \paragraph {Definition.}
 Let $a$, $b$ be non-zero complex numbers.
@@ -2337,57 +2337,123 @@ $\Im (\corr {b_0})$ unless
 $\corr {b_0}$ is real, so this choice determines our branch cut for $\AGM$.
 
 So in the following, we analyse the computation of $\AGM (1, \appro {b_0})$
-with $\appro {b_0} = \round (\corr {b_0}) \in \C \backslash \R^{\geq 0}$,
-where the real and imaginary parts of $\appro {b_0}$ are rounded towards~$0$,
-which ensures $| \appro {b_0} | \leq 1$
+with
+$\appro {b_0} = \round (\corr {b_0})$
+for $b_0 \in (\C \backslash \R) \cup \left] -1, 1 \right[$,
+where the real and imaginary parts of $\appro {b_0}$ are rounded
+towards~$0$,
+which ensures $\left| \Re (\appro {b_0}) \right| < 1$
+and $| \appro {b_0} | \leq 1$
 with absolute errors of the real and imaginary parts at most \ulp {1}.
 In the following, relative errors will be most convenient to work with;
 by Proposition~\ref {prop:comabstorelerror} we have
 $\relerror (\appro {b_0}) \leq 2^{1-p}$, where $p$ is the working precision.
 
 
-\paragraph {The first iteration -- entering a quadrant.}
+\paragraph {Warm-up --- a note on angle~$0$.}
+
+As said, when the angle between $a$ and $b$ is~$0$, which is immediately
+detected from $\Im (\appro {b_0}) = 0$ (computed at any precision),
+then $\AGM (a, b) = a \AGM (1, b_0)$ with a real number $0 < b_0 < 1$.
+We need to consider the error induced by computing
+$\round \left( a \cdot \round \left( \AGM (1, \appro {b_0}) \right) \right)$
+instead.
+
+Recall that $b_0 = (1 + \theta) \appro {b_0}$ with
+$- \epsilon \leq \theta \leq \epsilon = 2^{1-p}$.
+Since for positive real numbers each step of the AGM is monotonous in
+each of the two arguments, so is the AGM itself, and we have
+\[
+\AGM (1, b_0)
+= \AGM \left( 1, (1 + \theta) \appro {b_0} \right)
+\leq \AGM \left( 1 + \epsilon, (1 + \epsilon) \appro {b_0} \right)
+\leq (1 + \epsilon) \AGM \left( 1, \appro {b_0} \right).
+\]
+By the same kind of argument
+\[
+\AGM (1, b_0) \geq (1 - \epsilon) \AGM \left( 1, \appro {b_0} \right).
+\]
+So the relative error of at most $\epsilon$ in the input $\appro {b_0}$
+is preserved by the AGM.
+
+By Proposition~\ref {prop:relerror} applied to non-representable numbers
+and Proposition~\ref {prop:expround} this relative error translates into
+an absolute error satisfying
+\[
+\left| \AGM (1, b_0) - \AGM \left( 1, \appro {b_0} \right) \right|
+\leq 2 \cdot 2^{\Exp \left( \AGM \left( 1, \appro {b_0} \right) \right)
+   - p}
+\leq 2 \cdot 2^{\Exp \left( \round \left(
+   \AGM \left( 1, \appro {b_0} \right) \right) \right) - p}
+\]
+of at most~\ulp {2} of the rounded value, and the final rounding of the
+\texttt {mpfr\_agm} function leads to a total error bounded by~\ulp {3}.
+
+We multiply this value by the exact~$a$; applying \eqref {eq:proprealmul}
+with $k_1 = 3$ and $k_2 = 0$ and taking the final rounding into account
+leads to an error of at most~\ulp {7} for the real and for the imaginary
+parts of the complex AGM.
+
+
+\paragraph {The first iteration --- entering a quadrant.}
 If $\Re (\appro {b_0}) < 0$, then significant cancellation can occur for the
 arithmetic mean in the first iteration, which thus needs to be analysed
 separately.
 
 From now on, we use arbitrary rounding modes and apply
-Proposition~\ref {prop:comrelround} with $c = 1$
-(except for $\Re (\appro {a_1})$, which we need to round down or,
-equivalently, towards~$0$ for a later step in the analysis).
+Proposition~\ref {prop:comrelround} with $c = 1$.
 We let $\corr {b_1} = \sqrt {\corr {b_0}}$ and
 $\appro {b_1} = \round \left( \sqrt {\appro {b_0}} \right)$ with
 \[
 \relerror (\appro {b_1}) \leq
 2^{1-p} + \left( 1 + 2^{1-p} \right) 2^{1-p}
-\leq 2^2 \cdot 2^{1-p}
+\leq (\sqrt 2)^3 \cdot 2^{1-p}
 \]
 by \eqref {eq:propsqrt} and Proposition~\ref {prop:comrelround}.
 We let $\corr {a_1} = \frac {1 + \corr {b_0}}{2}$ and
 $\appro {a_1} = \round \left( \frac {1 + \appro {b_0}}{2} \right)$.
 The imaginary part of $\appro {a_1}$ has an error of at most \ulp{1},
-but following the discussion of \S\ref {sssec:propadd}, its real part
+and the same holds for the real part if $\Re (\appro {b_0}) = 0$
+or equivalently $\Re (b_0) = 0$; otherwise following the discussion
+of \S\ref {sssec:propadd}, the real part of $\appro {a_1}$
 may have an absolute error measured in $\Ulp$ of
-\[
-2^{\Exp (\Re (\appro {b_0})) - \Exp (\Re (\appro {a_1}))} + 1
+\begin {equation}
+\label {eq:agmfirst}
+2^{\Exp (\Re (\appro {b_0} / 2)) - \Exp (\Re (\appro {a_1}))} + 1
 \leq
-2^{- \Exp (\Re (\appro {a_1}))} + 1
+2^{- \Exp (\Re (\appro {a_1})) - 1} + 1
 \leq
-2^{- \Exp (\Re (\appro {a_1})) + 1},
-\]
-where we used that both $\Re (\appro {b_0})$ and $\Re (\appro {a_1})$ have
-non-positive exponents.
+2^{- \Exp (\Re (\appro {a_1})) + 2},
+\end {equation}
+where we have used that $\Exp (\Re (\appro {b_0})) \leq 0$
+and $\Exp (\Re (\appro {a_1})) \leq 1$.
+This bound also holds for $\Re (b_0) = 0$.
 By Proposition~\ref {prop:comabstorelerror},
 \[
 \relerror (\appro {a_1})
 \leq
-2^{- \Exp (\Re (\appro {a_1})) + 1} \cdot 2^{1-p}.
+2^{- \Exp (\Re (\appro {a_1})) + 2} \cdot 2^{1-p}.
 \]
-If $\Re (\appro {b_0}) \geq 0$, then $\Exp (\Re (\appro {a_1})) = 0$, and
+If $\Re (\appro {b_0}) \geq 0$, then $\Exp (\Re (\appro {a_1})) \geq 0$, and
 we obtain a bound that is similar to the one above for
 $\relerror (\appro {b_1})$. If $\appro {b_0}$ approaches $-1$, then
 the relative error in $\appro {a_1}$ becomes arbitrarily bad, as
 $\appro {a_1}$ becomes arbitrarily small.
+
+\noindent
+Letting
+\begin {equation}
+\label {eq:agmk1}
+k_1 = \max \left( 3, - 2 \Exp (\Re (\appro {a_1})) + 4 \right)
+\end {equation}
+we obtain an upper bound of
+\begin {equation}
+\label {eq:agmerr1}
+\relerror (\appro {a_1}), \relerror (\appro {b_1})
+\leq
+\left( \sqrt 2 \right)^{k_1} \cdot 2^{1-p}
+\end {equation}
+on the loss of precision in the first iteration.
 
 Notice that, independently of the rounding mode,
 $\appro {a_1}$ and $\appro {b_1}$ lie in the same complex quadrant
@@ -2400,25 +2466,29 @@ and thus not see any more cancellation in the arithmetic mean.
 
 \paragraph {The idea of the analysis.}
 
-Let us first give the basic idea of the following, rather technical analysis.
-Assume a target precision of $N$ bits, that is, a target
-relative error of $2^{-N}$. If $a$ and $b$ are of roughly equal size, the AGM
+Let us first give the basic idea of the following, rather technical
+analysis.
+Assume a target precision of $N$ bits, that is, a target relative error
+of $2^{-N}$. If $a_0$ and $b_0$ are of roughly equal size, the AGM
 iteration converges quadratically, that is, the number of correct digits
-doubles in each step, and we need about $\log_2 N$ iterations. Unfortunately,
-when $a$ and $b$ are of very different sizes, we have slower convergence.
-To illustrate this, consider $a = 1$ and $b = 2^{-e}$; during the first
+doubles in each step, and we need about $\log_2 N$ iterations.
+Unfortunately, when $a_0$ and $b_0$ are of very different sizes, we have
+slower convergence. To illustrate this, consider $a_0 = 1$ and
+$b_0 = 2^{-e}$; during the first
 iterations, $a_n \approx 2^{-n}$ and $b_n \approx 2^{-e/2^n}$. So we need
 to increase the number of iterations by roughly $\log_2$ of the absolute
-value of the exponent of $b/a$; the precise bound $B (N)$ on the number
-of iterations is given in~\eqref {eq:agmbound}.
-Moreover, when $\Re (b/a) < 0$, the situation of
-very different exponents in $a$ and $b$ may occur after one iteration through
-cancellation as explained above.
+value of the exponent of $b_0/a_0$; the precise bound
+$B \left( N, \appro {b_0}, \appro {a_1} \right)$ on
+the number of iterations is given in~\eqref {eq:agmbound}.
+Moreover, when $\Re (b/a) < 0$, the situation of very different exponents
+in $a$ and $b$ may occur after one iteration through cancellation as
+explained above.
 
 Unlike Newton iterations, AGM iterations are not auto-correcting, but
 rounding errors propagate. We lose a constant number of bits per iteration;
 so to reach the desired precision of $N$ bits, we need to carry out all
-computations at a working precision of about $p = N + c B (N, b/a)$.
+computations at a working precision of
+$p \in N + O \left( B (N, \appro {b_0}, \appro {a_1}) \right)$.
 The following discussion provides explicit bounds for all these quantities.
 
 
@@ -2444,91 +2514,114 @@ $\appro {a_n}$ and $\appro {b_n}$ lie in the same quadrant as
 $\appro {a_1}$ and $\appro {b_1}$
 (or, for that matter, $\corr {a_1}$ and $\corr {b_1}$).
 
-Let $\alpha_n = \relerror (\appro {a_n}) / 2^{1-p}$,
-$\gamma_n = \relerror (\appro {c_n}) / 2^{1-p}$ and
-$\beta_n = \relerror (\appro {b_n}) / 2^{1-p}$.
+Let $\alpha_n = \relerror (\appro {a_n})$,
+$\gamma_n = \relerror (\appro {c_n})$ and
+$\beta_n = \relerror (\appro {b_n})$.
 
+\noindent
 By \eqref {eq:propaddrel} and Proposition~\ref {prop:comrelround},
 \begin {equation}
 \label {eq:agmalpha}
 \alpha_n \leq
 \sqrt 2 \, \max (\alpha_{n-1}, \beta_{n-1})
-\left( 1 + 2^{1-p} \right) + 1.
+\left( 1 + 2^{1-p} \right) + 2^{1-p}.
 \end {equation}
 By \eqref {eq:propmulrel} and Proposition~\ref {prop:comrelround},
 \begin {equation}
 \label {eq:agmgamma}
 \gamma_n \leq
-\left( \alpha_{n-1} + \beta_{n-1} + \alpha_{n-1} \beta_{n-1} 2^{1-p} \right)
-\left( 1 + 2^{1-p} \right) + 1.
+\left( \alpha_{n-1} + \beta_{n-1} + \alpha_{n-1} \beta_{n-1} \right)
+\left( 1 + 2^{1-p} \right) + 2^{1-p}.
 \end {equation}
-If we assume for the time being that $\gamma_n \leq 1 / (2^{1-p})$
-(which will be shown under additional constraints later), then
-\eqref {eq:propsqrt} and Proposition~\ref {prop:comrelround} imply
+By \eqref {eq:propsqrt} and Proposition~\ref {prop:comrelround},
 \begin {equation}
 \label {eq:agmbeta}
 \beta_n \leq
-\gamma_n (1 + 2^{1-p}) + 1.
+\frac {1}{\sqrt 3} \, \gamma_n (1 + 2^{1-p}) + 2^{1-p}
+\text { if } \gamma_n \leq \frac {1}{4}.
 \end {equation}
 
-Let $r_n = (2^n - 1) r_1$ for some integer $r_1$ such that
-$\alpha_1$, $\beta_1 \leq r_1$.
-We may use $r_1 = 2^k$ with $k = \max (2, - \Exp (\Re (\appro {a_1}) + 1))$
-by the discussion of the first iteration above.
+Let $r_n = \left( (\sqrt 2)^{n+1} - 1 \right) r_1$ for some integer $r_1$
+such that $\alpha_1$, $\beta_1 \leq r_1 2^{1-p}$.
+We may use $r_1 = (\sqrt 2)^{k_1}$ with $k_1$ as in \eqref {eq:agmk1},
+so that $r_n \leq (\sqrt 2)^{n + k_1 + 1}$.
 We now show by induction that
-$\alpha_n, \beta_n \leq r_n \leq 2^{n + k}$ for $p \geq 2 (n + k) - 1$,
-that is, if the number of iterations $n$ is not too large compared to
+$\alpha_n, \beta_n \leq r_n 2^{1-p}$
+if the number of iterations $n$ is not too large compared to
 the working precision $p$.
-By \eqref {eq:agmgamma} we obtain
+For $n=1$, this follows from \eqref {eq:agmerr1} and the definition
+of~$r_1$.
+
+As a preparation for the induction step and taking the shape
+of~\eqref {eq:agmalpha} to~\eqref {eq:agmbeta} into account, we carry out
+the following computation for $n \geq 2$, $p \geq 2$,
+$\frac {289 (\sqrt 2 + 1)}{512} \leq \gamma \leq 2$
+(we will only need $\gamma \in \{ \sqrt 2, 2 \}$ later) and
+$0 \leq \delta \leq 1$ (we will only need $\delta \in \{ 0, 1 \}$):
 \[
-\gamma_n \leq
-2 r_{n-1} + 1 +
-\left( r_{n-1}^2 + 2 r_{n-1} + r_{n-1}^2 2^{1-p} \right) 2^{1-p}.
+\begin {aligned}
+R (n, \gamma, \delta) &:=
+  \left( \gamma r_{n-1} + \delta r_{n-1}^2 \, 2^{1-p} \right)
+   \left( 1 + 2^{1-p} \right) + 1 \\
+& = \left( \gamma + \delta r_{n-1} \, 2^{1-p} \right) r_{n-1} + 1
+   + 2^{1-p} \left( \gamma r_{n-1} + \delta r_{n-1}^2 \, 2^{1-p} \right) \\
+& \leq \left( \gamma + \delta (\sqrt 2)^{n + k_1 + 2 - 2 p} \right) r_{n-1}
+   + 1 +
+   2^{1-p} \left( (\sqrt 2)^{n + k_1 + 2} + 2^{n + k_1 + 1 - p} \right)
+\end {aligned}
 \]
-From $r_{n-1} < 2^{n - 1 + k}$ we deduce
-\[
-r_{n-1}^2 2^{1-p} < 2^{2 (n + k) - 1 - p} \leq 1
-\]
-as long as $p \geq 2 (n + k) - 1$, and then, under the same condition,
-\[
-\left( r_{n-1}^2 + 2 r_{n-1} + r_{n-1}^2 2^{1-p} \right) 2^{1-p}
-\leq
-(r_{n-1} + 1)^2 \, 2^{1-p} \leq (2^{n+k-1})^2 \, 2^{1-p} \leq 1.
-\]
-Then
-\[
-\gamma_n
-\leq
-2 r_{n-1} + 2
-\leq
-r_n - 2.
-\]
-By \eqref {eq:agmbeta},
-\[
-\beta_n
-\leq
-r_n - 1 + r_n 2^{1-p}
-\leq
-r_n - 1 + 2^{n+k+1-p}
-\leq r_n
-\]
-under a milder than the previous condition. Finally by \eqref {eq:agmalpha},
-for $p \geq 3$,
-\[
+So assuming $p \geq \frac {n + k_1 + 10}{2}$ we have
+\begin {eqnarray*}
+R (n, \gamma, \delta)
+& \leq & \left( \gamma + \delta (\sqrt 2)^{-8} \right) r_{n-1}
+   + 289/256 \\
+& \leq & \frac {\left( \gamma + \delta (\sqrt 2)^{-8} \right)}{\sqrt 2}
+   \, r_n + 289/256
+   - \frac {\left( \gamma + \delta (\sqrt 2)^{-8} \right)}{\sqrt 2}
+   \left( r_n - \sqrt 2 \, r_{n-1} \right) \\
+& \leq & \frac {\left( \gamma + \delta (\sqrt 2)^{-8} \right)}{\sqrt 2}
+   \, r_n + 289/256
+   - \frac {\left( \gamma + \delta (\sqrt 2)^{-8} \right)}{\sqrt 2}
+   \left( \sqrt 2 - 1 \right) (\sqrt 2)^3 \\
+&&   \text { since } r_1 \geq (\sqrt 2)^3 \\
+& \leq & \left( \frac {\gamma}{\sqrt 2} + \frac {\delta}{16 \sqrt 2} \right)
+   \, r_n
+   \text { since } \delta \geq 0
+   \text { and } \gamma \geq \frac {289 (\sqrt 2 + 1)}{512}.
+\end {eqnarray*}
+
+\noindent
+Using the induction hypothesis for $n \geq 2$ on \eqref {eq:agmalpha}
+and \eqref {eq:agmgamma}
+translates into
+\begin {eqnarray*}
 \alpha_n
-\leq
-\sqrt 2 \, r_{n-1} + 1 + \sqrt {2} \, r_{n-1} 2^{1-p}
-\leq \frac{5}{4} \sqrt{2} r_{n-1} + 1 \leq 2 r_{n-1} + r_1 = r_n.
-\]
-This finishes the induction argument.
-To summarise, we have for any fixed $n$ that
+& \leq & R (n, \sqrt 2, 0) \, 2^{1-p} \leq r_n 2^{1-p}, \\
+\gamma_n
+& \leq & R (n, 2, 1) \, 2^{1-p}
+\leq \sqrt 2 \cdot \frac {33}{32} \cdot r_{n-1} \, 2^{1-p} \\
+& \leq &
+\sqrt 6 \, r_{n-1} \, 2^{1-p} \\
+& \leq &
+4 \cdot (\sqrt 2)^{n + k_1} \cdot (\sqrt 2)^{- (n_1 + k_1 + 8)}
+= 1/4.
+\end {eqnarray*}
+So \eqref {eq:agmbeta} is valid, and substituting $\gamma_n$ by its
+upper bound $\sqrt 6 \, r_{n-1} \, 2^{1-p}$ yields
+\begin {eqnarray*}
+\beta_n
+& \leq & R (n, \sqrt 2, 0) \, 2^{1-p}
+\leq r_n 2^{1-p}.
+\end {eqnarray*}
+
+\noindent
+To summarise, we compute in iteration~$n$ approximations $\appro {a_n}$
+and $\appro {b_n}$ to~$a_n$ and~$b_n$ with a relative error bounded above by
 \begin {equation}
-\label {eq:propagm}
-\corr {a_n} = (1 + \theta_1) \appro {a_n}
-\text { with }
-|\theta_1| \leq 2^{n + k + 1 - p}
-\text { for }
-2 (n + k) - 1 \leq p.
+\label {eq:agmprec}
+2^{\frac {n + k_1 + 3}{2} - p}
+\text { assuming that the working precision satisfies }
+p \geq \frac {n + k_1}{2} + 5.
 \end {equation}
 
 
@@ -2540,7 +2633,8 @@ consider the optimal AGM sequences $(a_n')$ and $(b_n')$ computed (with
 infinite precision) from $a_0' = 1$ and $b_0' = z$. Let $N' \in \N$ and
 \[
 n \geq B' (N', z)
-  := \max \left( 1, \left\lceil \log_2 |\log_2 |z|| \right\rceil \right)
+  := \max \left( 1, \left\lceil \log_2 \big| \log_2 |z| \big|
+     \right\rceil \right)
         + \lceil \log_2 (N'+2) \rceil + 2
 \]
 (where $\log_2 0$ is to be understood as $- \infty$).
@@ -2557,53 +2651,179 @@ and the approximated values reversed compared to our definition.)
 In our context, we may have $\Re (\corr {b_0}) < 0$, but after one iteration,
 $\Re (\corr {b_1} / \corr {a_1}) \geq 0$. So we consider
 $\corr {z} = b_0' = \corr {b_1} / \corr {a_1}$, so that by
-homogeneity, $\corr {a_n} = \corr {a_1} a_{n-1}'$,
-$\corr {b_n} = \corr {a_1} b_{n-1}'$ and
+homogeneity, $\corr {a_{n+1}} = \corr {a_1} a_n'$,
+$\corr {b_{n+1}} = \corr {a_1} b_n'$ and
 $\AGM (1, \corr {b_0}) = \AGM (\corr {a_1}, \corr {b_1})
 = \corr {a_1} \AGM (1, \corr {z})$.
-Here
+Thus we need bounds on
 \[
 |z|
 = \left| \frac {\corr {b_1}}{\corr {a_1}} \right|
-= \frac {|\sqrt {\corr {b_0}}|}{|\corr {a_1}|}
-= \frac {|\corr {b_0}|}{2 |\corr {a_1}|}
+= \frac {|\sqrt {\corr {b_0}}|}{|\corr {a_1}|}.
 \]
-is bounded above by
-\[
-\frac {1}{2 \, \Re (\corr {a_1})}
+Since we have to decide on the number of iterations from approximations
+to $b_0$ and $a_1$ instead of the correct values, we may wish to replace
+$b_0$ by $\appro {b_0}$ and $a_1$ by $\appro {a_1}$. (In fact the
+arguments will be quite delicate and switch between the different
+quantities.) The relative errors derived above on $\appro {b_0}$ of
+$2^{1-p}$ and on $\appro {a_1}$ of $(\sqrt 2)^{k_1} \, 2^{1-p}$ with
+$p \geq k_1 / 2 + 5 \geq 5$ are tight enough to conclude that
+\begin {equation}
+\label {eq:agmabsz}
+\frac {1}{\sqrt 2} \,
+\frac {\left| \sqrt {\appro {b_0}} \right|}{|\appro {a_1}|}
 \leq
-2^{- \Exp (\Re (\corr {a_1}))}
-=
-2^{- \Exp (\Re (\appro {a_1}))}
-\]
-(since $\Re (\appro {a_1})$ was rounded down)
-and below by
+|z|
+\leq
+\sqrt 2 \,  \frac {\left| \sqrt {\appro {b_0}} \right|}{|\appro {a_1}|},
+\end {equation}
+where any of the $\appro {b_0}$ and $\appro {a_1}$ may be replaced by
+$b_0$ and $a_1$, respectively (and of course the factors $\sqrt 2$
+disappear when both are replaced in a formula and we fall back to the
+above equality).
+
+The quantity of interest is a (double) logarithm, so it is helpful to
+consider the (easily available) exponents of the numbers. Recall that
+$\appro {b_0} = \round ({b_0})$,
+$\appro {a_1} = \round \left( \frac {1 + \appro {b_0}}{2} \right)$ so that
+$\Im (\appro {a_1}) = \Im (\appro {b_0}) / 2
+= \round (\Im (b_0)) / 2 = \round (\Im (a_1))$.
+Hence we may apply Proposition~\ref {prop:expround} to $\Re (\appro {b_0})$,
+$\Im (\appro {b_0})$ and $\Im (\appro {a_1})$ and obtain
 \[
-\frac {|\corr {b_0}|}{2}
-\geq
-\frac {1}{2} \, \max \left( \Re (\corr {b_0}), |\Im (\corr {b_0})| \right)
-\geq
-\frac {1}{4} \,
-2^{\max \left( \Exp (\Re (\corr {b_0})), \Exp (\Im (\corr {b_0})) \right)}
-=
-2^{\max \left( \Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \right)
-- 2}
+\Exp (\Re (b_0)) \leq \Exp (\Re (\appro {b_0})) \leq \Exp (\Re (b_0)) + 1
 \]
-(since both parts of $\appro {b_0}$ were rounded down).
-So for $n \geq B (N)$ with
+and so on.
+However
+$\Re (\appro {a_1}) = \round (1 + \round (\Re (b_0))) / 2$,
+which may be different from $\round (\Re (a_1))$ due to the double rounding.
+
+Recall the bounds in our setting that
+\[
+|b_0| \leq 1 \text {, so that }
+|a_1| = \left| \frac {b_0 + 1}{2} \right| \leq 1;
+\]
+thus interesting situations can occur only when either
+$|b_0|$ is small or $|a_1|$ is small, that is, $b_0$ is close to $-1$;
+and both cannot happen simultaneously. This leads to the following
+case distinction:
+\begin {enumerate}
+\item
+Assume $\Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \leq -1$.
+
+Then $\Exp (\Re (b_0)), \Exp (\Im (b_0)) \leq -1$, so
+$\Re (b_0), \Im (b_0) < 1/2$ and
+\[
+|b_0| \leq \frac {\sqrt 2}{2} < 1.
+\]
+This implies
+\[
+1 - \frac {\sqrt 2}{2} \leq 2 |a_1| \leq 1 + \frac {\sqrt 2}{2}
+\text { and }
+1/8 \leq |a_1| \leq 1,
+\]
+which leads to
+\[
+\frac {1}{\sqrt 2} \, \sqrt {\left| \appro {b_0} \right|} \leq |z| \leq 8
+\text { and }
+\big| \log_2 |z| \big| \leq
+\max \left(
+3, - \frac {1}{2} \, \log_2 \left| \appro {b_0} \right| + \frac {1}{2}
+\right).
+\]
+by \eqref {eq:agmabsz}
+(with $a_1$ everywhere, $b_0$ on the right and $\appro {b_0}$ on the left,
+which induces the factor~$1/\sqrt 2$ for the lower bound, but no
+factor~$\sqrt 2$ for the upper bound).
+
+Using the estimate
+\[
+\left| \appro {b_0} \right|
+\geq \max \left( |\Re (\appro {b_0})|, |\Im (\appro {b_0})| \right)
+\geq
+2^{\max \left( \Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \right)
+- 1}
+\]
+we finally obtain
+\begin {equation}
+\label {eq:agmlb}
+\big| \log_2 |z| \big| \leq
+\max \left(
+3, - \frac {1}{2} \,
+\max \left( \Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \right) + 1
+\right).
+\end {equation}
+
+\item
+Assume $\Exp (\Im (\appro {b_0})) \leq -1$ and
+$\Exp (\Re (\appro {a_1})) \leq -2$.
+
+Then $\Exp (\Re (a_1)), \Exp (\Im (a_1)) \leq -2$, so
+$|a_1| \leq (\sqrt 2) / 4$,
+whence
+\[
+1 - \frac {\sqrt 2}{2} \leq |b_0| \leq 1
+\text { and }
+1/2 \leq \sqrt {|b_0|} \leq 1,
+\]
+which leads to
+\[
+\sqrt 2 \leq |z| \leq \frac {\sqrt 2}{|\appro {a_1}|}
+\text {and }
+\big| \log_2 |z| \big| \leq
+- \log_2 \left| \appro {a_1} \right| + \frac {1}{2}.
+\]
+which in exponents can be expressed as
+\begin {equation}
+\label {eq:agmla}
+\big| \log_2 |z| \big| \leq
+- \max \left( \Exp (\Re (\appro {a_1})), \Exp (\Im (\appro {b_0})) - 1 \right)
++ \frac {3}{2}.
+\end {equation}
+
+\item
+In the remaining case, one or both of
+$\Exp (\Re (\appro {b_0}))$ and $\Exp (\Im (\appro {b_0}))$
+are at least~$0$, so that one or both of
+$\Exp (\Re (b_0))$ and $\Exp (\Im (b_0))$
+are at least~$-1$, and
+\[
+\frac {1}{4} \leq |b_0| \leq 1 \text { and }
+\frac {1}{2} \leq \sqrt {|b_0|} \leq 1.
+\]
+Furthermore,
+$\Exp (\Re (\appro {a_1})) \geq -1$, so that
+$\Exp (\Re (a_1)) \geq -2$;
+or $\Exp (\Im (\appro {b_0})) \geq 0$, so that
+$\Exp (\Im (a_1)) = \Exp (\Im (b_0)) - 1 \geq -2$.
+In both cases
+\[
+\frac {1}{8} \leq |a_1| \leq 1.
+\]
+Altogether
+\begin {equation}
+\label {eq:agml}
+\frac {1}{2} \leq |z| \leq 8
+\text { and }
+\big| \log_2 |z| \big| \leq 3.
+\end {equation}
+\end {enumerate}
+
+
+Letting $L (\appro {b_0}, \appro {a_1})$ denote the above bound on
+$|\log_2 |z||$ depending on the exponents occurring in $\appro {b_0}$
+and $\appro {a_1}$, and counting the additional first iteration to compute
+$\appro {a_1}$ and $\appro {b_1}$, not present in the above analysis,
+we fix a number of iterations~$n$ such that
+$n \geq B (N, \appro {b_0}, \appro {a_1})$ with
 \begin{equation}
 \label{eq:agmbound}
-\begin {aligned}
-B (N)
-  = & \left\lceil \log_2 \max (- \Exp (\Re (\appro {a_1})),
-                             - \Exp (\Re (\appro {b_0})) + 2,
-                             - \Exp (\Im (\appro {b_0})) + 2
-                             ) \right\rceil \\
-    & + \lceil \log_2 (N+4) \rceil + 3
-\end {aligned}
+B (N, \appro {b_0}, \appro {a_1})
+= \max \left( 1,
+   \left\lceil \log_2 L (\appro {b_0}, \appro {a_1}) \right\rceil \right)
++ \lceil \log_2 (N+4) \rceil + 3.
 \end{equation}
-(in which all exponents are non-positive)
-we reach
+Then
 \[
 \corr {a_n} = (1 + \theta_2) \AGM (1, \corr {b_0})
 \text { with }
@@ -2613,55 +2833,88 @@ we reach
 
 \paragraph {Total error and working precision.}
 
-Combining with \eqref {eq:propagm} we obtain
+Combining with \eqref {eq:agmprec}, we obtain for a sufficiently large
+precision~$p$ and sufficiently many iterations~$n$ that
 $\AGM (1, b_0) = \frac {1 + \theta_1}{1 + \theta_2} \appro {a_n}
 = (1 + \theta) \appro {a_n}$ with
+$|\theta_1| \leq 2^{\frac {n + k_1 + 3}{2} - p}$ and
+$|\theta_2| \leq 2^{-(N+2)}$, so that
 \[
 |\theta| \leq \frac {|\theta_1| + |\theta_2|}{|1 - |\theta_2||}
-\leq \frac {4}{3} \, \left( 2^{n+k+1-p} + 2^{-(N+2)} \right)
+\leq \frac {4}{3} \, \left( 2^{\frac {n+k_1+3}{2}-p} + 2^{-(N+2)} \right)
 \]
 for $N \geq 2$.
-So after $n = B (N)$ steps of the AGM iteration at a working precision
-of $p \geq N + n + k + 3$, we obtain $\appro {a_n}$ with a relative error
-bounded by $\epsilon = \frac {2}{3} \cdot 2^{-N}$.
+So after $n = B (N, \appro {b_0}, \appro {a_1})$ steps of the AGM iteration
+at a working precision of
+$p \geq N + \frac {n + k_1 + 7}{2} \geq \frac {n + k_1 + 10}{2}$,
+we obtain $\appro {a_n}$ which approximates $\AGM (1, b_0)$ with a
+relative error bounded by $\frac {2}{3} \cdot 2^{-N}$.
 
 Finally, we let $\corr {z} = \AGM (a, b) = a \AGM (1, \corr {b_0})$ and
 $\appro {z} = \round (\corr {a} \appro {a_n})$, where $a$ is known
 exactly.
-By~\eqref {eq:propmulrel} and Proposition~\ref {prop:comabstorelerror},
-using that $N \geq 2$ implies $B (N) \geq 7$ and $p \geq 12$,
+By~\eqref {eq:propmulrel} and Proposition~\ref {prop:comrelround},
+using that $N \geq 2$ and $k_1 \geq 3$ imply
+$n = B (N, \appro {b_0}, \appro {a_1}) \geq 7$ and
+$p \geq N + 8 \geq 10$,
 this leads to a relative error bounded by $2^{-N}$.
 
 
-\paragraph {Parameter choice.}
+\paragraph {Summary.}
 
-Recall that in our analysis, $k = \max (2, - \Exp (\Re (\appro {a_1}) + 1))$
-is given by the input data. As we need to know it before choosing the final
-precision, it should be computed from an approximation at a tiny precision,
-of $2$ bits, say.
-We may then choose a target relative error~$N$,
-which determines the number of iterations~$n = B (N)$ by~\eqref {eq:agmbound}.
-Then the working precision may be chosen as
+In our analysis, the working precision~$p$ depends on
 \[
-p = \max (2 (n + k) - 1,
-          N + n + k + 3).
+k_1 = \max (3, - 2 \Exp (\Re (\appro {a_1})) + 4)
+\]
+of~\eqref {eq:agmk1}, which in turn depends not only on the input data,
+but also on the working precision of the first AGM iteration. It is not
+enough to carry out this computation at arbitrarily low precision:
+Since $\appro {b_0}$ is computed as $a / b$ or $b / a$ depending on the
+respective sizes of the numbers and it is rounded, the computation
+of $\Re (\appro {a_1})$ requires double rounding, which may even lead to a
+wrong exponent if the precision is too low. Precisely, the exponent of
+$\Re (\appro {a_1})$ may only be wrong if $\Re (\appro {b_0})$ is so close
+to~$-1$ that it is rounded towards zero to $-1$ plus \ulp {1}, that is,
+$\Re (\appro {b_0}) = - (1 - 2^{-p})$. Then
+$\Re (\appro {a_1}) = 2^{- p - 1}$ with $\Exp (\Re (\appro {a_1})) = -p$
+has lost all information on $\Re (b_0)$ and reflects only the rounding
+error. In all other cases a significant digit is retained and the exponent
+is correct. So $k_1$ may be computed by increasing the precision for
+this precomputation until $\Exp (\Re (\appro {a_1})) > -p$.
+
+Then we fix a desired accuracy~$N$ (around the target precision plus a
+safety margin), compute $L (\appro {b_0}, \appro {a_1})$
+by~\eqref {eq:agmlb}, \eqref {eq:agmla} or~\eqref {eq:agml} and
+the number of iterations
+$n = B (N, \appro {b_0}, \appro {a_1})$ by~\eqref {eq:agmbound}
+(more often than not, this will result in $n = \lceil \log_2 N \rceil + 5$).
+Then the working precision is given by
+\[
+p = N + \left\lceil \frac {n + k_1 + 7}{2} \right\rceil.
 \]
 
 Using Propositions~\ref {prop:comrelerror} and~\ref {prop:relerror}, the
-complex relative error may be translated into an error expressed in $\Ulp$.
+complex relative error of~$2^{-N}$ may be translated into an error
+expressed in $\Ulp$.
 With $\appro {z} = \appro x + i \appro y$
 the computed approximation of $\corr {z} = \AGM (a, b)$, let
 $k_R = \max (\Exp (\appro y) - \Exp (\appro x) + 1, 0) + 1$, and
 $k_I = \max (\Exp (\appro x) - \Exp (\appro y) + 1, 0) + 1$.
 Then we have
-$\error (\appro x) \leq 2^{k_R + n + k + 3} \Ulp (\appro x)$ and
-$\error (\appro y) \leq 2^{k_I + n + k + 3} \Ulp (\appro y)$.
+$\error (\appro x) \leq 2^{k_R + p - N} \Ulp (\appro x)$ and
+$\error (\appro y) \leq 2^{k_I + p - N} \Ulp (\appro y)$.
 
 In practice, one should take this additional loss into account.
 If rounding fails after the first computation, nevertheless the values of
 $k_R$ and $k_I$ will most likely not change with a larger precision.
 So one should let $k' = \max (k_R, k_I)$, replace $N$ by $N + k'$
-and adapt the precision and number of iterations accordingly.
+and adapt the number of iterations and the working precision accordingly.
+
+The number of iterations is also slightly pessimistic in practice,
+in particular the additional constant in~\eqref {eq:agmbound}.
+So the computations may be stopped earlier if the numbers occurring in
+the AGM iterations do not change any more, since then additional
+iterations will fix the result.
 
 \nocite{Baudin11,Stewart85,Priest04,muller:hal-01766584,jeannerod:ensl-01780265}
 \bibliographystyle{acm}
