@@ -13,7 +13,7 @@
 This manual is for GNU MPC, a library for multiple precision complex arithmetic,
 version @value{VERSION} of @value{UPDATED-MONTH}.
 
-Copyright @copyright{} 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020 INRIA
+Copyright @copyright{} 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022 INRIA
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -1031,6 +1031,16 @@ respectively.
 Set @var{rop} to the standard primitive @var{n}-th root of unity raised to the power @var{k}, that is,
 @m{\exp (2 \pi i k / n),exp (2 Pi i k / n)},
 rounded according to @var{rnd} with the precision of @var{rop}.
+@end deftypefun
+
+@deftypefun int mpc_agm (mpc_t @var{rop}, const mpc_t @var{a}, const mpc_t @var{b}, mpc_rnd_t @var{rnd})
+Set @var{rop} to the arithmetic-geometric mean (AGM) of @var{a} and
+@var{b}, rounded according to @var{rnd} with the precision of @var{rop}.
+Concerning the branch cut, the function is computed by homogeneity either
+as @var{a} AGM(1,b0) with b0=@var{b}/@var{a} if |@var{a}|>=|@var{b}|,
+or as @var{b} AGM(1,b0) with b0=@var{a}/@var{b} otherwise;
+then when b0 is real and negative, AGM(1,b0) is chosen to have positive
+imaginary part.
 @end deftypefun
 
 

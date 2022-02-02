@@ -191,6 +191,7 @@ __MPC_DECLSPEC int  mpc_cmp_abs     (mpc_srcptr, mpc_srcptr);
 __MPC_DECLSPEC int  mpc_exp         (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_log         (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_log10       (mpc_ptr, mpc_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC int  mpc_agm         (mpc_ptr, mpc_srcptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_sin         (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_cos         (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_sin_cos     (mpc_ptr, mpc_ptr, mpc_srcptr, mpc_rnd_t, mpc_rnd_t);

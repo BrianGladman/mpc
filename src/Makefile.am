@@ -1,6 +1,6 @@
 ## src/Makefile.am -- Process this file with automake to produce Makefile.in
 ##
-## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2016, 2018, 2020 INRIA
+## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2016, 2018, 2020, 2022 INRIA
 ##
 ## This file is part of GNU MPC.
 ##
@@ -20,7 +20,7 @@
 lib_LTLIBRARIES = libmpc.la
 libmpc_la_LDFLAGS = $(MPC_LDFLAGS) -version-info 5:1:2
 libmpc_la_SOURCES = mpc-impl.h abs.c acos.c acosh.c add.c add_fr.c         \
-  add_si.c add_ui.c arg.c asin.c asinh.c atan.c atanh.c clear.c            \
+  add_si.c add_ui.c agm.c arg.c asin.c asinh.c atan.c atanh.c clear.c      \
   cmp.c cmp_abs.c cmp_si_si.c conj.c cos.c cosh.c                          \
   div_2si.c div_2ui.c div.c div_fr.c div_ui.c				   \
   dot.c exp.c fma.c fr_div.c fr_sub.c get_prec2.c get_prec.c		   \

@@ -1,3 +1,6 @@
+Changes in version ???:
+  - New function: mpc_agm
+
 Changes in version 1.2.1, released in October 2020:
   - Bug fixes:
     - Fix an incompatibility problem with GMP 6.0 and before.
