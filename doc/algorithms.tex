@@ -9,6 +9,7 @@
 \usepackage{comment}
 \usepackage[notref,notcite]{showkeys}
 \usepackage{graphicx}
+\usepackage{tikz}
 
 \newcommand {\corr}[1]{{#1}}
 \newcommand {\appro}[1]{\widetilde {#1}}
@@ -3007,6 +3008,109 @@ in particular the additional constant in~\eqref {eq:agmbound}.
 So the computations may be stopped earlier if the numbers occurring in
 the AGM iterations do not change any more, since then additional
 iterations will fix the result.
+
+
+
+
+\section {Complex ball arithmetic}
+
+We propose a simple implementation of complex balls, which keep track of
+rounding errors over several operations.
+The originality of our implementation is that it uses complex relative
+errors as in \S\ref {sssec:comrelerror}. A complex ball of type
+\texttt {mpcb\_t} is defined by a non-zero centre~$c$ of type
+\texttt {mpc\_t} and a relative radius~$r$ of type~\texttt {mpcr\_t},
+and it represents all complex numbers~$z = c (1 + \theta)$ with
+$|\theta| \leq r$, or equivalently the closed circle with centre~$c$ and
+radius $r |c|$.
+In the following, we use the notation $(c, r)$ for this complex ball.
+
+The radius type represents the non-negative real half-axis from~$0$
+to~$\infty$, including this special infinite number. It is implemented
+internally as a non-negative floating point value with a signed 64~bit
+integer mantissa~$m$, normalised to 31 bits, so that two mantissas may be
+multiplied without rounding. The sign is used to encode $r = \infty$
+a zero mantissa encodes~$0$, otherwise a mantissa is always positive.
+The exponent is encoded as a 64~bit integer~$e$ such that (for finite radii)
+$r = m \cdot 2^e$ with $0 \leq m < 2^{31}$.
+In most applications a radius $r \geq 1$ will be meaningless, so that
+in practice we will almost always have $e \leq -31$, or $r = \infty$.
+
+Mathematical operators are then understood to work on sets and to ``round
+up'': They return a complex ball containing the set obtained by applying
+the operator to every combination of arguments from the input balls.
+Reasonable efforts are made to return small balls, but there is no
+guarantee that the returned ball is minimal.
+
+Compared to a representation decomposed along the real and imaginary parts,
+with separate relative or absolute errors, which leads to rectangles
+instead of circles, our representation simplifies multiplicative operations
+and makes additive operations more complicated. Determining branch cuts,
+which often depend on the decomposition of a complex number into real and
+imaginary parts, are probably also made more complicated.
+The biggest drawback is that intervals centred in~$0$ may not be
+represented at all. More generally, intervals containing~$0$ are also
+not meaningful: They correspond to balls with $r \geq 1$, which means that
+even the most significant digit of the centre is uncertain.
+
+
+\subsection {Crossing the axes}
+
+\begin {center}
+\begin {tikzpicture}
+\draw [->](-1,0) -- (4,0);
+\draw [->](0,-1) -- (0,3);
+\draw (2,1) circle (1.5);
+\draw (1.95,0.95) -- (2.05,1.05) node [above]{$c = x + i y$};
+\draw (1.95,1.05) -- (2.05,0.95);
+\draw (2,-0.05) -- (2,0.05) node [below]{$x$};
+\end {tikzpicture}
+\end {center}
+
+To correctly evaluate functions at branch cuts, it may be useful to examine
+how complex balls are positioned with respect to the axes.
+As already mentioned above, a ball $(c, r)$ contains the origin if and only
+if $r \geq 1$.
+
+For $c = x + i y$, it crosses (or touches) the real axis if and only if
+it contains the point~$x$, which means that
+\[
+|x - c| \leq r |c|
+\Leftrightarrow |y| \leq r |c|
+\Leftrightarrow y^2 \leq r^2 \left( x^2 + y^2 \right)
+\Leftrightarrow \left(1 - r^2 \right) y^2 \leq r^2 x^2.
+\]
+When does a complex ball touch the real axis?
+This means that $(1 - r^2) y^2 = r^2 x^2$, which happens obviously when
+$r = 0$ and $y = 0$, so that the ball is a point located on the real axis;
+or when $r = 1$ and $x = 0$, so that the ball is centred on the imaginary
+axis and touches the origin. All other cases are actually impossible with
+machine-representable numbers. Assuming otherwise, recall that $x$, $y$
+and $r$ are rational numbers with denomitor a power of~$2$.
+If $r$ is an integer, then it is either~$1$, which we already covered;
+or larger, and then the origin is contained in the interior of the ball,
+which must cross the real axis.
+So let $r = a / 2^n$ with $a$ an odd integer and $n \geq 1$. Then
+$4^n - a^2 = 4^n (1 - r^2) = (2^{-n} r x y^{-1})^2$ is the square of an
+odd integer. But all odd squares are~$1$ modulo~$4$, whereas the left-hand
+side is~$3$ modulo~$4$, a contradiction.
+
+Symmetrically, the complex ball $(x + i y, r)$ crosses (or touches) the
+imaginary axis if and only if
+\[
+\left(1 - r^2 \right) x^2 \leq r^2 y^2.
+\]
+It touches the imaginary axis if and only if $r = 0$ and $x = 0$, so that
+the ball is a point on the imaginary axis; or $r = 1$ and $y = 0$, so that
+the ball is centred on the real axis and touches the origin.
+
+The ball has a common point with the negative real axis (including the
+origin) if and only if either $x \leq 0$ and the ball has a common point
+with the real axis (since then $x$ is such a common point); or $x > 0$
+and the ball contains the origin.
+
+
+
 
 \nocite{Baudin11,Stewart85,Priest04,muller:hal-01766584,jeannerod:ensl-01780265}
 \bibliographystyle{acm}
