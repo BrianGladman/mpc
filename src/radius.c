@@ -298,7 +298,7 @@ int mpcr_zero_p (mpcr_srcptr r)
 int mpcr_lt_half_p (mpcr_srcptr r)
    /* Return true if r < 1/2, false otherwise. */
 {
-   return MPCR_EXP (r) < -31;
+   return mpcr_zero_p (r) || MPCR_EXP (r) < -31;
 }
 
 
