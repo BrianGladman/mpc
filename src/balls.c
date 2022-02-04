@@ -241,18 +241,30 @@ mpcb_div_2ui (mpcb_ptr z, mpcb_srcptr z1, unsigned long int e)
 
 
 int
-mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
+mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im,
+   mpc_rnd_t rnd)
+   /* Return a boolean value indicating whether rounding the center of op
+      to an mpc_t variable of precision prec_re for the real and prec_im
+      for the imaginary part returns a correctly rounded result in
+      direction rnd.
+      If yes, then using mpcb_round with the same rounding mode sets
+      a correct result with the usual MPC semantic. */
 {
    mpfr_srcptr re, im;
    mpfr_exp_t exp_re, exp_im, exp_err;
 
+   if (mpcr_inf_p (op->r))
+      return 0;
+   else if (mpcr_zero_p (op->r))
+      return 1;
+
    re = mpc_realref (op->c);
    im = mpc_imagref (op->c);
    /* The question makes sense only if neither the real nor the imaginary
-      part of the centre are 0: Otherwise, we can either round this part
-      to 0 or we cannot round. But to round to 0, we need to have an
-      absolute error that is less than the smallest representable number;
-      otherwise said, the precision needs to be about as big as the negative
+      part of the centre are 0: Otherwise we need to have an absolute error
+      that is less than the smallest representable number; since rounding
+      only once at precision p introduces an error of about 2^-p, this
+      means that the precision needs to be about as big as the negative
       of the minimal exponent, which is astronomically large. */
    if (mpfr_zero_p (re) || mpfr_zero_p (im))
       return 0;
@@ -272,16 +284,19 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im)
                 1 + max (exp_re, exp_im) + exponent (epsilon) */
    exp_err = 1 + MPC_MAX (exp_re, exp_im) + mpcr_get_exp (op->r);
 
-   return (   mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN, MPFR_RNDN,
-                              prec_re)
-           && mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN, MPFR_RNDN,
-                              prec_im));
+   return (   mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN,
+                 MPC_RND_RE (rnd), prec_re)
+           && mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN,
+                 MPC_RND_IM (rnd), prec_im));
 }
 
 
 void
-mpcb_round (mpc_ptr rop, mpcb_srcptr op)
+mpcb_round (mpc_ptr rop, mpcb_srcptr op, mpc_rnd_t rnd)
+   /* Set rop to the centre of op. To make sure that this corresponds
+      to the MPC semantics of returning a correctly rounded result, one
+      needs to call mpcb_can_round first. */
 {
-   mpc_set (rop, op->c, MPC_RNDNN);
+   mpc_set (rop, op->c, rnd);
 }
 

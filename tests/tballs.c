@@ -74,6 +74,7 @@ test_agm (void)
    mpc_t c;
    mpcb_t a, b, a1;
    mpc_t agma, agmb;
+   mpc_rnd_t rnd = MPC_RNDDU;
    int i, n;
 
    p = 1000;
@@ -102,11 +103,11 @@ test_agm (void)
       mpcb_out_str (stdout, a);
       printf ("   ");
       mpcb_out_str (stdout, b);
-      if (   mpcb_can_round (a, target, target)
-          && mpcb_can_round (b, target, target)) {
-         mpcb_round (agma, a);
-         mpcb_round (agmb, b);
-         if (!mpc_cmp (agma, agmb))
+      if (   mpcb_can_round (a, target, target, rnd)
+          && mpcb_can_round (b, target, target, rnd)) {
+         mpcb_round (agma, a, rnd);
+         mpcb_round (agmb, b, rnd);
+         if (mpc_cmp (agma, agmb) == 0)
             return 0;
       }
    }
