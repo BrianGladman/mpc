@@ -253,7 +253,8 @@ static unsigned int leading_bit (int64_t n)
 static void mpcr_normalise_rnd (mpcr_ptr r, mpfr_rnd_t rnd)
    /* The function computes a normalised value for the potentially
       unnormalised r; depending on whether rnd is MPFR_RNDU or MPFR_RNDD,
-      the result is rounded up or down. */
+      the result is rounded up or down. For efficiency reasons, rounding
+      up does not take exact cases into account and adds one ulp anyway. */
 {
    unsigned int k;
 

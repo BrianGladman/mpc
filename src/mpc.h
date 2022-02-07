@@ -264,6 +264,7 @@ __MPC_DECLSPEC void mpcb_out_str (FILE *f, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_init (mpcb_ptr);
 __MPC_DECLSPEC void mpcb_clear (mpcb_ptr);
 __MPC_DECLSPEC mpfr_prec_t mpcb_get_prec (mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_set_prec (mpcb_ptr, mpfr_prec_t);
 __MPC_DECLSPEC void mpcb_set (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_set_inf (mpcb_ptr);
 __MPC_DECLSPEC void mpcb_set_c (mpcb_ptr, mpc_srcptr, mpfr_prec_t,

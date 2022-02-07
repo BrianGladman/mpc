@@ -52,7 +52,7 @@ mpcb_get_prec (mpcb_srcptr op)
 }
 
 
-static void
+void
 mpcb_set_prec (mpcb_ptr rop, mpfr_prec_t prec)
 {
    mpc_set_prec (rop->c, prec);
@@ -276,6 +276,16 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 
 void
 mpcb_sqrt (mpcb_ptr z, mpcb_srcptr z1)
+   /* The function "glides over" the branch cut on the negative real axis:
+      In fact it always returns a ball with centre the square root of the
+      centre of z1, and a reasonable radius even when the input ball has a
+      crosses the negative real axis. This is inconsistent in a sense: The
+      output ball does not contain all the possible outputs of a call to
+      mpc_sqrt on an element of the input ball. On the other hand, it does
+      contain square roots of all elements of the input ball. This comes
+      handy for the alternative implementation of mpc_agm using ball
+      arithmetic, but would also cause a potential implementation of
+      mpcb_agm to ignore the branch cut. */
 {
    mpcr_t r;
    mpfr_prec_t p = mpcb_get_prec (z1);
