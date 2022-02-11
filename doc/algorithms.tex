@@ -51,7 +51,7 @@
 
 \title {MPC: Algorithms and Error Analysis}
 \author {Andreas Enge \and Philippe Th\'eveny \and Paul Zimmermann}
-\date {Draft; November 15, 2017}
+\date {Draft; February 11, 2022}
 
 \begin {document}
 \maketitle
@@ -76,21 +76,29 @@ several elementary arithmetic operations.
 
 \begin {definition}
 \label {def:exp}
-Let $x$ be a real number, which can be written uniquely as
+Let $x$ be a non-zero real number, which can be written uniquely as
 $x = m \cdot 2^e$ with $\frac{1}{2} \le |m| < 1$.
 The {\em exponent} of $x$ is
 $\Exp(x) = e = \lfloor \log_2 |x| \rfloor + 1$.
 The number is {\em representable at precision~$p$} if
 $2^p m$ is an integer.
-We denote the rounding of $x$ to one of the at most two representable
-numbers in the open interval $(x - 2^{-p}, x + 2^{-p})$ by
+If $x$ is representable, there is no other representable number in the
+open interval $(x - 2^{e-p}, x + 2^{e-p})$; otherwise there are two
+representable numbers in the interval.
+We denote the rounding of $x$ to one of them by
 $\round (x) = \round_p (x)$, with rounding being to nearest, up, down,
 towards zero or away from zero if there is a choice.
 \end {definition}
 
+The real number~$0$ does not fit into this framework; it is considered
+representable at any precision, so that it is never changed by rounding.
+Conversely, notice that no non-zero number is ever rounded to~$0$.
+One could define $\Exp(0) = -\infty$, and most of the following results
+would still hold.
+
 \begin {prop}
 \label {prop:expmuldiv}
-If $x_1$ and $x_2$ are two real numbers, then
+If $x_1$ and $x_2$ are two non-zero real numbers, then
 \begin {gather*}
 \Exp (x_1) + \Exp (x_2) - 1 \leq \Exp (x_1 x_2) \leq \Exp (x_1) + \Exp (x_2),
 \\
@@ -113,7 +121,7 @@ $\frac {1}{2} < \frac {m_1}{m_2} < 2$.
 
 \begin {prop}
 \label {prop:expround}
-For any real number $x$,
+For any non-zero real number $x$,
 \[
 \Exp (x) \leq \Exp (\round (x)) \leq \Exp (x) + 1,
 \]
@@ -130,7 +138,7 @@ since these two numbers are representable (independently of the precision).
 
 \begin {definition}
 \label {def:ulp}
-Let $x$ be a real number which is representable at precision~$p$.
+Let $x$ be a non-zero real number which is representable at precision~$p$.
 Its associated {\em unit in the last place} is
 $\Ulp(x) = \Ulp_p (x) = 2^{\Exp(x) - p}$, so that adding $\Ulp(x)$ to $x$
 corresponds to adding~$1$ to the integer $2^p m$.
@@ -210,7 +218,7 @@ but relatively as multiplicative factors (close to~$1$).
 
 \begin {definition}
 \label {def:relerror}
-Given a real number $\corr x$ and its approximation $\appro x$,
+Given a real number $\corr x$ and its non-zero approximation $\appro x$,
 we define the {\em upper relative error} of $\appro x$ by
 \[
 \relerror^+ (\appro x) = \epsilon^+
@@ -230,7 +238,7 @@ The {\em relative error} of $\appro x$ is
 
 Notice that $\epsilon^- = 0$ whenever $\appro x \leq \corr x$ and
 $\epsilon^+ = 0$ whenever $\appro x \geq \corr x$, so that at least one of
-$\epsilon^+$ and $\epsilon^-$ is zero. We express relative errors with
+$\epsilon^+$ and $\epsilon^-$ is~$0$. We express relative errors with
 respect to the approximate value; thus, they define an interval around
 the approximate value containing the correct one. Precisely,
 $\corr x = \appro x (1 + \vartheta)$ for some number $\theta$ with
@@ -247,7 +255,7 @@ it is easy to switch back and forth between absolute and relative errors.
 
 \begin {prop}
 \label {prop:relerror}
-Let $\appro x$ be a real number representable at precision $p$.
+Let $\appro x$ be a non-zero real number representable at precision $p$.
 \begin {enumerate}
 \item
 If $\error (\appro x) \leq k \Ulp (\appro x)$,
@@ -303,17 +311,21 @@ the complex relative error, and vice versa.
 
 \begin {prop}
 \label {prop:comrelerror}
-Let $\corr z = \corr x + i \corr y$, $\appro z = \appro x + i \appro y$,
+Let $\corr z = \corr x + i \corr y$,
+$\appro z = \appro x + i \appro y \neq 0$,
 $\epsilon = \relerror (\appro z)$,
-$\epsilon_R = \relerror (\appro x)$ and
-$\epsilon_I = \relerror (\appro y)$. Then
+$\epsilon_R = \relerror (\appro x)$ if $\appro x \neq 0$ and
+$\epsilon_I = \relerror (\appro y)$ if $\appro y \neq 0$. Then
 \begin {align*}
 \epsilon_R
-&\leq \left( 1 + 2^{\Exp (\appro y) - \Exp (\appro x) + 1} \right) \epsilon, \\
+&\leq \left( 1 + 2^{\Exp (\appro y) - \Exp (\appro x) + 1} \right) \epsilon
+\text { if } \appro x \neq 0, \\
 \epsilon_I
-&\leq \left( 1 + 2^{\Exp (\appro x) - \Exp (\appro y) + 1} \right) \epsilon, \\
+&\leq \left( 1 + 2^{\Exp (\appro x) - \Exp (\appro y) + 1} \right) \epsilon
+\text { if } \appro y \neq 0, \\
 \epsilon
-&\leq \max \left( \epsilon_R, \epsilon_I \right).
+&\leq \max \left( \epsilon_R, \epsilon_I \right)
+\text { if } \appro x, \appro y \neq 0.
 \end {align*}
 \end {prop}
 
@@ -349,7 +361,8 @@ to transform absolute into complex relative errors.
 
 \begin {prop}
 \label {prop:comabstorelerror}
-Let $\appro z = \appro x + i \appro y$ be representable at precision~$p$.
+Let $\appro z = \appro x + i \appro y$ be representable at precision~$p$
+with $\appro x, \appro y \neq 0$.
 If
 $\error (\appro x) \leq k \, \Ulp (\appro x)$ and
 $\error (\appro y) \leq k \, \Ulp (\appro y)$, then
@@ -365,7 +378,7 @@ relative errors.
 
 \begin {prop}
 \label {prop:comrelround}
-Let $\relerror (\appro z) = \epsilon$.
+Let $\appro z \neq 0$ and $\relerror (\appro z) = \epsilon$.
 Then
 \[
 \relerror (\round (\appro z)) \leq
