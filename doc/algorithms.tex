@@ -324,8 +324,14 @@ $\epsilon_I = \relerror (\appro y)$ if $\appro y \neq 0$. Then
 &\leq \left( 1 + 2^{\Exp (\appro x) - \Exp (\appro y) + 1} \right) \epsilon
 \text { if } \appro y \neq 0, \\
 \epsilon
-&\leq \max \left( \epsilon_R, \epsilon_I \right)
-\text { if } \appro x, \appro y \neq 0.
+&\leq \left\{
+\begin {array}{l}
+\max \left( \epsilon_R, \epsilon_I \right)
+\text { if } \appro x, \appro y \neq 0 \\
+\epsilon_R \text { if } \appro x \neq 0 \text { and } \corr y = \appro y \\
+\epsilon_I \text { if } \appro y \neq 0 \text { and } \corr x = \appro x
+\end {array}
+\right.
 \end {align*}
 \end {prop}
 
@@ -353,6 +359,8 @@ For the converse direction, write
 = \frac {\epsilon_R^2 \appro x^2 + \epsilon_I^2 \appro y^2}{\appro x^2 + \appro y^2}
 \leq \max \left( \epsilon_R^2, \epsilon_I^2 \right).
 \]
+when $\appro x, \appro y \neq 0$, and similar expressions in the
+other cases.
 \end {proof}
 
 As a corollary to Propositions~\ref {prop:relerror}
@@ -361,11 +369,19 @@ to transform absolute into complex relative errors.
 
 \begin {prop}
 \label {prop:comabstorelerror}
-Let $\appro z = \appro x + i \appro y$ be representable at precision~$p$
-with $\appro x, \appro y \neq 0$.
-If
-$\error (\appro x) \leq k \, \Ulp (\appro x)$ and
-$\error (\appro y) \leq k \, \Ulp (\appro y)$, then
+Let $\appro z = \appro x + i \appro y \neq 0$ be representable
+at precision~$p$.
+Assume that there is a non-negative integer~$k$ such that the following
+two assertions hold:
+\begin {itemize}
+\item
+$\appro x \neq 0$ and $\error (\appro x) \leq k \, \Ulp (\appro x)$,
+or $\appro x = \corr x$;
+\item
+$\appro y \neq 0$ and $\error (\appro y) \leq k \, \Ulp (\appro y)$,
+or $\appro y = \corr y$.
+\end {itemize}
+Then
 \[
 \relerror (\appro z) \leq k \, 2^{1-p}.
 \]
@@ -373,8 +389,10 @@ As in Proposition~\ref {prop:relerror}, there is an immediate generalisation
 if $\appro z$ is not representable at precision~$p$.
 \end {prop}
 
-This result can be used to analyse how rounding affects complex
-relative errors.
+Adding the improbable cases that $\appro x = \corr x$ and
+$\appro y = \corr y$ to Propositions~\ref {prop:comrelerror}
+and~\ref {prop:comabstorelerror} may look overly pedantic; but it is
+helpful to analyse how rounding affects complex relative errors.
 
 \begin {prop}
 \label {prop:comrelround}
@@ -389,10 +407,16 @@ rounded to nearest, and $c = 1$ otherwise.
 \end {prop}
 
 \begin {proof}
-Write $\corr z = (1 + \theta) \appro z$ with $|\theta| = \epsilon$.
-Applying Proposition~\ref {prop:comabstorelerror} with $\appro z$ in the
+Write $\corr z = \corr x + i \corr y = (1 + \theta) \appro z$
+with $|\theta| = \epsilon$.
+Notice that by the remark after Definition~\ref {def:exp}, either
+$\appro x$ and $\corr x$ are both~$0$, or none of them is~$0$ and the
+rounding error is bounded by~$c \, \Ulp (\appro x)$, and the same holds
+for~$\appro y$ and~$\corr y$.
+So we can apply
+Proposition~\ref {prop:comabstorelerror} with $\appro z$ in the
 place of $\corr z$, $\round (\appro z)$ in the place of $\appro z$
-and $c$ in the place of~$k$,
+and $c$ in the place of~$k$, and
 there is a $\theta'$ with $\appro z = (1 + \theta') \round (\appro z)$
 and $|\theta'| \leq c \, 2^{1-p}$.
 So $\corr z = (1 + \theta'') \round (\appro z)$ with
