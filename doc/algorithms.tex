@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{comment}
 \usepackage[notref,notcite]{showkeys}
+\usepackage{graphicx}
 
 \newcommand {\corr}[1]{{#1}}
 \newcommand {\appro}[1]{\widetilde {#1}}
@@ -2301,7 +2302,7 @@ by $\corr {a_0} = a$, $\corr {b_0} = b$,
 $\corr {a_{n+1}} = \frac {\corr {a_n} + \corr {b_n}}{2}$ and
 $\corr {b_{n+1}} = \sqrt {\corr {a_n} \corr {b_n}}$.
 At each step, there is a choice of sign for the square root.
-If $\corr {a_n}$ and $\corr {b_n}$ are at an (unoriented) angle
+If $\corr {a_n}$ and $\corr {b_n}$ form an (unoriented) angle
 different from $0$ and $\pi$, then
 they define a two-dimensional pointed cone in the complex plane.
 Notice that $\corr {a_{n+1}}$ lies in this cone.
@@ -2327,8 +2328,8 @@ If one or both of $a$ and $b$ are zero, all geometric means are zero,
 and $\AGM (a, b) = 0$.
 If the angle between $a$ and $b$ is~$0$, then $\corr {b_0}$ is a positive real
 number, and $\AGM (1, \corr {b_0})$ may be computed with \mpfr.
-If the angle between $a$ and $b$ is $\pi$, then $\corr {b_0}$ is a negative real
-number larger than or equal to $-1$. The arithmetic mean of $1$ and $-1$
+If the angle between $a$ and $b$ is $\pi$, then $\corr {b_0}$ is in
+$[-1,0)$. The arithmetic mean of $1$ and $-1$
 is zero, so $\AGM (1, -1) = 0$.
 If $\corr {b_0} > -1$, we take the first geometric mean with a positive imaginary
 part, so that also $\Im (\AGM (1, \corr {b_0}))$ will be positive.
@@ -2339,7 +2340,7 @@ $\corr {b_0}$ is real, so this choice determines our branch cut for $\AGM$.
 So in the following, we analyse the computation of $\AGM (1, \appro {b_0})$
 with
 $\appro {b_0} = \round (\corr {b_0})$
-for $b_0 \in (\C \backslash \R) \cup \left] -1, 1 \right[$,
+for $b_0$ in the unit disk centered at the origin (except $-1$ and $1$),
 where the real and imaginary parts of $\appro {b_0}$ are rounded
 towards~$0$,
 which ensures $\left| \Re (\appro {b_0}) \right| < 1$
@@ -2347,7 +2348,7 @@ and $| \appro {b_0} | \leq 1$
 with absolute errors of the real and imaginary parts at most \ulp {1}.
 In the following, relative errors will be most convenient to work with;
 by Proposition~\ref {prop:comabstorelerror} we have
-$\relerror (\appro {b_0}) \leq 2^{1-p}$, where $p$ is the working precision.
+$\relerror (\appro {b_0}) \leq 2^{1-p}$, where $p \geq 2$ is the working precision.
 
 
 \paragraph {Warm-up --- a note on angle~$0$.}
@@ -2361,7 +2362,7 @@ instead.
 
 Recall that $b_0 = (1 + \theta) \appro {b_0}$ with
 $- \epsilon \leq \theta \leq \epsilon = 2^{1-p}$.
-Since for positive real numbers each step of the AGM is monotonous in
+Since for positive real numbers each step of the AGM is increasing in
 each of the two arguments, so is the AGM itself, and we have
 \[
 \AGM (1, b_0)
@@ -2409,34 +2410,44 @@ $\appro {b_1} = \round \left( \sqrt {\appro {b_0}} \right)$ with
 2^{1-p} + \left( 1 + 2^{1-p} \right) 2^{1-p}
 \leq (\sqrt 2)^3 \cdot 2^{1-p}
 \]
-by \eqref {eq:propsqrt} and Proposition~\ref {prop:comrelround}.
-We let $\corr {a_1} = \frac {1 + \corr {b_0}}{2}$ and
-$\appro {a_1} = \round \left( \frac {1 + \appro {b_0}}{2} \right)$.
+by \eqref {eq:propsqrt} (where we use $\epsilon \leq \epsilon_1$
+since $\epsilon_1 \leq 2^{1-p} \leq 1$, $\epsilon_1$ being the relative
+error on $\appro{b_0}$)
+and Proposition~\ref {prop:comrelround},
+and where we have bounded $2 + 2^{1-p} \leq 2.5$
+by $(\sqrt 2)^3 \approx 2.83$.
+We let $\corr {a_1} = 1/2 + \corr {b_0}/2$ and
+$\appro {a_1} = \round ( 1/2 + \appro{b_0}/2 )$.
 The imaginary part of $\appro {a_1}$ has an error of at most \ulp{1},
 and the same holds for the real part if $\Re (\appro {b_0}) = 0$
-or equivalently $\Re (b_0) = 0$; otherwise following the discussion
-of \S\ref {sssec:propadd}, the real part of $\appro {a_1}$
-may have an absolute error measured in $\Ulp$ of
-\begin {equation}
-\label {eq:agmfirst}
-2^{\Exp (\Re (\appro {b_0} / 2)) - \Exp (\Re (\appro {a_1}))} + 1
-\leq
-2^{- \Exp (\Re (\appro {a_1})) - 1} + 1
-\leq
-2^{- \Exp (\Re (\appro {a_1})) + 2},
-\end {equation}
-where we have used that $\Exp (\Re (\appro {b_0})) \leq 0$
-and $\Exp (\Re (\appro {a_1})) \leq 1$.
-This bound also holds for $\Re (b_0) = 0$.
-By Proposition~\ref {prop:comabstorelerror},
+or equivalently $\Re (b_0) = 0$;
+the real part of $\appro {a_1}$
+has an absolute error bounded by
+\[
+\max \left( 2, 2^{- \Exp (\Re (\appro {a_1})) - 1} \right)
+\Ulp \left( \Re (\appro {a_1}) \right).
+\]
+Indeed, let $x$ be the real part of $\appro{b_0}$, and $y$ the real part of $\appro{a_1}$,
+we have $y = \round (1/2 + x/2)$.
+Remember that $-1 < x < 1$. If $-1/2 \leq x < 1$, then $x/2 \geq -1/4$ and
+$y \geq 1/4$, and $\Exp (y) \geq \Exp (x/2)$, and from
+\S\ref{sssec:propadd} the error on $y$ is at most 2 ulp (one from the
+error on $x/2$, and one from the addition).
+If on the other hand $-1 < x < -1/2$, then $1/2 + x/2$ is exact by
+Sterbenz's lemma, and the only error
+comes from that on $x/2$, which by \S\ref{sssec:propadd} is bounded above by
+$2^{\Exp(x/2)-\Exp(y)} \Ulp (x/2)$.
+Since $-1/2 < x/2 < -1/4$, we have $\Exp(x/2)=-1$ and the above result follows.
+This bound also holds when $\Re (b_0) = 0$.
+So by Proposition~\ref {prop:comabstorelerror},
 \[
 \relerror (\appro {a_1})
 \leq
-2^{- \Exp (\Re (\appro {a_1})) + 2} \cdot 2^{1-p}.
+\max \left( 2, 2^{- \Exp (\Re (\appro {a_1})) -1 } \right) \cdot 2^{1-p}.
 \]
 If $\Re (\appro {b_0}) \geq 0$, then $\Exp (\Re (\appro {a_1})) \geq 0$, and
 we obtain a bound that is similar to the one above for
-$\relerror (\appro {b_1})$. If $\appro {b_0}$ approaches $-1$, then
+$\relerror (\appro {b_1})$. If $\appro {b_0}$ approaches $-1$,
 the relative error in $\appro {a_1}$ becomes arbitrarily bad, as
 $\appro {a_1}$ becomes arbitrarily small.
 
@@ -2444,7 +2455,7 @@ $\appro {a_1}$ becomes arbitrarily small.
 Letting
 \begin {equation}
 \label {eq:agmk1}
-k_1 = \max \left( 3, - 2 \Exp (\Re (\appro {a_1})) + 4 \right)
+k_1 = \max \big( 3, - 2 \Exp (\Re (\appro {a_1})) - 2 \big)
 \end {equation}
 we obtain an upper bound of
 \begin {equation}
@@ -2463,16 +2474,26 @@ sign as that of $\appro {b_0}$
 During the remainder of the algorithm, we will not leave this quadrant
 and thus not see any more cancellation in the arithmetic mean.
 
+\begin{figure}[htp]
+% Sage code to produce the figure:
+% var('t')
+% p1=parametric_plot([1/2+cos(t)/2,sin(t)/2],(t,0,pi))
+% p2=list_plot([(real(sqrt(cos(t*pi/100)+i*sin(t*pi/100))),imag(sqrt(cos(t*pi/100)+i*sin(t*pi/100)))) for t in range(100)])
+% (p1+p2).save("iter1.pdf")
+\centerline{\includegraphics[width=5cm]{iter1.pdf}}
+  \caption{Extremal (by above) values of $a_1$ (solid curve) and $b_1$ (dotted curve) after the first
+    iteration of the AGM. The values are bounded by below by the $x$-axis.}
+\end{figure}
 
 \paragraph {The idea of the analysis.}
 
 Let us first give the basic idea of the following, rather technical
 analysis.
 Assume a target precision of $N$ bits, that is, a target relative error
-of $2^{-N}$. If $a_0$ and $b_0$ are of roughly equal size, the AGM
+of about $2^{-N}$. If $a_0$ and $b_0$ are of the same order of magnitude, the AGM
 iteration converges quadratically, that is, the number of correct digits
 doubles in each step, and we need about $\log_2 N$ iterations.
-Unfortunately, when $a_0$ and $b_0$ are of very different sizes, we have
+Unfortunately, when $a_0$ and $b_0$ are of different orders of magnitude, we have
 slower convergence. To illustrate this, consider $a_0 = 1$ and
 $b_0 = 2^{-e}$; during the first
 iterations, $a_n \approx 2^{-n}$ and $b_n \approx 2^{-e/2^n}$. So we need
@@ -2484,8 +2505,8 @@ Moreover, when $\Re (b/a) < 0$, the situation of very different exponents
 in $a$ and $b$ may occur after one iteration through cancellation as
 explained above.
 
-Unlike Newton iterations, AGM iterations are not auto-correcting, but
-rounding errors propagate. We lose a constant number of bits per iteration;
+Unlike Newton iterations, AGM iterations are not auto-correcting:
+due to rounding errors, we lose a constant number of bits per iteration;
 so to reach the desired precision of $N$ bits, we need to carry out all
 computations at a working precision of
 $p \in N + O \left( B (N, \appro {b_0}, \appro {a_1}) \right)$.
@@ -2547,7 +2568,7 @@ We may use $r_1 = (\sqrt 2)^{k_1}$ with $k_1$ as in \eqref {eq:agmk1},
 so that $r_n \leq (\sqrt 2)^{n + k_1 + 1}$.
 We now show by induction that
 $\alpha_n, \beta_n \leq r_n 2^{1-p}$
-if the number of iterations $n$ is not too large compared to
+if the number $n$ of iterations is not too large compared to
 the working precision $p$.
 For $n=1$, this follows from \eqref {eq:agmerr1} and the definition
 of~$r_1$.
@@ -2567,7 +2588,7 @@ R (n, \gamma, \delta) &:=
    + 2^{1-p} \left( \gamma r_{n-1} + \delta r_{n-1}^2 \, 2^{1-p} \right) \\
 & \leq \left( \gamma + \delta (\sqrt 2)^{n + k_1 + 2 - 2 p} \right) r_{n-1}
    + 1 +
-   2^{1-p} \left( (\sqrt 2)^{n + k_1 + 2} + 2^{n + k_1 + 1 - p} \right)
+   2^{1-p} \left( (\sqrt 2)^{n + k_1 + 2} + 2^{n + k_1 + 1 - p} \right).
 \end {aligned}
 \]
 So assuming $p \geq \frac {n + k_1 + 10}{2}$ we have
@@ -2593,7 +2614,7 @@ R (n, \gamma, \delta)
 \noindent
 Using the induction hypothesis for $n \geq 2$ on \eqref {eq:agmalpha}
 and \eqref {eq:agmgamma}
-translates into
+yields
 \begin {eqnarray*}
 \alpha_n
 & \leq & R (n, \sqrt 2, 0) \, 2^{1-p} \leq r_n 2^{1-p}, \\
