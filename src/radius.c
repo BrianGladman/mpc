@@ -376,6 +376,26 @@ void mpcr_set_ui_2si (mpcr_ptr r, uint64_t mant, int64_t exp)
 }
 
 
+void mpcr_max (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
+   /* Set r to the maximum of s and t. */
+{
+   if (mpcr_inf_p (s) || mpcr_inf_p (t))
+      mpcr_set_inf (r);
+   else if (mpcr_zero_p (s))
+      mpcr_set (r, t);
+   else if (mpcr_zero_p (t))
+      mpcr_set (r, s);
+   else if (MPCR_EXP (s) < MPCR_EXP (t))
+      mpcr_set (r, t);
+   else if (MPCR_EXP (s) > MPCR_EXP (t))
+      mpcr_set (r, s);
+   else if (MPCR_MANT (s) < MPCR_MANT (t))
+      mpcr_set (r, t);
+   else
+      mpcr_set (r, s);
+}
+
+
 int64_t mpcr_get_exp (mpcr_srcptr r)
    /* Return the exponent e such that r = m * 2^e with m such that
       0.5 <= m < 1. */
