@@ -20,7 +20,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #include <stdio.h>
 #include <math.h>
-#include <stdint.h>
 #include "mpc-impl.h"
 
 #define MPCR_MANT(r) ((r)->mant)
@@ -354,6 +353,26 @@ void mpcr_set_one (mpcr_ptr r)
 void mpcr_set (mpcr_ptr r, mpcr_srcptr s)
 {
    r [0] = s [0];
+}
+
+
+void mpcr_set_ui_2si (mpcr_ptr r, uint64_t mant, int64_t exp)
+   /* Set r to mant*2^exp, rounded up. */
+{
+   if (mant == 0)
+      mpcr_set_zero (r);
+   else {
+      if (mant >= ((uint64_t) 1) << 63) {
+         if (mant % 2 == 0)
+            mant = mant / 2;
+         else
+            mant = mant / 2 + 1;
+         exp++;
+      }
+      MPCR_MANT (r) = (int64_t) mant;
+      MPCR_EXP (r) = exp;
+      mpcr_normalise (r);
+   }
 }
 
 
