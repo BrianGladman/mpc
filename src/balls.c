@@ -61,15 +61,6 @@ mpcb_set_prec (mpcb_ptr rop, mpfr_prec_t prec)
 
 
 void
-mpcb_set_c (mpcb_ptr rop, mpc_srcptr op)
-{
-   mpc_set_prec (rop->c, MPC_MAX_PREC (op));
-   mpc_set (rop->c, op, MPC_RNDNN);
-   mpcr_set_zero (rop->r);
-}
-
-
-void
 mpcb_set (mpcb_ptr rop, mpcb_srcptr op)
 {
    mpc_set_prec (rop->c, mpc_get_prec (op->c));
@@ -79,11 +70,44 @@ mpcb_set (mpcb_ptr rop, mpcb_srcptr op)
 
 
 void
-mpcb_init_set_c (mpcb_ptr rop, mpc_srcptr op)
+mpcb_set_c (mpcb_ptr rop, mpc_srcptr op, mpfr_prec_t prec,
+   unsigned long int err_re, unsigned long int err_im)
+   /* Set the precision of rop to prec and assign a ball with centre op
+      to it. err_re and err_im contain potential errors in the real and
+      imaginary parts of op as multiples of a half ulp. For instance,
+      if the real part of op is exact, err_re should be set to 0;
+      if it is the result of rounding to nearest, it should be set to 1;
+      if it is the result of directed rounding, it should be set to 2.
+      The radius of the ball reflects err_re and err_im and the potential
+      additional rounding error that can occur when the precision of op
+      is higher than prec. If the real part of op is 0, then err_re
+      should be 0, since then ulp notation makes no sense, and similarly
+      for the imaginary part; otherwise the radius is set to infinity.
+      The implementation takes potential different precisions in the real
+      and imaginary parts of op into account. */
 {
-   mpc_init2 (rop->c, MPC_MAX_PREC (op));
-   mpc_set (rop->c, op, MPC_RNDNN);
-   mpcr_set_zero (rop->r);
+   int inex;
+   mpcr_t relerr_re, relerr_im;
+
+   mpc_set_prec (rop->c, prec);
+   inex = mpc_set (rop->c, op, MPC_RNDNN);
+
+   if (   (mpfr_zero_p (mpc_realref (op)) && err_re > 0)
+       || (mpfr_zero_p (mpc_imagref (op)) && err_im > 0))
+       mpcr_set_inf (rop->r);
+   else {
+      mpcr_set_ui_2si (relerr_re, err_re,
+         -mpfr_get_prec (mpc_realref (op)));
+         /* prop:relerror of algorithms.tex */
+      if (MPC_INEX_RE (inex))
+         mpcr_add_rounding_error (relerr_re, prec, MPFR_RNDN);
+      mpcr_set_ui_2si (relerr_im, err_im,
+         -mpfr_get_prec (mpc_imagref (op)));
+      if (MPC_INEX_IM (inex))
+         mpcr_add_rounding_error (relerr_im, prec, MPFR_RNDN);
+      mpcr_max (rop->r, relerr_re, relerr_im);
+         /* prop:comrelerror in algorithms.tex */
+   }
 }
 
 

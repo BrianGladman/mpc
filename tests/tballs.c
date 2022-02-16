@@ -83,9 +83,11 @@ test_agm (void)
 
    mpc_init2 (c, p);
    mpc_set_si_si (c, 100, 0, MPC_RNDNN);
-   mpcb_init_set_c (a, c);
+   mpcb_init (a);
+   mpcb_set_c (a, c, p, 0, 0);
    mpc_set_si_si (c, 0, 100, MPC_RNDNN);
-   mpcb_init_set_c (b, c);
+   mpcb_init (b);
+   mpcb_set_c (b, c, p, 0, 0);
    mpcb_init (a1);
    mpc_init2 (agma, target);
    mpc_init2 (agmb, target);
