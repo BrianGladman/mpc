@@ -505,7 +505,7 @@ void mpcr_add (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 
 void mpcr_sub_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t, mpfr_rnd_t rnd)
    /* Set r to s - t, rounded according to whether rnd is MPFR_RNDU or
-       MPFR_RNDD.; if the result were negative, it is set to infinity. */
+       MPFR_RNDD; if the result were negative, it is set to infinity. */
 {
    int64_t d;
    int cmp;

@@ -52,7 +52,7 @@ mpcb_get_prec (mpcb_srcptr op)
 }
 
 
-void
+static void
 mpcb_set_prec (mpcb_ptr rop, mpfr_prec_t prec)
 {
    mpc_set_prec (rop->c, prec);
@@ -93,7 +93,8 @@ mpcb_set_c (mpcb_ptr rop, mpc_srcptr op, mpfr_prec_t prec,
    inex = mpc_set (rop->c, op, MPC_RNDNN);
 
    if (   (mpfr_zero_p (mpc_realref (op)) && err_re > 0)
-       || (mpfr_zero_p (mpc_imagref (op)) && err_im > 0))
+       || (mpfr_zero_p (mpc_imagref (op)) && err_im > 0)
+       || !mpc_fin_p (op))
        mpcr_set_inf (rop->r);
    else {
       mpcr_set_ui_2si (relerr_re, err_re,
