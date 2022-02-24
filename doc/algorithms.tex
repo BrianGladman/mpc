@@ -51,7 +51,7 @@
 
 \title {MPC: Algorithms and Error Analysis}
 \author {Andreas Enge \and Philippe Th\'eveny \and Paul Zimmermann}
-\date {Draft; February 11, 2022}
+\date {Draft; February 24, 2022}
 
 \begin {document}
 \maketitle
@@ -432,6 +432,39 @@ functions with real arguments and values. Those already contained in
 \cite{MPFRAlgorithms} are simply quoted for the sake of self-containedness.
 
 
+\subsubsection {Multiplication}
+\label {sssec:proprealdiv}
+
+Let
+\[
+\appro x = \appro {x_1} \appro {x_2}.
+\]
+Then
+\begin {eqnarray*}
+\error (\appro x)
+& = & \left| \corr {x_1} \corr {x_2} - \appro {x_1} \appro {x_2} \right|
+= \left|   (\corr {x_1} - \appro {x_1}) (\corr {x_2} - \appro {x_2})
+         + (\corr {x_1} - \appro {x_1}) \appro {x_2}
+         + (\corr {x_2} - \appro {x_2}) \appro {x_1}
+         \right| \\
+& \leq & |\epsilon_1 \epsilon_2 + \epsilon_1 + \epsilon_2|
+      \cdot \left| \appro {x_1} \appro {x_2} \right|
+= |\epsilon_1 \epsilon_2 + \epsilon_1 + \epsilon_2| \cdot |\appro x|,
+\end {eqnarray*}
+using the notation introduced in Definition~\ref {def:relerror} together
+with the obvious subscripts to the~$\epsilon$.
+By the estimation of the relative error in terms of the absolute error of
+Proposition~\ref {prop:relerror} and using
+$|\appro x| \leq 2^{\Exp (\appro x)}$, this leads to
+\begin {equation}
+\label {eq:proprealdiv}
+\error (\appro x)
+\leq \left( 2 (k_1 + k_2) + k_1 k_2 2^{2-p} \right)
+   2^{\Exp (\appro x) - p}.
+\end {equation}
+This is a quick derivation of the same bound as in
+\cite[\S2.4]{MPFRAlgorithms}.
+
 
 \subsubsection {Division}
 \label {sssec:proprealdiv}
@@ -501,7 +534,7 @@ Let
 \[
 \appro x = \sqrt {\appro {x_1}}.
 \]
-Then by \cite[\S1.7]{MPFRAlgorithms},
+Then by \cite[\S2.7]{MPFRAlgorithms},
 \begin {equation}
 \label {eq:proprealsqrt}
 \error (\appro x)
