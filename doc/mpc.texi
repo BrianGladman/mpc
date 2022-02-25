@@ -1476,6 +1476,12 @@ when using appropriate values for @var{err_re} and @var{err_im}.
 @end deftypefun
 
 
+@deftypefun mpcb_set_ui_ui (mpcb_ptr @var{z}, unsigned long int @var{re}, unsigned long int @var {im}, mpfr_prec_t @var{prec})
+Set @var{z} to a ball with centre @var{re}+I*@var{im} at precision
+@var{prec} or the size of an @code{unsigned long int}, whatever is larger.
+@end deftypefun
+
+
 @deftypefun void mpcb_neg (mpcb_ptr @var{z}, mpcb_srcptr @var{z1})
 @deftypefunx void mpcb_add (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
 @deftypefunx void mpcb_mul (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})

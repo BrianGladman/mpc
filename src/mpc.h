@@ -267,6 +267,8 @@ __MPC_DECLSPEC mpfr_prec_t mpcb_get_prec (mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_set (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_set_c (mpcb_ptr, mpc_srcptr, mpfr_prec_t,
    unsigned long int, unsigned long int);
+__MPC_DECLSPEC void mpcb_set_ui_ui (mpcb_ptr, unsigned long int,
+   unsigned long int, mpfr_prec_t);
 __MPC_DECLSPEC void mpcb_neg (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_mul (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_sqr (mpcb_ptr, mpcb_srcptr);

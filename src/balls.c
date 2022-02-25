@@ -113,6 +113,21 @@ mpcb_set_c (mpcb_ptr rop, mpc_srcptr op, mpfr_prec_t prec,
 
 
 void
+mpcb_set_ui_ui (mpcb_ptr z, unsigned long int re, unsigned long int im,
+   mpfr_prec_t prec)
+   /* Set the precision of z to prec and assign a ball with centre
+      re+I*im to it. If prec is too small to hold the centre coordinates
+      without rounding, use the minimal possible precision instead. */
+{
+   prec = MPC_MAX (prec,
+      (mpfr_prec_t) (CHAR_BIT * sizeof (unsigned long int)));
+   mpc_set_prec (z->c, prec);
+   mpc_set_ui_ui (z->c, re, im, MPC_RNDNN);
+   mpcr_set_zero (z->r);
+}
+
+
+void
 mpcb_neg (mpcb_ptr z, mpcb_srcptr z1)
 {
    mpfr_prec_t p;
