@@ -1302,12 +1302,13 @@ behaviour will probably change in the future.
 @deftypefunx void mpcr_sub (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_mul (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_div (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
+@deftypefunx void mpcr_mul_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_div_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_sqr (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 @deftypefunx void mpcr_sqrt (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 Set @var{r} to the sum, difference, product or quotient of @var{s} and
-@var{t}, or to the quotient of @var{s} by 2^@var{t}, or to the square or
-the square root of @var{s}.
+@var{t}, or to the product of @var{s} by 2^@var{t} or to the quotient of
+@var{s} by 2^@var{t}, or to the square or the square root of @var{s}.
 If any of the arguments is infinity, or if a difference is negative,
 the result is infinity.
 The arguments to @code{mpcr_add} need not be normalised, but their sum
@@ -1478,6 +1479,7 @@ when using appropriate values for @var{err_re} and @var{err_im}.
 @deftypefun void mpcb_neg (mpcb_ptr @var{z}, mpcb_srcptr @var{z1})
 @deftypefunx void mpcb_add (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
 @deftypefunx void mpcb_mul (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
+@deftypefunx void mpcb_sqr (mpcb_ptr @var{z}, mpcb_srcptr @var{z1})
 @deftypefunx void mpcb_sqrt (mpcb_ptr @var{z}, mpcb_srcptr @var{z1})
 @deftypefunx void mpcb_div (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
 @deftypefunx void mpcb_div_2ui (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, unsigned long int @var{e})

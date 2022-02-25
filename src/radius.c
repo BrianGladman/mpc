@@ -438,6 +438,19 @@ void mpcr_mul (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 }
 
 
+void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s, const unsigned long int e)
+{
+   if (mpcr_inf_p (s))
+      mpcr_set_inf (r);
+   else if (mpcr_zero_p (s))
+      mpcr_set_zero (r);
+   else {
+      MPCR_MANT (r) = MPCR_MANT (s);
+      MPCR_EXP (r) = MPCR_EXP (s) + (int64_t) e;
+   }
+}
+
+
 static void mpcr_sqr_rnd (mpcr_ptr r, mpcr_srcptr s, mpfr_rnd_t rnd)
     /* Set r to the square of s, rounded according to whether rnd is
        MPFR_RNDU or MPFR_RNDD. */

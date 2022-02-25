@@ -174,6 +174,8 @@ __MPC_DECLSPEC void mpcr_max (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
 __MPC_DECLSPEC int64_t mpcr_get_exp (mpcr_srcptr r);
 __MPC_DECLSPEC void mpcr_out_str (FILE *f, mpcr_srcptr r);
 __MPC_DECLSPEC void mpcr_mul (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
+__MPC_DECLSPEC void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s,
+   const unsigned long int e);
 __MPC_DECLSPEC void mpcr_sqr (mpcr_ptr r, mpcr_srcptr s);
 __MPC_DECLSPEC void mpcr_add (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
 __MPC_DECLSPEC void mpcr_sub (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);

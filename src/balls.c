@@ -159,6 +159,26 @@ mpcb_mul (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 
 
 void
+mpcb_sqr (mpcb_ptr z, mpcb_srcptr z1)
+{
+   mpcr_t r, r2;
+   mpfr_prec_t p = mpcb_get_prec (z1);
+   int overlap = (z == z1);
+
+   /* Compute the error first in case there is overlap. */
+   mpcr_mul_2ui (r2, z1->r, 1);
+   mpcr_sqr (r, z1->r);
+   mpcr_add (r, r, r2);
+   mpcr_add_rounding_error (r, p, MPFR_RNDN);
+
+   if (!overlap)
+      mpcb_set_prec (z, p);
+   mpc_sqr (z->c, z1->c, MPC_RNDNN);
+   mpcr_set (z->r, r);
+}
+
+
+void
 mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
 {
    mpcr_t r, s, denom;
