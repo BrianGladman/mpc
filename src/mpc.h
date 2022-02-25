@@ -272,6 +272,7 @@ __MPC_DECLSPEC void mpcb_set_ui_ui (mpcb_ptr, unsigned long int,
 __MPC_DECLSPEC void mpcb_neg (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_mul (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_sqr (mpcb_ptr, mpcb_srcptr);
+__MPC_DECLSPEC void mpcb_pow_ui (mpcb_ptr, mpcb_srcptr, unsigned long int);
 __MPC_DECLSPEC void mpcb_add (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_sqrt (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_div (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);

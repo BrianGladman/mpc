@@ -63,9 +63,11 @@ mpcb_set_prec (mpcb_ptr rop, mpfr_prec_t prec)
 void
 mpcb_set (mpcb_ptr rop, mpcb_srcptr op)
 {
-   mpc_set_prec (rop->c, mpc_get_prec (op->c));
-   mpc_set (rop->c, op->c, MPC_RNDNN);
-   mpcr_set (rop->r, op->r);
+   if (rop != op) {
+      mpc_set_prec (rop->c, mpc_get_prec (op->c));
+      mpc_set (rop->c, op->c, MPC_RNDNN);
+      mpcr_set (rop->r, op->r);
+   }
 }
 
 
@@ -190,6 +192,38 @@ mpcb_sqr (mpcb_ptr z, mpcb_srcptr z1)
       mpcb_set_prec (z, p);
    mpc_sqr (z->c, z1->c, MPC_RNDNN);
    mpcr_set (z->r, r);
+}
+
+void
+mpcb_pow_ui (mpcb_ptr z, mpcb_srcptr z1, unsigned long int e)
+{
+   mpcb_t pow;
+
+   if (e == 0)
+      mpcb_set_ui_ui (z, 1, 0, mpcb_get_prec (z1));
+   else if (e == 1)
+     mpcb_set (z, z1);
+   else {
+      /* Right to left powering is easier to implement, but requires an
+         additional variable even when there is no overlap. */
+      mpcb_init (pow);
+      mpcb_set (pow, z1);
+      /* Avoid setting z to 1 and multiplying by it, instead set it to the
+         smallest 2-power multiple of z1 that is occurring. */
+      while (e % 2 == 0) {
+         mpcb_sqr (pow, pow);
+         e /= 2;
+      }
+      mpcb_set (z, pow);
+      e /= 2;
+      while (e != 0) {
+         mpcb_sqr (pow, pow);
+         if (e % 2 == 1)
+            mpcb_mul (z, z, pow);
+         e /= 2;
+      }
+      mpcb_clear (pow);
+   }
 }
 
 

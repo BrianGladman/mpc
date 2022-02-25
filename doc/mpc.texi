@@ -1486,6 +1486,7 @@ Set @var{z} to a ball with centre @var{re}+I*@var{im} at precision
 @deftypefunx void mpcb_add (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
 @deftypefunx void mpcb_mul (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
 @deftypefunx void mpcb_sqr (mpcb_ptr @var{z}, mpcb_srcptr @var{z1})
+@deftypefunx void mpcb_pow_ui (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, unsigned long int @var{e})
 @deftypefunx void mpcb_sqrt (mpcb_ptr @var{z}, mpcb_srcptr @var{z1})
 @deftypefunx void mpcb_div (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, mpcb_srcptr @var{z2})
 @deftypefunx void mpcb_div_2ui (mpcb_ptr @var{z}, mpcb_srcptr @var{z1}, unsigned long int @var{e})
