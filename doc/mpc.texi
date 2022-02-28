@@ -1433,6 +1433,14 @@ Set @var{z} to @var{z1}, preserving the precision of the centre.
 @end deftypefun
 
 
+@deftypefun void mpcb_set_inf (mpcb_ptr @var{z})
+Set @var{z} to the whole complex plane. This is intended to be used much
+in the spirit of an assertion: When a precondition is not satisfied inside
+a function, it can set its result to this value, which will propagate
+through further computations.
+@end deftypefun
+
+
 @deftypefun mpcb_set_c (mpcb_ptr @var{z}, mpc_srcptr @var{c}, mpfr_prec_t @var{prec}, unsigned long int @var{err_re}, unsigned long int @var {err_im})
 Set @var{z} to a ball with centre @var{c} at precision @var{prec}.
 If @var{prec} is at least the maximum of the precisions of the real and the

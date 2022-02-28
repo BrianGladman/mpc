@@ -72,6 +72,15 @@ mpcb_set (mpcb_ptr rop, mpcb_srcptr op)
 
 
 void
+mpcb_set_inf (mpcb_ptr rop)
+{
+   mpc_set_prec (rop->c, 2);
+   mpc_set_ui_ui (rop->c, 0, 0, MPC_RNDNN);
+   mpcr_set_inf (rop->r);
+}
+
+
+void
 mpcb_set_c (mpcb_ptr rop, mpc_srcptr op, mpfr_prec_t prec,
    unsigned long int err_re, unsigned long int err_im)
    /* Set the precision of rop to prec and assign a ball with centre op
