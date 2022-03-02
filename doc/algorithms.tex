@@ -38,6 +38,7 @@
 \renewcommand {\geq}{\geqslant}
 \newcommand {\AGM}{\operatorname{AGM}}
 \newcommand {\sign}{\operatorname{sign}}
+\newcommand {\Sl}{\operatorname{Sl}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -53,7 +54,7 @@
 
 \title {MPC: Algorithms and Error Analysis}
 \author {Andreas Enge \and Philippe Th\'eveny \and Paul Zimmermann}
-\date {Draft; April 4, 2022}
+\date {Draft; April 20, 2022}
 
 \begin {document}
 \maketitle
@@ -567,12 +568,39 @@ Taking the exponents into account, one obtains
 \label {eq:proprealcos}
 \error (\appro x)
 \leq
-k \, 2^{\Exp (\appro {x_1}) - \Exp (\appro x)}
+k_1 \, 2^{\Exp (\appro {x_1}) - \Exp (\appro x)}
 \, 2^{\Exp (\appro x) - p}.
 \end {equation}
 
 For the sine function, a completely analogous argument shows that
 \eqref {eq:proprealcos} also holds.
+
+
+\subsubsection {Exponential}
+\label {sssec:proprealexp}
+
+Let
+\[
+\appro x = \exp (\appro {x_1})
+\]
+for $\appro {x_1} \neq 0$, of the same sign as $\corr {x_1}$ and  with
+$\error (\appro {x_1}) \leq k_1 \Ulp (\appro {x_1})$.
+Assume furthermore that $\appro {x_1} \geq \corr {x_1}$, that is, it has
+been obtained by consistently rounding up.
+Then by the mean value theorem there is a $\xi$ with
+$\corr {x_1} \leq \xi \leq \appro {x_1}$ such that
+\[
+\relerror {\appro x}
+= \frac {e^\xi \error (\appro {x_1})}{\appro x}
+\leq \error (\appro {x_1})
+\leq k_1 2^{\Exp (\appro {x_1}) - p}.
+\]
+By Proposition~\ref {prop:relerror} this implies
+\begin {equation}
+\label {eq:proprealexp}
+\error (\appro x)
+\leq k_1 \, 2^{\Exp (\appro {x_1})} \, 2^{\Exp (\appro x) - p}.
+\end {equation}
 
 
 \subsubsection {Logarithm}
@@ -594,17 +622,17 @@ For $x_1 > 0$, this implies
 \error (\appro x)
 & \leq & \error (\appro {x_1})
 \leq
-k \, 2^{\Exp (\appro {x_1}) - \Exp (\appro x)}
+k_1 \, 2^{\Exp (\appro {x_1}) - \Exp (\appro x)}
 \, 2^{\Exp (\appro x) - p} \\
-& \leq & 2 \, k \, \frac {\appro {x_1}}{\appro x} \, 2^{\Exp (\appro x) - p} \\
-& \leq & 2 \, k \, \frac {\appro {x_1}}{\appro {x_1} - \appro {x_1}^2/2}
+& \leq & 2 \, k_1 \, \frac {\appro {x_1}}{\appro x} \, 2^{\Exp (\appro x) - p} \\
+& \leq & 2 \, k_1 \, \frac {\appro {x_1}}{\appro {x_1} - \appro {x_1}^2/2}
 \, 2^{\Exp (\appro x) - p}
 \end {eqnarray*}
 using $\log (1 + z) \geq z - z^2/2$ for $z > 0$.
 For $0 < x_1 \leq 1$, we have $\appro {x_1}^2/2 \leq \appro {x_1}/2$ and
 \[
 \error (\appro x)
-\leq 4 \, k \, 2^{\Exp (\appro x) - p}.
+\leq 4 \, k_1 \, 2^{\Exp (\appro x) - p}.
 \]
 
 
@@ -3202,6 +3230,354 @@ r_{a, b} \leq
             - 1 \right)}
 \]
 is enough, where $\Exp (0)$ is considered as $- \infty$.
+
+
+
+\subsection {Modular functions}
+
+\paragraph {Series for the Dedekind $\eta$-function.}
+
+Modular functions for $\Sl_2 (\Z)$ are often constructed starting from the
+Dedekind $\eta$-function or from Jacobi $\theta$-functions. For $z$ with
+$\Im (z) > 0$ the former is given by
+$q^{1/24} = e^{2 \pi i z / 24}$,
+$q = (q^{1/24})^{24}$ and
+\[
+\eta (z) = q^{1/24} \left( 1 + \sum_{i=1}^\infty (-1)^i
+   \left( q^{(3 i - 1) i / 2} + q^{(3 i + 1) i / 2} \right)
+\right)
+= q^{1/24} \sum_{n=0}^\infty a_n q^n
+\]
+with $a_0 = 1$,
+$a_n = 1$ if there is an even $i \geq 2$ such that
+$n = (3 i - 1) i / 2$ or $n = (3 i + 1) i / 2$,
+$a_n = -1$ if there is an odd $i \geq 1$ such that
+$n = (3 i - 1) i / 2$ or $n = (3 i + 1) i / 2$,
+and $a_n = 0$ otherwise.
+Since the transformation behaviour of $\eta$ under matrices of~$\Sl_2 (\Z)$
+is well-known, we may assume that $z$ lies in the standard fundamental
+domain for this modular group and satisfies $|\Re (z)| \leq 1/2$ and
+$|z| \geq 1$. Then $|q|$ admits its minimum $0.00433\ldots$ for
+$z = \frac {-1 + \sqrt {-3}}{2}$. In the following, we will only assume
+$|q| < 1/4$, which will generously account for rounding errors when
+transforming~$z$ into the fundamental domain and computing~$q$ from~$z$.
+
+We first examine the series without the factor $q^{1/24}$ and let
+\[
+E (q) = \sum_{n=0}^\infty a_n q^n.
+\]
+In practice, one needs to truncate this series after a finite number of
+terms, so we also have to consider
+\[
+E' (q) = \sum_{n=0}^N a_n q^n,
+\]
+where we may assume that $a_N \neq 0$, and let $M$ be the smallest exponent
+larger than~$N$ such that $a_M \neq 0$ again.
+
+Starting with a ball for $q$ such that $|q| < 1/4$ everywhere in the ball,
+we compute by ball arithmetic $\appro {E'}$ and $\epsilon'$ such that
+$E' = \appro {E'} (1 + \theta')$ with $|\theta'| \leq \epsilon'$, which
+accounts for the radius of the input ball for~$q$ as well as for rounding
+errors during the series evaluation.
+We also need to estimate the mathematical, truncation error, given by
+\[
+|E - E'|
+\leq \sum_{n = M}^\infty |q|^n
+= \frac {|q|^M}{1 - |q|}
+\leq \frac {4}{3} \cdot |q|^M
+\]
+since $|q| < 1/4$.
+To obtain a relative error, we use the lower bound
+\[
+|E'|
+\geq 1 - \sum_{n=1}^\infty |q|^n
+\geq 1 - \sum_{n=1}^\infty (1/4)^n
+= 2/3,
+\]
+so that altogether
+\[
+\left| \frac {E - E'}{E'} \right|
+\leq 2 \, |q|^M
+\leq 2^{M \Exp (|q|) + 1}.
+\]
+So we have $E = E' (1 + \theta_M)$ with
+$|\theta_M| \leq \epsilon_M = 2^{M \Exp (|q|) + 1}$.
+Putting the two estimates together, we obtain
+$E = \appro {E'} (1 + \theta_M) (1 + \theta')
+= \appro {E'} (1 + \theta)$
+with
+$|\theta| \leq \epsilon' + \epsilon_M + \epsilon' \epsilon_M$.
+So we obtain a ball for~$E$ by keeping the centre of~$\appro {E'}$
+and adapting the radius according to this formula.
+
+A ball for $\eta$ can then be obtained by multiplying the ball for
+$E$ by the ball for $q^{1/24}$.
+
+Notice that Jacobi $\theta$-functions are defined by a similar series
+as~$E$ with coefficients in $\{ 0, \pm 1 \}$, so that the same kind of
+analysis can be applied.
+
+
+\paragraph {From $z$ to $q$.}
+
+The previous section explains how to compute the $\eta$-function from its
+series given a ball for the Fourier transform~$q$ of its complex
+argument~$z$. Deducing an algorithm for computing $\eta$ on an MPC type
+argument with correct rounding requires an error analysis on the passage
+from an exact complex value~$z$ to $q = e^{2 \pi i z}$, or more precisely
+$q^{1/24} = e^{\pi i z / 12}$. Since in the main application (discussed in
+the next section) the argument~$z$ may itself be the result of a
+computation, we analyse more generally the case that $z = x + i y$ is given
+by an approximation $\appro z = \appro x + i \appro y$ with $\appro x$,
+$\appro y$ at the same precision~$p$ and with respective errors of
+$k_x \Ulp (\appro x)$ and $k_y \Ulp (\appro y)$.
+
+Since deriving error bounds for even the rather simple formula
+for~$q^{1/24}$ turns out to be surprisingly lengthy, we start by
+summarising the algorithm; particular choices for rounding modes will be
+explained during the later analysis:
+\[
+\begin {array}{ll}
+w = \pi i z / 12 = u + i v
+   & \appro u = - \round (\round (\round (\pi) / 12) \appro y)
+     \text { with all roundings down,} \\
+   & \text {so that $\appro u$ is rounded up} \\
+   & \appro v = \round (\round (\round (\pi) / 12) \appro x)
+     \text { rounded arbitrarily} \\
+t = \exp (u)
+   & \appro t = \round (\exp (\appro u)) \text { rounded up} \\
+r = \cos (v)
+   & \appro r = \round (\cos (\appro v)) \text { rounded towards zero} \\
+s = \sin (v)
+   & \appro s = \round (\sin (\appro v)) \text { rounded away from zero} \\
+q^{1/24} = \exp (w) = a + i b
+   & \appro a = \round \left( \appro t \appro r \right)
+     \text { with arbitrary rounding} \\
+   & \appro b = \round \left( \appro t \appro s \right)
+     \text { with arbitrary rounding}
+\end {array}
+\]
+
+Since we are eventually interested in $z$ lying in the fundamental domain
+for $\Sl_2 (\Z)$, we may assume $|x| \leq 1/2$.
+At precision larger than~$3$, it is reasonable to assume that
+$|\appro x| \leq 5/8$, which should be checked at the beginning of the
+algorithm.
+So that the algorithm really obtains an upper bound
+$\appro u \geq u$, we also need to assume that $\appro y$ has been
+computed with rounding down (or towards zero, since it is positive),
+so that $\appro y \leq y$.
+For reasons that will become clear later we also assume a minimal
+precision~$p$ such that $2^p \geq 240 + 66 k_x$.
+In particular this implies $p \geq 8$.
+
+We also need to get an exact case out of the way.
+When $x = 0$, we assume that this is detected and that $\appro x = x = 0$
+has been obtained exactly without error.
+Then $\appro v = v = 0$, $\appro r = r = 1$ and $\appro s = s = 0$
+exactly, and $q^{1/24} = t$ is real.
+So in this case the error analysis of $\appro t$ below directly carries
+over, and when analysing $\appro v$, $\appro r$ and $\appro s$ below
+we will assume that we are not in this case.
+(The cases $|x| = 1/2$ and $|x| = 1/4$ are also particular: In the former,
+$q$ is real, in the latter, $q$ is purely imaginary; but
+$q^{1/24}$ is not, so it has to be computed by the generic algorithm.)
+
+The rounded-down value of $\pi$ is obtained with an error of \ulp{1}.
+Division by the exact constant~$12$ at most doubles the error in ulp
+by~\eqref {eq:proprealdiv}, and the final rounding down results in an
+error of at most \ulp{3}. Multiplication by~$\appro y$ and rounding down
+leads by~\eqref {eq:proprealmul} to a total error of
+\[
+\error (\appro u)
+\leq \big( 1 + 2 (3 + k_y) + 3 k_y 2^{2-p} \big) \Ulp (\appro u)
+=    \big( 7 + (2 + 12 \cdot 2^{-p}) k_y \big) \Ulp (\appro u).
+\]
+For $\appro v$ we obtain an analogous bound with $k_y$ replaced by $k_x$.
+(One could also recompute $\pi / 12$ with rounding to nearest,
+or even precompute the constant $\pi / 12$ itself, potentially
+with a higher precision than~$p$ to obtain an arbitrarily low error,
+but we will stick with the simpler algorithm and use the same bound
+for $\appro u$ and $\appro v$, which will not make a big difference in
+the analysis.)
+
+For the next step we will want to express $\Exp (\appro u)$ in terms of
+$\Exp (\appro y)$. Already at precision~$3$ (and independently of the
+rounding mode), the constant $\pi$ is bounded by representable numbers
+as follows:
+$3 \leq \round (\pi) \leq 7/2$, so that
+$1/4 \leq \round (\round (\pi) / 12) \leq 5/16 < 1/2$,
+and these bounds can only become tighter at higher precision.
+This implies that
+$\Exp (\appro u) - \Exp (\appro y) \in \{ -2, -1 \}$.
+Also $|\appro x| \leq 5/8$ and $\round (\round (\pi) / 12) \leq 5/16$
+imply that $|\appro v| \leq \round (25/128) \leq 28/128 < 1/4$
+at precision~$3$ or higher (where $28$ is a representable floating point
+number above~$25$), or equivalently $\Exp (\appro v) \leq -2$.
+
+Working with an upper bound $\appro u \geq u$ and rounding $\appro t$ up
+implies $\appro t \geq t$, so that we can apply~\eqref {eq:proprealexp},
+which together with the error bound on $\appro u$ yields
+\begin {eqnarray*}
+\error (\appro t)
+& \leq &
+\left( 1 +
+\big( 7 + (2 + 12 \cdot 2^{-p}) k_y \big) \, 2^{\Exp (\appro u)}
+\right) \Ulp (\appro t) \\
+& \leq &
+\left( 1 +
+\big( 7/2 + (1 + 6 \cdot 2^{-p}) k_y \big) \, 2^{\Exp (\appro y)}
+\right) \Ulp (\appro t).
+\end {eqnarray*}
+For the trigonometric functions we use~\eqref {eq:proprealcos} and obtain,
+taking the final directed rounding into account, that
+\begin {eqnarray*}
+\error (\appro r) \leq
+\left( 1 +
+\big( 7 + (2 + 12 \cdot 2^{-p}) k_x \big) \,
+2^{\Exp (\appro v) - \Exp (\appro r)}
+\right) \Ulp (\appro r), \\
+\error (\appro s) \leq
+\left( 1 +
+\big( 7 + (2 + 12 \cdot 2^{-p}) k_x \big) \,
+2^{\Exp (\appro v) - \Exp (\appro s)}
+\right) \Ulp (\appro s).
+\end {eqnarray*}
+
+In the non-exact case (that is, when we do not have $\appro x = x = 0$ as
+discussed above) we use the bound $\Exp (\appro v) \leq -2$ and
+$1/2 < \cos (\appro v) < 1$ for $|\appro v| < 1/4$, so that
+$1/2 \leq \appro r < 1$ since we rounded towards zero,
+$\Exp (\appro r) = 0$ and
+\[
+\error (\appro r) \leq
+\left( 11/4 + (1/2 + 3 \cdot 2^{-p}) k_x \right) \Ulp (\appro r).
+\]
+
+Concerning the sine function, we consider without loss of generality the
+case that $\appro v > 0$ (the case $\appro v < 0$ is symmetric, since by
+rounding away from zero we chose a symmetric rounding mode).
+For $\appro v < 1/4$, we have $0 < \sin (\appro v) < \appro v$ and thus
+$0 < \appro s \leq \appro v$ since $\appro v$ is a representable upper bound.
+The function $\alpha \mapsto \frac {\alpha - \sin (\alpha)}{\alpha}$
+is strictly increasing for $0 < \alpha < 1/4$ with an upper limit of
+$1 - 4 \, \sin (1/4) < 1/2$ so that in this range
+$\sin (\alpha) > \alpha / 2$, which implies
+$\appro s \geq \sin (\appro v) > \appro v / 2$.
+In terms of exponents, these upper and lower bounds translate into
+$\Exp (\appro v) - \Exp (\appro s) \in \{ 0, 1 \}$. Thus
+\[
+\error (\appro s) \leq
+\left( 15 + (4 + 24 \cdot 2^{-p}) k_x \right) \Ulp (\appro s).
+\]
+
+Simplifying a bit further by replacing the constants in front of $2^{-p}$
+by the smallest powers of~$2$ above them and $2^{-p}$ by the upper
+bound $2^{-8}$, the current error bounds can be summarised as
+\begin {eqnarray*}
+\error (\appro t)
+& \leq & k_t \, \Ulp (\appro t)
+   \text { with } k_t =
+   1 + \big( 7/2 + (33/32) k_y \big) 2^{\Exp (\appro y)}, \\
+\error (\appro r)
+& \leq & k_r \, \Ulp (\appro r)
+   \text { with } k_r = 11/4 + (33/64) k_x, \\
+\error (\appro s)
+& \leq & k_s \, \Ulp (\appro s)
+   \text { with } k_s = 15 + (33/8) k_x.
+\end {eqnarray*}
+
+Now $q^{1/24} = a + i b$ is computed with two more multiplications
+(in the non-exact case); we write
+$\error (\appro a) = k_a \Ulp (\appro a)$ and
+$\error (\appro b) = k_b \Ulp (\appro b)$ and
+obtain by~\eqref {eq:proprealmul} and including the final rounding that
+\begin {eqnarray*}
+k_a
+& \leq & 1 + 2 k_t + 2 k_r + 4 k_t k_r \, 2^{-p} \\
+k_b
+& \leq & 1 + 2 k_t + 2 k_s + 4 k_t k_s \, 2^{-p}
+\end {eqnarray*}
+Plugging in the above bounds for $k_r$, $k_s$ and $k_t$, this yields
+longish polynomials in $k_x$, $k_y$, $2^{-p}$ and $2^{\Exp (\appro y)}$.
+For a more compact expression, we use the assumption
+$2^p \geq 16 k_s = 240 + 66 k_x \geq 64 k_r$
+to get rid of the second order error terms; indeed it implies that
+$4 k_s 2^{-p} \leq 1/4$ and $4 k_r 2^{-p} \leq 1/16$, so that we end up with
+\begin {equation}
+\label {eq:qfromz}
+\begin {aligned}
+k_a
+& \leq 1 + (33/16) k_t + 2 k_r \\
+& \leq \big( 231/32 + (1089/512) k_y \big) \, 2^{\Exp (\appro y)}
+         + \big( 137/16 + (33/32) k_x \big) \\
+& \leq \big( 8 + (5/2) k_y \big) \, 2^{\Exp (\appro y)}
+         + \big( 9 + 2 k_x \big) \\
+k_b
+& \leq 1 + (9/4) k_t + 2 k_s \\
+& \leq \big( 63/8 + (297/128) k_y \big) \, 2^{\Exp (\appro y)}
+         + \big( 133/4 + (33/4) k_x \big) \\
+& \leq \big( 8 + (5/2) k_y \big) \, 2^{\Exp (\appro y)}
+         + \big( 67/2 + 9 k_x \big)
+\end {aligned}
+\end {equation}
+
+Notice that in this expression we expect $k_x$ and $k_y$ to be very small
+(for a concrete example, see the following section), and
+$2^{\Exp (\appro y)} \approx \appro y$ to yield the dominant term.
+However, in practice this is also bounded:
+Since we are computing $\appro t$ as the exponential of $\appro u$, which
+is up to a small constant factor about $\appro y$, the value of
+$\appro y$ is bounded by roughly the maximal admissible exponent, which
+is around $2^{64}$; so every multiple of $2^{\Exp (\appro y)}$ in the
+formul{\ae} above amounts to a loss of at most $64$~bits of precision.
+In this case, the series for $\eta$ is essentially~$1$ and the value
+of~$\eta$ is essentially $q^{1/24}$, which is almost indistinguishable
+from~$0$.
+
+
+\paragraph {An exemplary setting for $z$.}
+
+The main application for computing the Dedekind $\eta$-function comes from
+what is called complex multiplication of elliptic curves. There $z$ is
+given as an imaginary-quadratic algebraic number, that is,
+$z = \frac {-B + \sqrt {D}}{2 A}$ with integers $A$ and $B$ and the
+discriminant $D < 0$, which satisfy furthermore
+$|B| \leq A \leq (B^2 - D) / (4 A)$.
+This implies $x = - B / (2A)$ with $|x| \leq 1/2$, and the case that
+$x = 0$ is easily detectable from $B = 0$; and it implies
+$y = \sqrt {|D|} / (2 A)$ and $|z| \geq 1$, so that $z$ lies in the
+fundamental domain as defined in the previous section.
+
+The errors in computing $\appro x$ and $\appro y$ from the integers
+$A$, $B$ and $D$ are readily estimated as follows. We assume that the
+precision is large enough so that all occurring integers are represented
+exactly.
+We compute $\appro x = \round (B / (2A))$ by dividing two representable
+numbers with an error in ulp of at most $k_x = 1/2$ when rounding to
+nearest; in precision at least~$3$ the condition $|x| \leq 5/8$ required
+in the previous section is satisfied automatically.
+For $\appro y$, first compute $\round \left( \sqrt {|D|} \right)$, rounded
+down, with an error of at most \ulp {1}. Dividing by the exact $2 A$ at
+most doubles the error by~\eqref {eq:proprealdiv}, and rounding down we
+end up with an error in ulp of at most $k_y = 3$.
+
+Plugging $k_x = 1/2$ and $k_y = 3$ into~\eqref {eq:qfromz}, the error
+when computing~$\appro {q^{1/24}}$ from this $\appro z$ is bounded by
+\begin {equation}
+\label {eq:qfromzcm}
+\begin {aligned}
+k_a & \leq (31/2) \cdot 2^{\Exp (\appro y)} + 10 \\
+k_b & \leq (31/2) \cdot 2^{\Exp (\appro y)} + 38
+\end {aligned}
+\end {equation}
+To get an idea on $2^{\Exp (\appro y)}$, notice that
+$y$ is bounded above by $\sqrt {|D|} / 2$ for $A = 1$.
+The largest $D$ treated with this approach in the literature is
+$D = -2093236031$\cite {Enge09}, for which
+$\Exp (\appro y) \leq 15$, so that
+$k_a, k_b \leq 2^{19}$, which corresponds to a loss of precision bounded
+by about $19$~bits.
 
 
 \nocite{Baudin11,Stewart85,Priest04,muller:hal-01766584,jeannerod:ensl-01780265}
