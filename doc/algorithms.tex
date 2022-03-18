@@ -52,7 +52,7 @@
 
 \title {MPC: Algorithms and Error Analysis}
 \author {Andreas Enge \and Philippe Th\'eveny \and Paul Zimmermann}
-\date {Draft; February 24, 2022}
+\date {Draft; April 4, 2022}
 
 \begin {document}
 \maketitle
@@ -2481,8 +2481,10 @@ and thus not see any more cancellation in the arithmetic mean.
 % p2=list_plot([(real(sqrt(cos(t*pi/100)+i*sin(t*pi/100))),imag(sqrt(cos(t*pi/100)+i*sin(t*pi/100)))) for t in range(100)])
 % (p1+p2).save("iter1.pdf")
 \centerline{\includegraphics[width=5cm]{iter1.pdf}}
-  \caption{Extremal (by above) values of $a_1$ (solid curve) and $b_1$ (dotted curve) after the first
-    iteration of the AGM. The values are bounded by below by the $x$-axis.}
+  \caption{Extremal (from above) values of $a_1$ (solid curve) and
+    $b_1$ (dotted curve) after the first iteration of the AGM for
+    $\Im (b_0) \geq 0$.
+    The values are bounded from below by the $x$-axis.}
 \end{figure}
 
 \paragraph {The idea of the analysis.}
@@ -2686,43 +2688,68 @@ Since we have to decide on the number of iterations from approximations
 to $b_0$ and $a_1$ instead of the correct values, we may wish to replace
 $b_0$ by $\appro {b_0}$ and $a_1$ by $\appro {a_1}$. (In fact the
 arguments will be quite delicate and switch between the different
-quantities.) The relative errors derived above on $\appro {b_0}$ of
+quantities.)
+The relative errors derived above on $\appro {b_0}$ of
 $2^{1-p}$ and on $\appro {a_1}$ of $(\sqrt 2)^{k_1} \, 2^{1-p}$ with
-$p \geq k_1 / 2 + 5 \geq 5$ are tight enough to conclude that
+$p \geq k_1 / 2 + 5 \geq 5$ show that
+\[
+\left( 1 - 2^{-4} \right) \left| \appro {b_0} \right|
+\leq |b_0|
+\leq \left( 1 + 2^{-4} \right) \left| \appro {b_0} \right|
+\text { and }
+\left( 1 - 2^{-4} \right) \left| \appro {a_1} \right|
+\leq |a_1|
+\leq \left( 1 + 2^{-4} \right) \left| \appro {a_1} \right|.
+\]
+Since $\appro {b_0} = \round (b_0)$ with both parts rounded towards zero,
+we even have $\left| \appro {b_0} \right| \leq |b_0|$.
+Altogether we have the (much coarser) following bounds:
 \begin {equation}
-\label {eq:agmabsz}
-\frac {1}{\sqrt 2} \,
-\frac {\left| \sqrt {\appro {b_0}} \right|}{|\appro {a_1}|}
-\leq
-|z|
-\leq
-\sqrt 2 \,  \frac {\left| \sqrt {\appro {b_0}} \right|}{|\appro {a_1}|},
+\label {eq:agmabsb0a1}
+\left| \appro {b_0} \right|
+\leq |b_0|
+\leq \sqrt 2 \, \left| \appro {b_0} \right|
+\text { and }
+\frac {1}{\sqrt 2} \, \left| \appro {a_1} \right|
+\leq |a_1|
+\leq \sqrt 2 \, \left| \appro {a_1} \right|.
 \end {equation}
-where any of the $\appro {b_0}$ and $\appro {a_1}$ may be replaced by
-$b_0$ and $a_1$, respectively (and of course the factors $\sqrt 2$
-disappear when both are replaced in a formula and we fall back to the
-above equality).
 
 The quantity of interest is a (double) logarithm, so it is helpful to
-consider the (easily available) exponents of the numbers. Recall that
-$\appro {b_0} = \round ({b_0})$,
+consider the (easily available) exponents of the numbers.
+Since $\appro {b_0} = \round ({b_0})$ with both parts rounded towards zero
+we have
+\begin {equation}
+\label {eq:agmexpb0}
+\Exp (\Re (\appro {b_0})) = \Exp (\Re (b_0))
+\text { and }
+\Exp (\Im (\appro {b_0})) = \Exp (\Im (b_0)).
+\end {equation}
+Recall that
 $\appro {a_1} = \round \left( \frac {1 + \appro {b_0}}{2} \right)$ so that
-$\Im (\appro {a_1}) = \Im (\appro {b_0}) / 2
-= \round (\Im (b_0)) / 2 = \round (\Im (a_1))$.
-Hence we may apply Proposition~\ref {prop:expround} to $\Re (\appro {b_0})$,
-$\Im (\appro {b_0})$ and $\Im (\appro {a_1})$ and obtain
-\[
-\Exp (\Re (b_0)) \leq \Exp (\Re (\appro {b_0})) \leq \Exp (\Re (b_0)) + 1
-\]
-and so on.
+$\Im (\appro {a_1}) = \Im (\appro {b_0}) / 2$ does not require any
+additional rounding; together with \eqref {eq:agmexpb0} this yields
+\begin {equation}
+\label {eq:agmexpima1}
+\Exp (\Im (\appro {a_1})) = \Exp (\Im (\appro {b_0})) - 1
+= \Exp (\Im (b_0)) - 1 = \Exp (\Im (a_1)).
+\end {equation}
 However
-$\Re (\appro {a_1}) = \round (1 + \round (\Re (b_0))) / 2$,
-which may be different from $\round (\Re (a_1))$ due to the double rounding.
+$\Re (\appro {a_1}) = \round (1 + \round (\Re (b_0))) / 2$
+is computed with two roundings, so it takes a bit more work to relate
+it to $\Re (a_1) = (1 + \Re (b_0)) / 2$, which we postpone to the
+following case distinction since we do not need a completely general
+result.
 
-Recall the bounds in our setting that
+The above bound~$B'$ for the required number of iterations~$n$ grows with
+$\big| \log_2 |z| \big|$, so problematic situations may occur when $|z|$
+is either very large or very small; the former may happen when $|b_0|$ is
+large and/or $|a_1|$ is small, the latter when $|b_0|$ is small and/or
+$|a_1|$ is large.
+Remember that in our setting we have the bounds
 \[
 |b_0| \leq 1 \text {, so that }
-|a_1| = \left| \frac {b_0 + 1}{2} \right| \leq 1;
+|a_1| = \left| \frac {b_0 + 1}{2} \right| \leq 1.
 \]
 thus interesting situations can occur only when either
 $|b_0|$ is small or $|a_1|$ is small, that is, $b_0$ is close to $-1$;
@@ -2732,7 +2759,8 @@ case distinction:
 \item
 Assume $\Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \leq -1$.
 
-Then $\Exp (\Re (b_0)), \Exp (\Im (b_0)) \leq -1$, so
+By~\eqref {eq:agmexpb0} this is equivalent to
+$\Exp (\Re (b_0)), \Exp (\Im (b_0)) \leq -1$, whence
 $\Re (b_0), \Im (b_0) < 1/2$ and
 \[
 |b_0| \leq \frac {\sqrt 2}{2} < 1.
@@ -2741,21 +2769,19 @@ This implies
 \[
 1 - \frac {\sqrt 2}{2} \leq 2 |a_1| \leq 1 + \frac {\sqrt 2}{2}
 \text { and }
-1/8 \leq |a_1| \leq 1,
+1/8 \leq |a_1| \leq 1
 \]
-which leads to
+and we know $|\sqrt {b_0}| \geq \left| \sqrt {\appro {b_0}} \right|$
+by \eqref {eq:agmabsb0a1}. Collecting these upper and lower bounds,
+we obtain for $z = \sqrt {b_0} / a_1$ that
 \[
-\frac {1}{\sqrt 2} \, \sqrt {\left| \appro {b_0} \right|} \leq |z| \leq 8
+\sqrt {\left| \appro {b_0} \right|} \leq |z| \leq 8
 \text { and }
 \big| \log_2 |z| \big| \leq
 \max \left(
-3, - \frac {1}{2} \, \log_2 \left| \appro {b_0} \right| + \frac {1}{2}
+3, - \frac {1}{2} \, \log_2 \left| \appro {b_0} \right|
 \right).
 \]
-by \eqref {eq:agmabsz}
-(with $a_1$ everywhere, $b_0$ on the right and $\appro {b_0}$ on the left,
-which induces the factor~$1/\sqrt 2$ for the lower bound, but no
-factor~$\sqrt 2$ for the upper bound).
 
 Using the estimate
 \[
@@ -2771,7 +2797,8 @@ we finally obtain
 \big| \log_2 |z| \big| \leq
 \max \left(
 3, - \frac {1}{2} \,
-\max \left( \Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \right) + 1
+\max \left( \Exp (\Re (\appro {b_0})), \Exp (\Im (\appro {b_0})) \right)
++ \frac {1}{2}
 \right).
 \end {equation}
 
@@ -2779,22 +2806,48 @@ we finally obtain
 Assume $\Exp (\Im (\appro {b_0})) \leq -1$ and
 $\Exp (\Re (\appro {a_1})) \leq -2$.
 
-Then $\Exp (\Re (a_1)), \Exp (\Im (a_1)) \leq -2$, so
-$|a_1| \leq (\sqrt 2) / 4$,
-whence
+By~\eqref {eq:agmexpima1} the first condition implies
+$\Exp (\Im (a_1)) \leq -2$ or $|\Im (a_1)| < 1/4$.
+The second condition together with the first inequality of
+Proposition~\ref {prop:expround} implies that
+$\Exp \left( (1 + \Re (\appro {b_0})) / 2 \right) \leq -2$,
+or $\left| 1 + \Re (\appro {b_0}) \right| < 1/2$.
+So in fact $-1 < \Re (\appro {b_0}) < -1/2$, and then
+$-1 < \Re (b_0) < -1/2$ as well. This in turn implies
+$0 < \Re (a_1) < 1/4$.
+
+Putting these together, we obtain
 \[
-1 - \frac {\sqrt 2}{2} \leq |b_0| \leq 1
+1/2 \leq |\Re (b_0)| \leq |b_0|
+\text { or }
+1 / \sqrt 2 \leq |\sqrt {b_0}|,
 \text { and }
-1/2 \leq \sqrt {|b_0|} \leq 1,
+|a_1| \leq \sqrt 2 / 4,
 \]
-which leads to
+and we already know
 \[
-\sqrt 2 \leq |z| \leq \frac {\sqrt 2}{|\appro {a_1}|}
+|b_0| \leq 1 \text { or } |\sqrt {b_0}| \leq 1
+\]
+from our general setting and
+\[
+|a_1| \geq |\appro {a_1}| / \sqrt 2
+\]
+by~\eqref {eq:agmabsb0a1}, whence
+\[
+2 \leq |z| \leq \frac {\sqrt 2}{|\appro {a_1}|}
 \text {and }
 \big| \log_2 |z| \big| \leq
 - \log_2 \left| \appro {a_1} \right| + \frac {1}{2}.
 \]
-which in exponents can be expressed as
+Using the estimate
+\[
+\left| \appro {a_1} \right|
+\geq \max \left( |\Re (\appro {a_1})|, |\Im (\appro {a_1})| \right)
+\geq
+2^{\max \left( \Exp (\Re (\appro {a_1})), \Exp (\Im (\appro {a_1})) \right)
+- 1}
+\]
+and~\eqref {eq:agmexpima1} we finally obtain
 \begin {equation}
 \label {eq:agmla}
 \big| \log_2 |z| \big| \leq
@@ -2803,28 +2856,46 @@ which in exponents can be expressed as
 \end {equation}
 
 \item
-In the remaining case, one or both of
-$\Exp (\Re (\appro {b_0}))$ and $\Exp (\Im (\appro {b_0}))$
-are at least~$0$, so that one or both of
+In the remaining case, since we are not in~(a), at least one of
+$\Exp \left( \Re (\appro {b_0}) \right)$ and
+$\Exp \left( \Im (\appro {b_0}) \right)$,
+or equivalently by~\eqref {eq:agmexpb0} at least one of
 $\Exp (\Re (b_0))$ and $\Exp (\Im (b_0))$
-are at least~$-1$, and
+is~$0$ or larger, so that
 \[
-\frac {1}{4} \leq |b_0| \leq 1 \text { and }
-\frac {1}{2} \leq \sqrt {|b_0|} \leq 1.
+\frac {1}{2} \leq \max (|\Re (b_0)|, |\Im (b_0)|)
+\leq |b_0| \leq 1 \text { and }
+\frac {1}{\sqrt 2} \leq \sqrt {|b_0|} \leq 1.
 \]
-Furthermore,
-$\Exp (\Re (\appro {a_1})) \geq -1$, so that
-$\Exp (\Re (a_1)) \geq -2$;
-or $\Exp (\Im (\appro {b_0})) \geq 0$, so that
-$\Exp (\Im (a_1)) = \Exp (\Im (b_0)) - 1 \geq -2$.
-In both cases
+If $\Exp \left( \Im (\appro {b_0}) \right) \geq 0$, then
+$\Exp (\Im (a_1)) \geq -1$ by~\eqref {eq:agmexpima1}
+and
 \[
-\frac {1}{8} \leq |a_1| \leq 1.
+|a_1| \geq |\Im (a_1)| \geq 1/4.
 \]
+Otherwise since we are not in~(b),
+$\Exp (\Re (\appro {a_1})) \geq -1$ or
+$|\Re (\appro {a_1})| \geq 1/4$;
+as it is known to be positive in fact
+$\Re (\appro {a_1}) \geq 1/4$.
+In precision at least~$5$, the value $1/4 \cdot 31/32$
+is representable and smaller than~$1/4$ so that the value rounded
+to $\Re (\appro {a_1})$ satisfies
+$(1 + \Re (\appro {b_0})) / 2 > 31/128$ and
+$\Re (\appro {b_0}) > -33/64$.
+In precision at least~$5$, the value $-34/64$
+is representable and smaller than~$-33/64$ so that the unrounded
+value satisfies
+$\Re (b_0) > -17/32$,
+which implies $\Re (a_1) > 15/64 > 1/8$ and
+\[
+|a_1| \geq |\Re (a_1)| \geq 1/8.
+\]
+We also know $|a_1| \leq 1$ in our general setting.
 Altogether
 \begin {equation}
 \label {eq:agml}
-\frac {1}{2} \leq |z| \leq 8
+\frac {1}{\sqrt 2} \leq |z| \leq 8
 \text { and }
 \big| \log_2 |z| \big| \leq 3.
 \end {equation}
@@ -2885,7 +2956,7 @@ this leads to a relative error bounded by $2^{-N}$.
 
 In our analysis, the working precision~$p$ depends on
 \[
-k_1 = \max (3, - 2 \Exp (\Re (\appro {a_1})) + 4)
+k_1 = \max (3, - 2 \Exp (\Re (\appro {a_1})) - 2)
 \]
 of~\eqref {eq:agmk1}, which in turn depends not only on the input data,
 but also on the working precision of the first AGM iteration. It is not
