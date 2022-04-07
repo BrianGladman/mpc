@@ -417,7 +417,9 @@ life.
 
 A complex rounding mode is of the form @code{MPC_RNDxy} where
 @code{x} and @code{y} are one of @code{N} (to nearest), @code{Z} (towards
-zero), @code{U} (towards plus infinity), @code{D} (towards minus infinity).
+zero), @code{U} (towards plus infinity), @code{D} (towards minus infinity),
+@code{A} (away from zero, that is, towards plus or minus infinity depending
+on the sign of the number to be rounded).
 The first letter refers to the rounding mode for the real part,
 and the second one for the imaginary part.
 For example @code{MPC_RNDZU} indicates to round the real part towards zero,
