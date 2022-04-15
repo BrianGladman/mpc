@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9FE7BC5C-F282-4601-90D6-8DF2A86B1342}</ProjectGuid>
+    <RootNamespace>mpc_lib</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30128.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mpc</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mpc</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mpc</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mpc</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\mpir\lib\$(IntDir);..\..\..\mpfr\src;..\..\src;..\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib />
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+    <PostBuildEvent>
+      <Command>..\file_copy ..\..\src\mpc.h ..\..\lib\$(IntDir)mpc.h</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\mpir\lib\$(IntDir);..\..\..\mpfr\src;..\..\src;..\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib />
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+    <PostBuildEvent>
+      <Command>..\file_copy ..\..\src\mpc.h ..\..\lib\$(IntDir)mpc.h</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\mpir\lib\$(IntDir);..\..\..\mpfr\src;..\..\src;..\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib />
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+    <PostBuildEvent>
+      <Command>..\file_copy ..\..\src\mpc.h ..\..\lib\$(IntDir)mpc.h</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\mpir\lib\$(IntDir);..\..\..\mpfr\src;..\..\src;..\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib />
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+    <PostBuildEvent>
+      <Command>..\file_copy ..\..\src\mpc.h ..\..\lib\$(IntDir)mpc.h</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\abs.c" />
+    <ClCompile Include="..\..\src\acos.c" />
+    <ClCompile Include="..\..\src\acosh.c" />
+    <ClCompile Include="..\..\src\add.c" />
+    <ClCompile Include="..\..\src\add_fr.c" />
+    <ClCompile Include="..\..\src\add_si.c" />
+    <ClCompile Include="..\..\src\add_ui.c" />
+    <ClCompile Include="..\..\src\agm.c" />
+    <ClCompile Include="..\..\src\arg.c" />
+    <ClCompile Include="..\..\src\asin.c" />
+    <ClCompile Include="..\..\src\asinh.c" />
+    <ClCompile Include="..\..\src\atan.c" />
+    <ClCompile Include="..\..\src\atanh.c" />
+    <ClCompile Include="..\..\src\balls.c" />
+    <ClCompile Include="..\..\src\clear.c" />
+    <ClCompile Include="..\..\src\cmp.c" />
+    <ClCompile Include="..\..\src\cmp_abs.c" />
+    <ClCompile Include="..\..\src\cmp_si_si.c" />
+    <ClCompile Include="..\..\src\conj.c" />
+    <ClCompile Include="..\..\src\cos.c" />
+    <ClCompile Include="..\..\src\cosh.c" />
+    <ClCompile Include="..\..\src\div.c" />
+    <ClCompile Include="..\..\src\div_2si.c" />
+    <ClCompile Include="..\..\src\div_2ui.c" />
+    <ClCompile Include="..\..\src\div_fr.c" />
+    <ClCompile Include="..\..\src\div_ui.c" />
+    <ClCompile Include="..\..\src\dot.c" />
+    <ClCompile Include="..\..\src\exp.c" />
+    <ClCompile Include="..\..\src\fma.c" />
+    <ClCompile Include="..\..\src\fr_div.c" />
+    <ClCompile Include="..\..\src\fr_sub.c" />
+    <ClCompile Include="..\..\src\get_prec.c" />
+    <ClCompile Include="..\..\src\get_prec2.c" />
+    <ClCompile Include="..\..\src\get_version.c" />
+    <ClCompile Include="..\..\src\get_x.c" />
+    <ClCompile Include="..\..\src\imag.c" />
+    <ClCompile Include="..\..\src\init2.c" />
+    <ClCompile Include="..\..\src\init3.c" />
+    <ClCompile Include="..\..\src\inp_str.c" />
+    <ClCompile Include="..\..\src\log.c" />
+    <ClCompile Include="..\..\src\log10.c" />
+    <ClCompile Include="..\..\src\mem.c" />
+    <ClCompile Include="..\..\src\mul.c" />
+    <ClCompile Include="..\..\src\mul_2si.c" />
+    <ClCompile Include="..\..\src\mul_2ui.c" />
+    <ClCompile Include="..\..\src\mul_fr.c" />
+    <ClCompile Include="..\..\src\mul_i.c" />
+    <ClCompile Include="..\..\src\mul_si.c" />
+    <ClCompile Include="..\..\src\mul_ui.c" />
+    <ClCompile Include="..\..\src\neg.c" />
+    <ClCompile Include="..\..\src\norm.c" />
+    <ClCompile Include="..\..\src\out_str.c" />
+    <ClCompile Include="..\..\src\pow.c" />
+    <ClCompile Include="..\..\src\pow_d.c" />
+    <ClCompile Include="..\..\src\pow_fr.c" />
+    <ClCompile Include="..\..\src\pow_ld.c" />
+    <ClCompile Include="..\..\src\pow_si.c" />
+    <ClCompile Include="..\..\src\pow_ui.c" />
+    <ClCompile Include="..\..\src\pow_z.c" />
+    <ClCompile Include="..\..\src\proj.c" />
+    <ClCompile Include="..\..\src\radius.c" />
+    <ClCompile Include="..\..\src\real.c" />
+    <ClCompile Include="..\..\src\rootofunity.c" />
+    <ClCompile Include="..\..\src\set.c" />
+    <ClCompile Include="..\..\src\set_prec.c" />
+    <ClCompile Include="..\..\src\set_str.c" />
+    <ClCompile Include="..\..\src\set_x.c" />
+    <ClCompile Include="..\..\src\set_x_x.c" />
+    <ClCompile Include="..\..\src\sin.c" />
+    <ClCompile Include="..\..\src\sinh.c" />
+    <ClCompile Include="..\..\src\sin_cos.c" />
+    <ClCompile Include="..\..\src\sqr.c" />
+    <ClCompile Include="..\..\src\sqrt.c" />
+    <ClCompile Include="..\..\src\strtoc.c" />
+    <ClCompile Include="..\..\src\sub.c" />
+    <ClCompile Include="..\..\src\sub_fr.c" />
+    <ClCompile Include="..\..\src\sub_ui.c" />
+    <ClCompile Include="..\..\src\sum.c" />
+    <ClCompile Include="..\..\src\swap.c" />
+    <ClCompile Include="..\..\src\tan.c" />
+    <ClCompile Include="..\..\src\tanh.c" />
+    <ClCompile Include="..\..\src\uceil_log2.c" />
+    <ClCompile Include="..\..\src\ui_div.c" />
+    <ClCompile Include="..\..\src\ui_ui_sub.c" />
+    <ClCompile Include="..\..\src\urandom.c" />
+    <ClCompile Include="..\dlfcn.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\mpc-impl.h" />
+    <ClInclude Include="..\..\src\mpc-log.h" />
+    <ClInclude Include="..\..\src\mpc.h" />
+    <ClInclude Include="..\dlfcn.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

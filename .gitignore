@@ -51,3 +51,33 @@ stamp-h1
 
 /tools/bench/mpcbench
 
+add_test_lib.tlog
+/build.vc/dll_tests/add_test_lib/x64/Release/*.obj
+/build.vc/dll_tests/add_test_lib/*.user
+/build.vc/dll_tests/x64
+/build.vc/dll_tests/tacos/x64/Release/tacos.tlog/*.lastbuildstate
+/build.vc/dll_tests/tacos/x64/Release/tacos.tlog/*.tlog
+/build.vc/dll_tests/tacos/x64/Release/*.recipe
+/build.vc/dll_tests/tacos/x64/Release/*.iobj
+/build.vc/dll_tests/tacos/x64/Release/*.ipdb
+/build.vc/dll_tests/tacos/x64/Release/*.log
+/build.vc/dll_tests/tacos/x64/Release/*.obj
+/build.vc/dll_tests/tacos/x64/Release/*.pdb
+/build.vc/.vs
+/build.vc/dll_tests/tabs/x64/Release/*.recipe
+/build.vc/dll_tests/add_test_lib/x64/Release/*.recipe
+/build.vc/dll_tests/tabs/x64/Release/*.iobj
+/build.vc/dll_tests/tabs/x64/Release/*.ipdb
+/build.vc/dll_tests/tabs/x64/Release/tabs.tlog/*.tlog
+/build.vc/dll_tests/tabs/x64/Release/tabs.tlog/*.lastbuildstate
+/build.vc/dll_tests/tabs/x64/Release/*.obj
+/build.vc/dll_tests/tabs/x64/Release/*.pdb
+*.recipe
+*.iobj
+*.ipdb
+*.obj
+*.tlog
+*.pdb
+*.user
+*.exe
+*.lib
