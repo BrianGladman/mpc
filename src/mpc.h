@@ -291,8 +291,9 @@ __MPC_DECLSPEC void mpcb_sqrt (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_div (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_div_2ui (mpcb_ptr, mpcb_srcptr, unsigned long int);
 __MPC_DECLSPEC int mpcb_can_round (mpcb_srcptr, mpfr_prec_t, mpfr_prec_t,
-   mpc_rnd_t rnd);
-__MPC_DECLSPEC int mpcb_round (mpc_ptr, mpcb_srcptr, mpc_rnd_t rnd);
+   mpc_rnd_t);
+__MPC_DECLSPEC int mpcb_round (mpc_ptr, mpcb_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC int mpc_eta_fund (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 
 #if defined (__cplusplus)
 }

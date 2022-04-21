@@ -63,46 +63,63 @@ static int
 test_eta (void)
 {
    const mpfr_prec_t p = 300;
-   mpc_t z;
+   mpc_t z, eta;
    mpcb_t j;
+   mpfr_t fuzz;
    long int re, im;
    int ok;
    
    mpc_init2 (z, p);
+   mpc_init2 (eta, p);
    mpcb_init (j);
+   mpfr_init2 (fuzz, 2*p);
 
    mpfr_set_si (mpc_realref (z), -1, MPFR_RNDN);
    mpfr_set_ui (mpc_imagref (z), 163, MPFR_RNDD);
    mpfr_sqrt (mpc_imagref (z), mpc_imagref (z), MPFR_RNDD);
    mpc_div_2ui (z, z, 1, MPC_RNDNN);
 
+   /* Check whether mpc_eta_fund avoids an infinite loop. */
+   mpc_eta_fund (eta, z, MPC_RNDNN);
+
    /* The error is bounded by 1/2 ulp in the real and 3 ulp in the
       imaginary part, see algorithms.tex. */
    mpcb_j_err (j, z, 1, 6);
-   mpcb_out_str (stdout, j);
 
-   /* Check whether j ((-1+sqrt(-163))/2) equals -262537412640768000;
-      rounding is impossible due to the zero imaginary part, so add I
-      for a dirty quick check and use the precisions that just work. */
+   /* Check whether j ((-1+sqrt(-163))/2) equals -262537412640768000.
+      Rounding is impossible since the result is exact, and the imaginary
+      part is 0; for a quick and dirty check, add the non-representable
+      number 0.1 + 1.1 I and use the precisions that just work. */
+   mpfr_set_ui (fuzz, 1, MPFR_RNDN);
+   mpfr_div_ui (fuzz, fuzz, 10, MPFR_RNDN);
+   mpfr_add (mpc_realref (j->c), mpc_realref (j->c), fuzz, MPFR_RNDN);
+   mpfr_add (mpc_imagref (j->c), mpc_imagref (j->c), fuzz, MPFR_RNDN);
    mpfr_add_ui (mpc_imagref (j->c), mpc_imagref (j->c), 1, MPFR_RNDN);
-   ok = mpcb_can_round (j, 293, 236, MPC_RNDNN);
+   ok = mpcb_can_round (j, 291, 234, MPC_RNDNN);
    mpcb_round (z, j, MPC_RNDNN);
    re = mpfr_get_si (mpc_realref (z), MPFR_RNDN);
    im = mpfr_get_si (mpc_imagref (z), MPFR_RNDN);
    ok &= (re == -262537412640768000L && im == 1);
 
-   /* Check whether j (I) equals 1728. */
+   /* Check whether mpc_eta_fund (I) avoids an infinite loop. */
    mpc_set_ui_ui (z, 0, 1, MPC_RNDNN);
+   mpc_eta_fund (eta, z, MPC_RNDNN);
+
+   /* Check whether j (I) equals 1728. */
    mpcb_j_err (j, z, 0, 0);
-   mpcb_out_str (stdout, j);
+   mpfr_add (mpc_realref (j->c), mpc_realref (j->c), fuzz, MPFR_RNDN);
+   mpfr_add (mpc_imagref (j->c), mpc_imagref (j->c), fuzz, MPFR_RNDN);
    mpfr_add_ui (mpc_imagref (j->c), mpc_imagref (j->c), 1, MPFR_RNDN);
-   ok &= mpcb_can_round (j, 293, 283, MPC_RNDNN);
+   ok &= mpcb_can_round (j, 292, 282, MPC_RNDNN);
    mpcb_round (z, j, MPC_RNDNN);
    re = mpfr_get_si (mpc_realref (z), MPFR_RNDN);
    im = mpfr_get_si (mpc_imagref (z), MPFR_RNDN);
    ok &= (re == 1728 && im == 1);
+
+   mpc_clear (eta);
    mpc_clear (z);
    mpcb_clear (j);
+   mpfr_clear (fuzz);
 
    return !ok;
 }

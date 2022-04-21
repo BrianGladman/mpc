@@ -244,3 +244,67 @@ mpcb_eta_err (mpcb_ptr eta, mpc_srcptr z, unsigned long int err_re,
    mpcb_clear (q24);
 }
 
+
+int
+mpc_eta_fund (mpc_ptr rop, mpc_srcptr z, mpc_rnd_t rnd)
+   /* Given z in the fundamental domain for Sl_2 (Z), that is,
+      |Re z| <= 1/2 and |z| >= 1, compute Dedekind eta (z).
+      Outside the fundamental domain, the function may loop
+      indefinitely. */
+{
+   mpfr_prec_t prec;
+   mpc_t zl;
+   mpcb_t eta;
+   int xzero, ok, inex;
+
+   mpc_init2 (zl, 2);
+   mpcb_init (eta);
+
+   xzero = mpfr_zero_p (mpc_realref (z));
+   prec = MPC_MAX (MPC_MAX_PREC (rop), MPC_MAX_PREC (z));
+   do {
+      mpc_set_prec (zl, prec);
+      mpc_set (zl, z, MPC_RNDNN); /* exact */
+      mpcb_eta_err (eta, zl, 0, 0);
+
+      if (!xzero)
+         ok = mpcb_can_round (eta, MPC_PREC_RE (rop), MPC_PREC_IM (rop),
+            rnd);
+      else {
+         /* TODO: The result is real, so the ball contains part of the
+            imaginary axis, and rounding to a complex number is impossible
+            independently of the precision.
+            It would be best to project to a real interval and to decide
+            whether we can round. Lacking such functionality, we add
+            the non-representable number 0.1*I (in ball arithmetic) and
+            check whether rounding is possible then. */
+         mpc_t fuzz;
+         mpcb_t fuzzb;
+         mpc_init2 (fuzz, prec);
+         mpcb_init (fuzzb);
+         mpc_set_ui_ui (fuzz, 0, 1, MPC_RNDNN);
+         mpc_div_ui (fuzz, fuzz, 10, MPC_RNDNN);
+         mpcb_set_c (fuzzb, fuzz, prec, 0, 1);
+         ok = mpfr_zero_p (mpc_imagref (eta->c));
+         mpcb_add (eta, eta, fuzzb);
+         ok &= mpcb_can_round (eta, MPC_PREC_RE (rop), 2, rnd);
+         mpc_clear (fuzz);
+         mpcb_clear (fuzzb);
+      }
+
+      prec += 20;
+   } while (!ok);
+
+   if (!xzero)
+      inex = mpcb_round (rop, eta, rnd);
+   else
+      inex = MPC_INEX (mpfr_set (mpc_realref (rop), mpc_realref (eta->c),
+                          MPC_RND_RE (rnd)),
+                       mpfr_set_ui (mpc_imagref (rop), 0, MPFR_RNDN));
+
+   mpc_clear (zl);
+   mpcb_clear (eta);
+
+   return inex;
+}
+

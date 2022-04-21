@@ -497,6 +497,7 @@ different word size.
 * Basic Arithmetic::
 * Power Functions and Logarithm::
 * Trigonometric Functions::
+* Modular Functions::
 * Miscellaneous Complex Functions::
 * Advanced Functions::
 * Internals::
@@ -1095,6 +1096,26 @@ The branch cut of @code{mpc_acosh} is
 (-Inf, 1)
 @end ifnottex
 @end deftypefun
+
+
+@node Modular Functions
+@section Modular Functions
+@cindex Modular functions
+
+The following function is experimental, not least because it depends on
+the equally experimental ball arithmetic, see @ref {Ball Arithmetic}.
+So its prototype may change in future releases, and it may be removed
+altogether.
+
+@deftypefun int mpc_eta_fund (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+Assuming that the argument @var{op} lies in the fundamental domain for
+@math{Sl_2(Z)}, that is, it has real part not below @math{-1/2} and
+not above @math{+1/2} and absolute value at least 1,
+return the value of the Dedekind eta-function in @var{rop}.
+For arguments outside the fundamental domain the function is expected to
+loop indefinitely.
+@end deftypefun
+
 
 @node Miscellaneous Complex Functions
 @section Miscellaneous Functions
