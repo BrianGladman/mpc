@@ -452,14 +452,6 @@ void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s, const unsigned long int e)
 }
 
 
-static void mpcr_sqr_rnd (mpcr_ptr r, mpcr_srcptr s, mpfr_rnd_t rnd)
-    /* Set r to the square of s, rounded according to whether rnd is
-       MPFR_RNDU or MPFR_RNDD. */
-{
-   mpcr_mul_rnd (r, s, s, rnd);
-}
-
-
 void mpcr_sqr (mpcr_ptr r, mpcr_srcptr s)
 {
    mpcr_mul_rnd (r, s, s, MPFR_RNDU);
@@ -660,7 +652,7 @@ static void mpcr_mpfr_abs_rnd (mpcr_ptr r, mpfr_srcptr z, mpfr_rnd_t rnd)
       can be one of MPFR_RNDU or MPFR_RNDD. */
 {
    double d;
-   int neg, e;
+   int neg;
 
    neg = mpfr_cmp_ui (z, 0);
    if (neg == 0)
@@ -703,7 +695,6 @@ void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd)
        rnd can take either of the values MPFR_RNDU and MPFR_RNDD, and
        the function computes an upper or a lower bound, respectively. */
 {
-   double x, y;
    mpcr_t re, im, u;
 
    mpcr_mpfr_abs_rnd (re, mpc_realref (z), rnd);
