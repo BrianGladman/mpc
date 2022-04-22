@@ -24,7 +24,6 @@ static int
 test_sqrt (void)
 {
    int64_t n, N, s;
-   int i;
 
    n = ((int64_t) 1) << 30;
    /* The following commented line checks all possible inputs n to
