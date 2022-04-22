@@ -1507,17 +1507,19 @@ complex numbers.
 
 
 @deftypefun int mpcb_can_round (mpcb_srcptr @var{z}, mpfr_prec_t @var{prec_re}, mpfr_prec_t @var{prec_im}, mpc_rnd_t @var{rnd})
-Return @code{true} if rounding any of the complex numbers in the ball
-to a complex number with precision @var{prec_re} of its real and precision
-@var{prec_im} of its imaginary part and rounding mode @var{rnd} yields the
-same result; return @code{false} otherwise.
+Return @code{true} if it can be decided that rounding any of the complex
+numbers in the ball to a complex number with precision @var{prec_re} of
+its real and precision @var{prec_im} of its imaginary part and rounding
+mode @var{rnd} yields the same result and rounding direction value,
+cf. @ref{return-value}; return @code{false} otherwise.
 
 If @var{z} contains the result of evaluating some mathematical function
-through a sequence of calls to @code{mpcb_} functions, starting with exact
+through a sequence of calls to @code{mpcb} functions, starting with exact
 complex numbers, that is, balls of radius 0, then a return value of
 @code{true} indicates that rounding any value in the ball (its centre is
 readily available) in direction @var{rnd} yields the correct result of
-the function with the usual MPC semantics.
+the function and the correct rounding direction value with the usual
+MPC semantics.
 
 Notice that when the precision of @var{z} is larger than @var{prec_re}
 or @var{prec_im}, the centre need not be representable at the desired
@@ -1525,15 +1527,22 @@ precision, and in fact the ball need not contain a representable number
 at all to be ``roundable''. Even worse, when @var{rnd} is a directed
 rounding mode for the real or the imaginary part and the ball contains
 a representable number, the return value is necessarily @code{false}.
+Even worse, when the rounding mode for one part is to nearest, the
+corresponding part of the centre of the ball is representable and the ball
+has a non-zero radius, then the return value is also necessarily
+@code{false}, since even if rounding may be possible, the rounding
+direction value cannot be determined.
 @end deftypefun
 
 
-@deftypefun void mpcb_round (mpc_ptr @var{c}, mpcb_srcptr @var{z}, mpc_rnd_t @var{rnd})
-Set @var{c} to the centre of @var{z}, rounded in direction @var{rnd}.
+@deftypefun int mpcb_round (mpc_ptr @var{c}, mpcb_srcptr @var{z}, mpc_rnd_t @var{rnd})
+Set @var{c} to the centre of @var{z}, rounded in direction @var{rnd},
+and return the corresponding rounding direction value.
 Before calling this function, one should check that @code{mpcb_can_round},
 called with the precisions of @var{c} and the rounding mode @var{rnd},
-returns @code{true}; then the function does what is expected and
-``correctly rounds the ball''.
+returns @code{true}; then the function does what is expected,
+``correctly rounds the ball'' and returns a rounding direction value
+that is valid for all of the ball.
 As explained above, the result is then not necessarily (in the presence of
 directed rounding, it is rather necessarily not) an element of the ball.
 @end deftypefun
