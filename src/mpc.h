@@ -21,6 +21,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #ifndef __MPC_H
 #define __MPC_H
 
+#include <stdint.h>
 #include "gmp.h"
 #include "mpfr.h"
 
