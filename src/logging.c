@@ -1,6 +1,6 @@
 /* logging.c -- "Dummy" functions logging calls to real mpc functions.
 
-Copyright (C) 2011 INRIA
+Copyright (C) 2011, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -18,15 +18,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
-#include "config.h"
 #include <stdio.h>
-
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
 
 #define __MPC_LIBRARY_BUILD
    /* to indicate we are inside the library build; needed here since mpc-log.h

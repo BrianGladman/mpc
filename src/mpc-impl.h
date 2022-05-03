@@ -28,7 +28,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include <stdlib.h>
 #endif
 #include <stdio.h>
-#include <stdint.h>
 #include "mpc.h"
 
 /*
@@ -159,7 +158,7 @@ do {                                                            \
 extern "C" {
 #endif
 
-/* Function for radius arithmetic. */
+/* Functions for radius arithmetic. */
 __MPC_DECLSPEC int mpcr_inf_p (mpcr_srcptr r);
 __MPC_DECLSPEC int mpcr_zero_p (mpcr_srcptr r);
 __MPC_DECLSPEC int mpcr_lt_half_p (mpcr_srcptr r);
@@ -189,6 +188,10 @@ __MPC_DECLSPEC void mpcr_sqrt (mpcr_ptr r, mpcr_srcptr s);
 __MPC_DECLSPEC void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p,
    mpfr_rnd_t rnd);
 __MPC_DECLSPEC void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd);
+
+/* Function for mpcb. */
+__MPC_DECLSPEC void mpcb_eta_err (mpcb_ptr eta, mpc_srcptr z,
+   unsigned long int err_re, unsigned long int err_im);
 
 /* Functions for mpc. */
 __MPC_DECLSPEC int  mpc_mul_naive (mpc_ptr, mpc_srcptr, mpc_srcptr, mpc_rnd_t);

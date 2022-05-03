@@ -20,7 +20,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mpc],[1.2.2dev],[mpc-discuss@inria.fr])
+AC_INIT([mpc],[1.3.0dev],[mpc-discuss@inria.fr])
 AC_CONFIG_SRCDIR([src/mpc-impl.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])

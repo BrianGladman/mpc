@@ -35,7 +35,7 @@ LOADLIBES=$(DEFS) $(AM_CPPFLAGS) $(CPPFLAGS) $(CFLAGS)	\
   $(top_builddir)/tests/.libs/libmpc-tests.a		\
   $(top_builddir)/src/.libs/libmpc.a $(LIBS)
 
-check_PROGRAMS = tradius tballs                                         \
+check_PROGRAMS = tradius tballs teta                                    \
   tabs tacos tacosh tadd tadd_fr tadd_si tadd_ui tagm targ              \
   tasin tasinh tatan tatanh tcmp_abs tconj tcos tcosh                   \
   tdiv tdiv_2si tdiv_2ui tdiv_fr tdiv_ui tdot texp tfma tfr_div tfr_sub \

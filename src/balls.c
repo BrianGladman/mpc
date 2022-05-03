@@ -356,12 +356,18 @@ mpcb_div_2ui (mpcb_ptr z, mpcb_srcptr z1, unsigned long int e)
 int
 mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im,
    mpc_rnd_t rnd)
-   /* Return a boolean value indicating whether rounding the center of op
-      to an mpc_t variable of precision prec_re for the real and prec_im
-      for the imaginary part returns a correctly rounded result in
-      direction rnd.
-      If yes, then using mpcb_round with the same rounding mode sets
-      a correct result with the usual MPC semantic. */
+   /* The function returns true if it can decide that rounding the centre
+      of op to an mpc_t variable of precision prec_re for the real and
+      prec_im for the imaginary part returns a correctly rounded result
+      of the ball in direction rnd for which the rounding direction value
+      can be determined. The second condition implies that if the centre
+      can be represented at the target precisions and the radius is small,
+      but non-zero, the function returns false although correct rounding
+      would be possible, while the rounding direction value could be
+      anything.
+      If the return value is true, then using mpcb_round with the same
+      rounding mode sets a correct result and returns a correct rounding
+      direction value with the usual MPC semantic. */
 {
    mpfr_srcptr re, im;
    mpfr_exp_t exp_re, exp_im, exp_err;
@@ -373,12 +379,14 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im,
 
    re = mpc_realref (op->c);
    im = mpc_imagref (op->c);
-   /* The question makes sense only if neither the real nor the imaginary
-      part of the centre are 0: Otherwise we need to have an absolute error
-      that is less than the smallest representable number; since rounding
-      only once at precision p introduces an error of about 2^-p, this
-      means that the precision needs to be about as big as the negative
-      of the minimal exponent, which is astronomically large. */
+   /* If the real or the imaginary part of the centre is 0, directed
+      rounding is impossible, and rounding to nearest is only possible
+      if the absolute error is less than the smallest representable
+      number; since rounding only once at precision p introduces an error
+      of about 2^-p, this means that the precision needs to be about as
+      big as the negative of the minimal exponent, which is astronomically
+      large. In any case, even then we could not determine the rounding
+      direction value. */
    if (mpfr_zero_p (re) || mpfr_zero_p (im))
       return 0;
 
@@ -388,28 +396,32 @@ mpcb_can_round (mpcb_srcptr op, mpfr_prec_t prec_re, mpfr_prec_t prec_im,
    /* Absolute error of the real part, as given in the proof of
       prop:comrelerror of algorithms.tex:
       |x-x~|  = |x~*theta_R - y~*theta_I|
-             <= |x~ - y~| * epsilon, where epsilon is the complex
-                                     relative error
-             <= (|x~|+|y~|) * epsilon
+             <= (|x~|+|y~|) * epsilon,
+                where epsilon is the complex relative error
              <= 2 * max (|x~|, |y~|) * epsilon
       To call mpfr_can_round, we only need the exponent in base 2,
       which is then bounded above by
                 1 + max (exp_re, exp_im) + exponent (epsilon) */
    exp_err = 1 + MPC_MAX (exp_re, exp_im) + mpcr_get_exp (op->r);
 
+   /* To check whether the rounding direction value can be determined
+      when rounding to nearest, use the trick described in the
+      documentation of mpfr_can_round to check for directed rounding
+      at precision larger by 1. */
    return (   mpfr_can_round (re, exp_re - exp_err, MPFR_RNDN,
-                 MPC_RND_RE (rnd), prec_re)
+                 MPFR_RNDZ, prec_re + (MPC_RND_RE (rnd) == MPFR_RNDN))
            && mpfr_can_round (im, exp_im - exp_err, MPFR_RNDN,
-                 MPC_RND_IM (rnd), prec_im));
+                 MPFR_RNDZ, prec_im + (MPC_RND_IM (rnd) == MPFR_RNDN)));
 }
 
 
-void
+int
 mpcb_round (mpc_ptr rop, mpcb_srcptr op, mpc_rnd_t rnd)
-   /* Set rop to the centre of op. To make sure that this corresponds
-      to the MPC semantics of returning a correctly rounded result, one
-      needs to call mpcb_can_round first. */
+   /* Set rop to the centre of op and return the corresponding rounding
+      direction value. To make sure that this corresponds to the MPC
+      semantics of returning a correctly rounded result and a correct
+      rounding direction value, one needs to call mpcb_can_round first. */
 {
-   mpc_set (rop, op->c, rnd);
+   return mpc_set (rop, op->c, rnd);
 }
 

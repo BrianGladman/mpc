@@ -32,7 +32,7 @@ mpc_mpcb_agm (mpc_ptr rop, mpc_srcptr opa, mpc_srcptr opb, mpc_rnd_t rnd)
    mpcb_t a, b, an, bn, anp1, bnp1, res;
    mpfr_exp_t exp_an, exp_diff;
    mpcr_t rab;
-   int cmp, equal, re_zero, im_zero, ok;
+   int cmp, equal, re_zero, im_zero, ok, inex;
 
    if (!mpc_fin_p (opa) || !mpc_fin_p (opb)
        || mpc_zero_p (opa) || mpc_zero_p (opb)
@@ -163,7 +163,7 @@ mpc_mpcb_agm (mpc_ptr rop, mpc_srcptr opa, mpc_srcptr opb, mpc_rnd_t rnd)
          prec += prec + mpcr_get_exp (res->r);
    } while (!ok);
 
-   mpcb_round (rop, res, rnd);
+   inex = mpcb_round (rop, res, rnd);
 
    mpcb_clear (a);
    mpcb_clear (b);
@@ -172,6 +172,8 @@ mpc_mpcb_agm (mpc_ptr rop, mpc_srcptr opa, mpc_srcptr opb, mpc_rnd_t rnd)
    mpcb_clear (anp1);
    mpcb_clear (bnp1);
    mpcb_clear (res);
+
+   return inex;
 }
 
 
@@ -181,7 +183,7 @@ test_agm (void)
    mpfr_prec_t prec;
    mpc_t a, b, agm1, agm2;
    mpc_rnd_t rnd = MPC_RNDDU;
-   int ok;
+   int inex, inexb, ok;
 
    prec = 1000;
 
@@ -192,10 +194,10 @@ test_agm (void)
    mpc_init2 (agm1, prec);
    mpc_init2 (agm2, prec);
 
-   mpc_agm (agm1, a, b, rnd);
-   mpc_mpcb_agm (agm2, a, b, rnd);
+   inex = mpc_agm (agm1, a, b, rnd);
+   inexb = mpc_mpcb_agm (agm2, a, b, rnd);
 
-   ok = mpc_cmp (agm1, agm2) == 0;
+   ok = (inex == inexb) && (mpc_cmp (agm1, agm2) == 0);
 
    mpc_clear (a);
    mpc_clear (b);

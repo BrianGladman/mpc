@@ -21,14 +21,15 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #ifndef __MPC_H
 #define __MPC_H
 
+#include <stdint.h>
 #include "gmp.h"
 #include "mpfr.h"
 
 /* Define MPC version number */
 #define MPC_VERSION_MAJOR 1
-#define MPC_VERSION_MINOR 2
-#define MPC_VERSION_PATCHLEVEL 2
-#define MPC_VERSION_STRING "1.2.2dev"
+#define MPC_VERSION_MINOR 3
+#define MPC_VERSION_PATCHLEVEL 0
+#define MPC_VERSION_STRING "1.3.0dev"
 
 /* Macros dealing with MPC VERSION */
 #define MPC_VERSION_NUM(a,b,c) (((a) << 16L) | ((b) << 8) | (c))
@@ -290,8 +291,9 @@ __MPC_DECLSPEC void mpcb_sqrt (mpcb_ptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_div (mpcb_ptr, mpcb_srcptr, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_div_2ui (mpcb_ptr, mpcb_srcptr, unsigned long int);
 __MPC_DECLSPEC int mpcb_can_round (mpcb_srcptr, mpfr_prec_t, mpfr_prec_t,
-   mpc_rnd_t rnd);
-__MPC_DECLSPEC void mpcb_round (mpc_ptr, mpcb_srcptr, mpc_rnd_t rnd);
+   mpc_rnd_t);
+__MPC_DECLSPEC int mpcb_round (mpc_ptr, mpcb_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC int mpc_eta_fund (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 
 #if defined (__cplusplus)
 }

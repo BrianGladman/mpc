@@ -1,6 +1,6 @@
 /* mpc_get_version -- MPC version
 
-Copyright (C) 2008, 2009, 2010, 2011, 2012, 2017, 2018, 2020 INRIA
+Copyright (C) 2008, 2009, 2010, 2011, 2012, 2017, 2018, 2020, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -23,5 +23,5 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 const char *
 mpc_get_version (void)
 {
-  return "1.2.2dev";
+  return "1.3.0dev";
 }
