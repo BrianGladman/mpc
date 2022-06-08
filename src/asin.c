@@ -154,20 +154,20 @@ mpc_asin_series (mpc_srcptr rop, mpc_ptr s, mpc_srcptr z, mpc_rnd_t rnd)
   /* ulp(Re(s)) = 2^(ex+1-p) */
   err = 0;
   /* invariant: the error will be kx*2^err */
-  if (ex+1 > e) /* divide kx by 2^(ex+1-e) */
-    while (ex+1 > e)
+  if (ex + 1 > e) /* divide kx by 2^(ex+1-e) */
+    while (ex + 1 > e)
       {
         kx = (kx + 1) / 2;
-        ex --;
+        ex--;
       }
   else /* multiply the error by 2^(e-(ex+1)), thus add e-(ex+1) to err */
-    err += e - (ex+1);
+    err += e - (ex + 1);
   /* now the rounding error is bounded by kx*2^err*ulp(Re(s)), add the
      mathematical error which is bounded by ulp(Re(s)): the first neglected
      term is less than 1/2*ulp(Re(s)), and each term decreases by at least
      a factor 2, since |z^2| <= 1/2. */
-  kx ++;
-  for (; kx > 2; err ++, kx = (kx + 1) / 2);
+  kx++;
+  for (; kx > 2; err++, kx = (kx + 1) / 2);
   /* can we round Re(s) with error less than 2^(EXP(Re(s))-err) ? */
   if (!mpfr_can_round (mpc_realref (s), p - err, MPFR_RNDN, MPFR_RNDZ,
                        mpfr_get_prec (mpc_realref (rop)) +
@@ -181,20 +181,20 @@ mpc_asin_series (mpc_srcptr rop, mpc_ptr s, mpc_srcptr z, mpc_rnd_t rnd)
      (see algorithms.tex) */
   e = mpfr_get_exp (mpc_imagref (z));
   /* ulp(Im(s)) = 2^(ey+1-p) */
-  if (ey+1 > e) /* divide ky by 2^(ey+1-e) */
-    while (ey+1 > e)
+  if (ey + 1 > e) /* divide ky by 2^(ey+1-e) */
+    while (ey + 1 > e)
       {
         ky = (ky + 1) / 2;
-        ey --;
+        ey--;
       }
   else /* multiply ky by 2^(e-(ey+1)) */
-    ky <<= e - (ey+1);
+    ky <<= e - (ey + 1);
   /* now the rounding error is bounded by ky*ulp(Im(s)), add the
      mathematical error which is bounded by ulp(Im(s)): the first neglected
      term is less than 1/2*ulp(Im(s)), and each term decreases by at least
      a factor 2, since |z^2| <= 1/2. */
-  ky ++;
-  for (err = 0; ky > 2; err ++, ky = (ky + 1) / 2);
+  ky++;
+  for (err = 0; ky > 2; err++, ky = (ky + 1) / 2);
   /* can we round Im(s) with error less than 2^(EXP(Im(s))-err) ? */
   return mpfr_can_round (mpc_imagref (s), p - err, MPFR_RNDN, MPFR_RNDZ,
                          mpfr_get_prec (mpc_imagref (rop)) +
