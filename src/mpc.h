@@ -269,9 +269,9 @@ __MPC_DECLSPEC long double _Complex mpc_get_ldc (mpc_srcptr, mpc_rnd_t);
 #ifdef _GMP_H_HAVE_FILE
 __MPC_DECLSPEC int mpc_inp_str    (mpc_ptr, FILE *, size_t *, int, mpc_rnd_t);
 __MPC_DECLSPEC size_t mpc_out_str (FILE *, int, size_t, mpc_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC void mpcb_out_str  (FILE *f, mpcb_srcptr);
 #endif
 
-__MPC_DECLSPEC void mpcb_out_str (FILE *f, mpcb_srcptr);
 __MPC_DECLSPEC void mpcb_init (mpcb_ptr);
 __MPC_DECLSPEC void mpcb_clear (mpcb_ptr);
 __MPC_DECLSPEC mpfr_prec_t mpcb_get_prec (mpcb_srcptr);
