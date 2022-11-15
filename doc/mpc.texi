@@ -1254,8 +1254,8 @@ The special values infinity and 0 are encoded through the sign of
 @code{mant}, but should be tested for and set using dedicated functions.
 
 @cindex @code{mpc-impl.h}
-The following functions are declared in @code{mpc-impl.h} and defined in
-@code{radius.c} for internal use of the ball arithmetic module.
+The following functions are declared in @code{mpc-impl.h}
+for internal use of the ball arithmetic module.
 Unless indicated otherwise, they assume radius arguments to be normalised,
 they return normalised results, and they round their results up, not
 necessarily to the smallest representable number, although reasonable
@@ -1310,7 +1310,6 @@ Assuming that @var{r} is neither infinity nor 0, return its exponent
 field @code{exp} in the struct representing a radius, but that instead it
 is independent of the implementation.)
 Otherwise the behaviour is undefined.
-Caveat: This function should be removed or specified completely.
 @end deftypefun
 
 
@@ -1464,7 +1463,7 @@ through further computations.
 @end deftypefun
 
 
-@deftypefun mpcb_set_c (mpcb_ptr @var{z}, mpc_srcptr @var{c}, mpfr_prec_t @var{prec}, unsigned long int @var{err_re}, unsigned long int @var {err_im})
+@deftypefun void mpcb_set_c (mpcb_ptr @var{z}, mpc_srcptr @var{c}, mpfr_prec_t @var{prec}, unsigned long int @var{err_re}, unsigned long int @var {err_im})
 Set @var{z} to a ball with centre @var{c} at precision @var{prec}.
 If @var{prec} is at least the maximum of the precisions of the real and the
 imaginary parts of @var{c} and @var{err_re} and @var{err_im} are 0, then
@@ -1507,7 +1506,7 @@ when using appropriate values for @var{err_re} and @var{err_im}.
 @end deftypefun
 
 
-@deftypefun mpcb_set_ui_ui (mpcb_ptr @var{z}, unsigned long int @var{re}, unsigned long int @var {im}, mpfr_prec_t @var{prec})
+@deftypefun void mpcb_set_ui_ui (mpcb_ptr @var{z}, unsigned long int @var{re}, unsigned long int @var {im}, mpfr_prec_t @var{prec})
 Set @var{z} to a ball with centre @var{re}+I*@var{im} at precision
 @var{prec} or the size of an @code{unsigned long int}, whatever is larger.
 @end deftypefun
@@ -1546,7 +1545,8 @@ Notice that when the precision of @var{z} is larger than @var{prec_re}
 or @var{prec_im}, the centre need not be representable at the desired
 precision, and in fact the ball need not contain a representable number
 at all to be ``roundable''. Even worse, when @var{rnd} is a directed
-rounding mode for the real or the imaginary part and the ball contains
+rounding mode for the real or the imaginary part and the ball of
+non-zero radius contains
 a representable number, the return value is necessarily @code{false}.
 Even worse, when the rounding mode for one part is to nearest, the
 corresponding part of the centre of the ball is representable and the ball
@@ -1559,13 +1559,13 @@ direction value cannot be determined.
 @deftypefun int mpcb_round (mpc_ptr @var{c}, mpcb_srcptr @var{z}, mpc_rnd_t @var{rnd})
 Set @var{c} to the centre of @var{z}, rounded in direction @var{rnd},
 and return the corresponding rounding direction value.
-Before calling this function, one should check that @code{mpcb_can_round},
-called with the precisions of @var{c} and the rounding mode @var{rnd},
-returns @code{true}; then the function does what is expected,
-``correctly rounds the ball'' and returns a rounding direction value
-that is valid for all of the ball.
+If @code{mpcb_can_round}, called with @var {z}, the precisions of @var{c}
+and the rounding mode @var{rnd} returns @code{true}, then this function
+does what is expected, it ``correctly rounds the ball'' and returns a
+rounding direction value that is valid for all of the ball.
 As explained above, the result is then not necessarily (in the presence of
-directed rounding, it is rather necessarily not) an element of the ball.
+directed rounding with radius different from 0, it is rather
+necessarily not) an element of the ball.
 @end deftypefun
 
 
