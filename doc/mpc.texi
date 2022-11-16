@@ -1276,7 +1276,9 @@ boolean.
 
 
 @deftypefun int mpcr_lt_half_p (mpcr_srcptr @var{r})
-Return @code {true} if @var{r}<1/2, and @code{false} otherwise.
+Return @code{true} if @var{r}<1/2, and @code{false} otherwise.
+(Everywhere in this document,
+@code{true} means any non-zero value, and @code{false} means zero.)
 @end deftypefun
 
 
