@@ -650,7 +650,7 @@ static void mpcr_set_d_rnd (mpcr_ptr r, double d, mpfr_rnd_t rnd)
 }
 
 
-static void mpcr_mpfr_abs_rnd (mpcr_ptr r, mpfr_srcptr z, mpfr_rnd_t rnd)
+static void mpcr_f_abs_rnd (mpcr_ptr r, mpfr_srcptr z, mpfr_rnd_t rnd)
    /* Set r to the absolute value of z, rounded according to rnd, which
       can be one of MPFR_RNDU or MPFR_RNDD. */
 {
@@ -693,15 +693,15 @@ void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p, mpfr_rnd_t rnd)
 }
 
 
-void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd)
+void mpcr_c_abs_rnd (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd)
     /* Compute a bound on mpc_abs (z) in r.
        rnd can take either of the values MPFR_RNDU and MPFR_RNDD, and
        the function computes an upper or a lower bound, respectively. */
 {
    mpcr_t re, im, u;
 
-   mpcr_mpfr_abs_rnd (re, mpc_realref (z), rnd);
-   mpcr_mpfr_abs_rnd (im, mpc_imagref (z), rnd);
+   mpcr_f_abs_rnd (re, mpc_realref (z), rnd);
+   mpcr_f_abs_rnd (im, mpc_imagref (z), rnd);
 
    if (mpcr_zero_p (re))
       mpcr_set (r, im);

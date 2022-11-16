@@ -257,10 +257,10 @@ mpcb_add (mpcb_ptr z, mpcb_srcptr z1, mpcb_srcptr z2)
    /* generic error of addition:
       r <= (|z1|*r1 + |z2|*r2) / |z1+z2|
         <= (|z1|*r1 + |z2|*r2) / |z| since we rounded towards 0 */
-   mpcr_mpc_abs (denom, zc, MPFR_RNDD);
-   mpcr_mpc_abs (r, z1->c, MPFR_RNDU);
+   mpcr_c_abs_rnd (denom, zc, MPFR_RNDD);
+   mpcr_c_abs_rnd (r, z1->c, MPFR_RNDU);
    mpcr_mul (r, r, z1->r);
-   mpcr_mpc_abs (s, z2->c, MPFR_RNDU);
+   mpcr_c_abs_rnd (s, z2->c, MPFR_RNDU);
    mpcr_mul (s, s, z2->r);
    mpcr_add (r, r, s);
    mpcr_div (r, r, denom);

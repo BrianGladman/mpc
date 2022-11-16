@@ -187,7 +187,8 @@ __MPC_DECLSPEC int64_t sqrt_int64 (int64_t n);
 __MPC_DECLSPEC void mpcr_sqrt (mpcr_ptr r, mpcr_srcptr s);
 __MPC_DECLSPEC void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p,
    mpfr_rnd_t rnd);
-__MPC_DECLSPEC void mpcr_mpc_abs (mpcr_ptr r, mpc_srcptr z, mpfr_rnd_t rnd);
+__MPC_DECLSPEC void mpcr_c_abs_rnd (mpcr_ptr r, mpc_srcptr z,
+   mpfr_rnd_t rnd);
 
 /* Function for mpcb. */
 __MPC_DECLSPEC void mpcb_eta_err (mpcb_ptr eta, mpc_srcptr z,
