@@ -462,12 +462,15 @@ static void mpcr_add_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t,
    mpfr_rnd_t rnd)
     /* Set r to the sum of s and t, rounded according to whether rnd
        is MPFR_RNDU or MPFR_RNDD.
-       s and t need not be normalised, but the addition must fit without
-       causing an overflow into the sign bit of the mantissae; this is
-       in particular the case when the mantissae of s and t start with
-       the bits 00, that is, are less than 2^62, for instance because
-       they are the results of multiplying two normalised mantissae
-       together. */
+       The function also works correctly for certain non-normalised
+       arguments s and t as long as the sum of their (potentially shifted
+       if the exponents are not the same) mantissae does not flow over into
+       the sign bit of the resulting mantissa. This is in particular the
+       case when the mantissae of s and t start with the bits 00, that is,
+       are less than 2^62, for instance because they are the results of
+       multiplying two normalised mantissae together, so that an fmma
+       function can be implemented without intermediate normalisation of
+       the products. */
 {
    int64_t d;
 
@@ -478,7 +481,7 @@ static void mpcr_add_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t,
    else if (mpcr_zero_p (t))
       mpcr_set (r, s);
    else {
-      /* Now all numbers are positive and normalised. */
+      /* Now all numbers are finite and non-zero. */
       d = MPCR_EXP (s) - MPCR_EXP (t);
       if (d >= 0) {
          if (d >= 64)

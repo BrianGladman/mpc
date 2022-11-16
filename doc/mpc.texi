@@ -1333,9 +1333,6 @@ Set @var{r} to the sum, difference, product or quotient of @var{s} and
 @var{s} by 2^@var{t}, or to the square or the square root of @var{s}.
 If any of the arguments is infinity, or if a difference is negative,
 the result is infinity.
-The arguments to @code{mpcr_add} need not be normalised, but their sum
-must fit into the signed mantissa type without overflowing into the sign
-bit.
 @end deftypefun
 
 
