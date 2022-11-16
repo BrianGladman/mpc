@@ -1524,11 +1524,18 @@ complex numbers.
 
 
 @deftypefun int mpcb_can_round (mpcb_srcptr @var{z}, mpfr_prec_t @var{prec_re}, mpfr_prec_t @var{prec_im}, mpc_rnd_t @var{rnd})
-Return @code{true} if it can be decided that rounding any of the complex
-numbers in the ball to a complex number with precision @var{prec_re} of
-its real and precision @var{prec_im} of its imaginary part and rounding
-mode @var{rnd} yields the same result and rounding direction value,
-cf. @ref{return-value}; return @code{false} otherwise.
+If the function returns @code{true} (a non-zero number), then rounding
+any of the complex numbers in the ball to a complex number with precision
+@var{prec_re} of its real and precision @var{prec_im} of its imaginary
+part and rounding mode @var{rnd} yields the same result and rounding
+direction value, cf. @ref{return-value}.
+If the function returns @code{false} (that is, 0), then it could not
+conclude, or there are two numbers in the ball which would be rounded to
+a different complex number or in a different direction. Notice that the
+function works in a best effort mode and errs on the side of caution by
+potentially returning @code{false} on a roundable ball; this is consistent
+with computational functions not necessarily returning the smallest
+enclosing ball.
 
 If @var{z} contains the result of evaluating some mathematical function
 through a sequence of calls to @code{mpcb} functions, starting with exact
