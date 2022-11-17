@@ -132,3 +132,6 @@
 - + 53 0x3243f6a8885a3p-49 53 0x16a09e667f3bcdp-552 53 1 53 0x1p-999 N N
 - + 2 1.5 2 0x1p-40 2 1 20 0xff802p-100 N N
 - - 24 -0x1p-148 24 -0xc.75cp-20 24 -0x1p-148 24 -0xc.75cp-20 N N
+
+# this test failed before the 1.3.0 release
+? ? 9 -0x1.72p+0 9 -0x1.e4p-5 9 -0x1.fdp-1 9 -0x1.dcp-8 Z N
