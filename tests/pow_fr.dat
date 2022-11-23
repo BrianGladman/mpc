@@ -72,3 +72,6 @@
 # (+0 0.75)^7 = (-0 -0.13348388671875) is rounded to (-0 -0.125)
 0 + 2 -0 2 -0x1p-3   2 +0 2 0x3p-2   3 7 N N
 0 - 8 -0 8 -0x89p-10 2 +0 2 0x3p-2   3 7 N N
+
+# issue revealed by random tests (with GMP_CHECK_RANDOMIZE=1669437260)
+- 0 2 -0x1p-28 2 +0 2 0x1.8p-8 2 0x1.8p-8 2 4 N N
