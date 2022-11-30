@@ -29,7 +29,7 @@ compare_mpc_pow (mpfr_prec_t pmax, int iter, unsigned long nbits)
   mpc_t x, y, z, t;
   long n;
   int i, inex_pow, inex_pow_si;
-  mpc_rnd_t rnd;
+  mpc_rnd_t rnd1, rnd2, rnd;
 
   mpc_init3 (y, sizeof (unsigned long) * CHAR_BIT, MPFR_PREC_MIN);
   for (p = MPFR_PREC_MIN; p <= pmax; p++)
@@ -41,8 +41,10 @@ compare_mpc_pow (mpfr_prec_t pmax, int iter, unsigned long nbits)
         mpc_urandom (x, rands);
         n = (signed long) gmp_urandomb_ui (rands, nbits);
         mpc_set_si (y, n, MPC_RNDNN);
-        for (rnd = 0; rnd < 16; rnd ++)
+        for (rnd1 = 0; rnd1 < 4; rnd1 ++)
+          for (rnd2 = 0; rnd2 < 4; rnd2 ++)
           {
+            rnd = MPC_RND (rnd1, rnd2);
             inex_pow = mpc_pow (z, x, y, rnd);
             inex_pow_si = mpc_pow_si (t, x, n, rnd);
             if (mpc_cmp (z, t) != 0)
@@ -81,39 +83,10 @@ compare_mpc_pow (mpfr_prec_t pmax, int iter, unsigned long nbits)
 
 #include "data_check.tpl"
 
-static void
-bug20221116 (void)
-{
-  mpc_t x, y, z;
-  mpc_rnd_t rnd;
-  mpc_init2 (x, 82);
-  mpc_init2 (y, 82);
-  mpc_init2 (z, 82);
-  mpfr_set_str (mpc_realref (x), "b.54b8673e0601b3bca3940@-1", 16, MPFR_RNDN);
-  mpfr_set_str (mpc_imagref (x), "5.a02830262007b93520840@-1", 16, MPFR_RNDN);
-  mpc_set_ui (y, 2, MPC_RNDNN);
-  for (rnd = 0; rnd < 16; rnd++)
-  {
-    int ret1 = mpc_pow (z, x, y, rnd);
-    int ret2 = mpc_pow_si (z, x, 2, rnd);
-    if (ret1 != ret2)
-    {
-      printf ("bug20221116: mpc_pow and mpc_pow_si give different flags for rnd=%d\n", rnd);
-      printf ("mpc_pow gives %d, mpc_pow_si gives %d\n", ret1, ret2);
-      exit (1);
-    }
-  }
-  mpc_clear (x);
-  mpc_clear (y);
-  mpc_clear (z);
-}
-
 int
 main (void)
 {
   test_start ();
-
-  bug20221116 ();
 
   data_check_template ("pow_si.dsc", "pow_si.dat");
 

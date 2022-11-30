@@ -136,8 +136,26 @@ do {                                                            \
 #define MPFR_OUT(x)                                             \
 do {                                                            \
   printf (#x "[%lu]=", (unsigned long int) mpfr_get_prec (x));  \
-  mpfr_out_str (stdout, 2, 0, x, MPFR_RNDN);                     \
+  mpfr_out_str (stdout, 2, 0, x, MPFR_RNDN);                    \
   printf ("\n");                                                \
+} while (0)
+
+#define MPFR_OUT_Q(x)                                           \
+do {                                                            \
+  mpq_t q;                                                      \
+  mpq_init (q);                                                 \
+  mpfr_get_q (q, x);                                            \
+  mpq_out_str (stdout, 10, q);                                  \
+  mpq_clear (q);                                                \
+} while (0)
+
+#define MPC_OUT_PARI(x)                                         \
+do {                                                            \
+  printf (#x "=");                                              \
+  MPFR_OUT_Q (mpc_realref (x));                                 \
+  printf ("+I*(");                                              \
+  MPFR_OUT_Q (mpc_imagref (x));                                 \
+  printf (");\n");                                              \
 } while (0)
 
 

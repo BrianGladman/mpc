@@ -25,7 +25,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include "mpc.h"
+#include "mpc-impl.h"
 
 /* pieces copied from mpc-impl.h */
 #define MPC_PREC_RE(x) (mpfr_get_prec(mpc_realref(x)))

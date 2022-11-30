@@ -39,13 +39,15 @@
 \newcommand {\AGM}{\operatorname{AGM}}
 \newcommand {\sign}{\operatorname{sign}}
 \newcommand {\Sl}{\operatorname{Sl}}
+\newcommand {\diff}{\mathrm {d}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{prop}[theorem]{Proposition}
 \newtheorem{conj}[theorem]{Conjecture}
-\newenvironment{proof}{\noindent{\bf Proof:}}{{\hspace* {\fill}$\blacksquare$}}
+\newenvironment{proof}{\noindent \textbf {Proof:}}{{\hspace* {\fill}$\blacksquare$}}
+\newenvironment{remark}{\noindent \textit {Remark:}}{}
 
 \newcommand {\enumi}[1]{(\alph {#1})}
 \renewcommand {\labelenumi}{\enumi {enumi}}
@@ -54,7 +56,7 @@
 
 \title {MPC: Algorithms and Error Analysis}
 \author {Andreas Enge \and Philippe Th\'eveny \and Paul Zimmermann}
-\date {Draft; April 20, 2022}
+\date {Draft; November 21, 2022}
 
 \begin {document}
 \maketitle
@@ -1141,7 +1143,60 @@ since $1 - \sqrt{1-x}$ is bounded by $x$
 for $0 < x \leq 1$, which comes from $1 - x \leq \sqrt{1-x}$.
 
 
-\subsubsection {Logarithm}
+
+\section {Complex analysis}
+
+\begin {theorem}[Taylor expansion and remainder term]
+\label {th:taylor}
+Let $f : U \to \C$ be a holomorphic function on the open subset
+$U \subseteq \C$. Denote by $B = B (c, r) = \{ z \in \C : |z - c| < r \}$
+the open disk with centre~$c$ and radius~$r$, by
+$\overline B = \overline B (c, r) = \{ z \in \C : |z - c| \leq r \}$
+its closure, and by
+$\partial B = \partial B (c, r) = \{ z \in \C : |z - c| = r \}$
+its boundary. Assume that $\overline B \subseteq U$, and let $z \in B$.
+Let $M_r = \max\limits_{w \in \partial B} |f (w)|$,
+let $\beta$ be any real number such that $|z - c| / r \leq \beta < 1$,
+and let $N \geq 1$ be an integer. Then
+\[
+f (z) = f (c) + \sum_{n = 1}^N \frac {f^{(n)} (c)}{n!} (z - c)^n + R_N
+\text { with }
+|R_N| \leq M_r \, \frac {\beta^{N + 1}}{1 - \beta}.
+\]
+\end {theorem}
+\begin {proof}
+The Taylor series for $f$ is given by \cite [Theorem~16-8]{Apostol57} as
+\[
+f (z) = f (c) + \sum_{n = 1}^\infty \frac {f^{(n)} (c)}{n!} (z - c)^n
+\]
+under the sole assumption that $B \subseteq U$.
+Cauchy's integral formula gives the remainder term by
+\cite [Theorem~16-7]{Apostol57} as
+\[
+R_N = \sum_{n = N+1}^\infty \frac {f^{(n)} (c)}{n!} (z - c)^n
+= \sum_{n = N+1}^\infty \frac {(z - c)^n}{2 \pi i}
+\int\limits_{w \in \partial B} \frac {f (w)}{(w - c)^{n+1}} \, \diff w
+\]
+under the assumption that $\overline B \subseteq U$.
+So
+\[
+|R_N| \leq \sum_{n = N+1}^\infty \frac {|z - c|^n}{2 \pi}
+\int\limits_{w \in \partial B} \frac {M_r}{r^{n+1}} \, \diff w
+= M_r \sum_{n = N+1}^\infty \left( \frac {|z - c|}{r} \right)^n
+\leq M_r \sum_{n = N+1}^\infty \beta^n,
+\]
+and evaluating the geometric series yields the bound of the theorem.
+\end {proof}
+
+\begin {remark}
+The result probably still holds when $f$ is holomorphic only
+on~$B \subseteq U$ instead of on $\overline B$, assuming that it is at
+least continuous on $\partial B$ (in particular, it is not allowed to have
+a singularity on the boundary); a proof idea would be to apply the theorem
+for $r' < r$ and to take the limit $r' \to r$.
+We do not need such a result, and instead can apply this approach to upper
+bounds obtained in cases we are interested in.
+\end {remark}
 
 
 
@@ -1287,10 +1342,44 @@ k_R=\left\{
 
 \subsection {\texttt {mpc\_asin}}
 
+Besides non-finite, real and purely imaginary arguments, we treat a few
+special cases separately to speed up the computations.
+
+\paragraph{Tiny imaginary part with $|\Re z| < 1/2$ and $|\Im z| < 1/4$.}
+The function $\asin z$ is holomorphic in $B (0, 1)$
+with derivative $1/\sqrt{1-z^2}$, so we can apply Theorem~\ref {th:taylor}
+with $N = 1$.
+Letting $z = x + i y \in B (0, 1)$, we take $c = x$, $0 < r < 1 - |x|$
+and $\beta = |y| / r$ and obtain
+\[
+\asin (x + i y) = \asin x + i \, \frac{y}{\sqrt {1 - x^2}} + R_1
+\]
+with
+\[
+|R_1| \leq M_r \frac {\beta^2}{1 - \beta}
+\leq \frac {\pi}{2} \cdot \frac {\beta^2}{1 - \beta}:
+\]
+Since the Taylor expansion of $\asin$ has positive real coefficents,
+we have $|\asin (z)| \leq \asin (|z|) < \pi / 2$ for $|z| < 1$.
+Letting $r$ tend to $1 - |x|$ in the above formula, we deduce that the
+bound on $|R_1|$ still holds for $\beta = |y| / (1 - |x|)$.
+
+We apply this to $|x| < 1/2$ and $|y| < 1/4$, which implies $|z| < 1$;
+then $\beta \leq 2 |y| < 1/2$, $1 / (1 - \beta) < 2$ and
+\[
+|R_1| < 4 \pi |y|^2 < 16 |y|^2.
+\]
+Notice that to be able to round the imaginary part of the result,
+which is close to $y$, the relative error should be bounded above by
+about $2^{-p}$, where $p$ is the precision; so $|y|$ must be smaller
+than about $2^{-p}$.
+
+
 \paragraph{Tiny imaginary part with real part $1$.}
 First, in case the real part of the argument is exactly $1$,
 for $0 \leq y \leq 1$, we have $|\Re \asin (1 \pm iy) - \pi/2|
 \leq y^{1/2}$, and $|\Im \asin (1 \pm iy) \mp y^{1/2}| \leq (1/12) y^{3/2}$.
+
 
 \paragraph{Small real and imaginary parts.}
 Formula 4.4.40 from \cite{AbSt73} gives for $|z| < 1$:
@@ -1400,24 +1489,6 @@ and since all the bounds on the imaginary
 parts are multiplied by $2^{-\delta}$ too, the same holds for the recurrence
 on $\varepsilon_k$ and their solutions. Thus the final error bound on
 $\Im s$ is multiplied by $2^{-\delta}$ too.
-
-\paragraph{Tiny imaginary part with $1/2 < |\Re z| < 1$.}
-The function $\asin z$ is analytical in the disk of center $(0,0)$ and
-radius $1$, with derivative $1/\sqrt{1-z^2}$.
-Taylor's theorem in complex analysis says that if $c,z$ are points in the unit
-disk, then:
-% https://en.wikipedia.org/wiki/Taylor%27s_theorem#Taylor's_theorem_in_complex_analysis
-\[ \asin z = \asin c + (z-c) \frac{1}{\sqrt{1-c^2}} + R, \]
-with $|R| \leq M_r \beta^2/(1-\beta)$, where $M_r = {\rm max}|\asin w|$
-for $|w-c| = r$, and $|z-c|/r \leq \beta < 1$.
-
-Assume we want to evaluate $\asin z$ for $z = x + iy$, with $y$ tiny,
-and $|x| < 1$.
-Taking $c=x$ in the above formula, $z = x + iy$, and $r = 1 - |x|$, we get:
-\[ \left| \asin(x + iy) - \left( \asin x + \frac{iy}{\sqrt{1-x^2}} \right)
-  \right| \leq \frac{\pi \beta^2}{2 (1-\beta)}, \]
-where $\beta = |y|/(1-|x|)$,
-since $|\asin z| \leq \pi/2$ for $|z| \leq 1$.
 
 
 \subsection {\texttt {mpc\_pow}}
@@ -2054,6 +2125,15 @@ the determined cases:
 
 where $\sigma_2$ (resp $\rho_1$, $\rho_2$) is the sign of $x_2$ (resp. $y_1$,
 $y_2$) and with the convention $0^0=+1$.
+
+FIXME: This misses the cases $(x_1 \pm x_1 i)^{y_1 + 0 i}$ for $y_1 \geq 2$
+even and $x_1 \neq 0$; the case (d)(ii) above applies when $x_2 > 0$, but
+misses $x_2 < 0$. In any case, the sign of the imaginary part
+(for $y_1$ divisible by~$4$)
+or the real part
+(for $y_1$ divisible by~$2$, but not by~$4$)
+cannot be determined.
+
 
 \subsection {\texttt {mpc\_pow\_ui}}
 \label {ssec:mpcpowui}
