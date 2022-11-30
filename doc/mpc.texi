@@ -1253,10 +1253,8 @@ Normalised finite radii use 31 bits for the mantissa, that is,
 The special values infinity and 0 are encoded through the sign of
 @math{m}, but should be tested for and set using dedicated functions.
 
-@cindex @code{mpc-impl.h}
-The following functions are declared in @code{mpc-impl.h}
-for internal use of the ball arithmetic module.
-Unless indicated otherwise, they assume radius arguments to be normalised,
+Unless indicated otherwise, the following functions
+assume radius arguments to be normalised,
 they return normalised results, and they round their results up, not
 necessarily to the smallest representable number, although reasonable
 effort is made to get a tight upper bound: They only guarantee that
