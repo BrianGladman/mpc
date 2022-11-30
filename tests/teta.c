@@ -66,6 +66,7 @@ test_eta (void)
    mpc_t z, eta;
    mpcb_t j;
    mpfr_t fuzz;
+   mpz_t re_z, tmp;
    long int re, im;
    int ok;
    
@@ -97,9 +98,19 @@ test_eta (void)
    mpfr_add_ui (mpc_imagref (j->c), mpc_imagref (j->c), 1, MPFR_RNDN);
    ok = mpcb_can_round (j, 291, 234, MPC_RNDNN);
    mpcb_round (z, j, MPC_RNDNN);
-   re = mpfr_get_si (mpc_realref (z), MPFR_RNDN);
+   mpz_init (re_z);
+   mpz_init_set_str (tmp, "-262537412640768000", 10);
+   mpfr_get_z (re_z, mpc_realref (z), MPFR_RNDN);
    im = mpfr_get_si (mpc_imagref (z), MPFR_RNDN);
-   ok &= (re == -262537412640768000L && im == 1);
+   ok &= (!mpz_cmp (re_z, tmp) && im == 1);
+   if (!ok) {
+      printf ("Error for -163:\n");
+      MPC_OUT (z);
+      mpz_out_str (stdout, 10, re_z);
+      printf ("\n");
+   }
+   mpz_clear (tmp);
+   mpz_clear (re_z);
 
    /* Check whether mpc_eta_fund (I) avoids an infinite loop. */
    mpc_set_ui_ui (z, 0, 1, MPC_RNDNN);
@@ -115,6 +126,11 @@ test_eta (void)
    re = mpfr_get_si (mpc_realref (z), MPFR_RNDN);
    im = mpfr_get_si (mpc_imagref (z), MPFR_RNDN);
    ok &= (re == 1728 && im == 1);
+   if (!ok) {
+      printf ("Error for -4:\n");
+      MPC_OUT (z);
+      printf ("%li\n", re);
+   }
 
    mpc_clear (eta);
    mpc_clear (z);
