@@ -176,38 +176,6 @@ do {                                                            \
 extern "C" {
 #endif
 
-/* Functions for radius arithmetic. */
-__MPC_DECLSPEC int mpcr_inf_p (mpcr_srcptr r);
-__MPC_DECLSPEC int mpcr_zero_p (mpcr_srcptr r);
-__MPC_DECLSPEC int mpcr_lt_half_p (mpcr_srcptr r);
-__MPC_DECLSPEC int mpcr_cmp (mpcr_srcptr r, mpcr_srcptr s);
-__MPC_DECLSPEC void mpcr_set_inf (mpcr_ptr r);
-__MPC_DECLSPEC void mpcr_set_zero (mpcr_ptr r);
-__MPC_DECLSPEC void mpcr_set_one (mpcr_ptr r);
-__MPC_DECLSPEC void mpcr_set (mpcr_ptr r, mpcr_srcptr s);
-__MPC_DECLSPEC void mpcr_set_ui_2si (mpcr_ptr r, uint64_t mant,
-   int64_t exp);
-__MPC_DECLSPEC void mpcr_max (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
-__MPC_DECLSPEC int64_t mpcr_get_exp (mpcr_srcptr r);
-__MPC_DECLSPEC void mpcr_out_str (FILE *f, mpcr_srcptr r);
-__MPC_DECLSPEC void mpcr_mul (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
-__MPC_DECLSPEC void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s,
-   const unsigned long int e);
-__MPC_DECLSPEC void mpcr_sqr (mpcr_ptr r, mpcr_srcptr s);
-__MPC_DECLSPEC void mpcr_add (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
-__MPC_DECLSPEC void mpcr_sub (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
-__MPC_DECLSPEC void mpcr_sub_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t,
-   mpfr_rnd_t rnd);
-__MPC_DECLSPEC void mpcr_div (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
-__MPC_DECLSPEC void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s,
-   const unsigned long int e);
-__MPC_DECLSPEC int64_t sqrt_int64 (int64_t n);
-__MPC_DECLSPEC void mpcr_sqrt (mpcr_ptr r, mpcr_srcptr s);
-__MPC_DECLSPEC void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p,
-   mpfr_rnd_t rnd);
-__MPC_DECLSPEC void mpcr_c_abs_rnd (mpcr_ptr r, mpc_srcptr z,
-   mpfr_rnd_t rnd);
-
 /* Function for mpcb. */
 __MPC_DECLSPEC void mpcb_eta_err (mpcb_ptr eta, mpc_srcptr z,
    unsigned long int err_re, unsigned long int err_im);

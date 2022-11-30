@@ -830,7 +830,7 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
       if (ramified)
          ret = MPC_INEX (
             mpfr_set_ui (mpc_realref (z), 0, MPFR_RNDN),
-            mpfr_set (mpc_imagref(z), mpc_imagref(u), MPC_RND_RE(rnd)));
+            mpfr_set (mpc_imagref(z), mpc_imagref(u), MPC_RND_IM(rnd)));
       else
       {
          ret = mpfr_set (mpc_imagref(z), mpc_imagref(u), MPC_RND_IM(rnd));

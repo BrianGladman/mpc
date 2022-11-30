@@ -78,3 +78,5 @@
 - 0 2 -0x3p-29 2 +0   2 0x1.8p-8 2 -0x1.8p-8 2 4 N N
 0 - 2 +0 2  0x1p-14   2 0x1.8p-8 2  0x1.8p-8 2 2 N N
 0 + 2 +0 2 -0x1p-14   2 0x1.8p-8 2 -0x1.8p-8 2 2 N N
+# issue revealed by random tests (with GMP_CHECK_RANDOMIZE=1670627686)
+0 + 2 +0 2 -0x3p-18   2 -0x3p6   2 -0x3p6    2 -2 N Z
