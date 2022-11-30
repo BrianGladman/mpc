@@ -18,6 +18,7 @@ Required versions:
 Creating a new release
 ----------------------
 
+-1) Check the release also works on 32-bit processors.
 0) Check compilability with tcc.
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
    README, src/get_version.c, src/mpc.h (remove suffix "dev" in
