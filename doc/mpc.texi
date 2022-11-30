@@ -1326,8 +1326,8 @@ behaviour will probably change in the future.
 @deftypefunx void mpcr_sub (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_mul (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_div (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
-@deftypefunx void mpcr_mul_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, const unsigned long int @var{t})
-@deftypefunx void mpcr_div_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, const unsigned long int @var{t})
+@deftypefunx void mpcr_mul_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, unsigned long int @var{t})
+@deftypefunx void mpcr_div_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, unsigned long int @var{t})
 @deftypefunx void mpcr_sqr (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 @deftypefunx void mpcr_sqrt (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 Set @var{r} to the sum, difference, product or quotient of @var{s} and

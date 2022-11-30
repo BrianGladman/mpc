@@ -439,7 +439,7 @@ void mpcr_mul (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 }
 
 
-void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s, const unsigned long int e)
+void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s, unsigned long int e)
 {
    if (mpcr_inf_p (s))
       mpcr_set_inf (r);
@@ -561,7 +561,7 @@ void mpcr_div (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t)
 }
 
 
-void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s, const unsigned long int e)
+void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s, unsigned long int e)
 {
    if (mpcr_inf_p (s))
       mpcr_set_inf (r);

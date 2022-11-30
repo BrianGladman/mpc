@@ -192,7 +192,7 @@ __MPC_DECLSPEC int64_t mpcr_get_exp (mpcr_srcptr r);
 __MPC_DECLSPEC void mpcr_out_str (FILE *f, mpcr_srcptr r);
 __MPC_DECLSPEC void mpcr_mul (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
 __MPC_DECLSPEC void mpcr_mul_2ui (mpcr_ptr r, mpcr_srcptr s,
-   const unsigned long int e);
+   unsigned long int e);
 __MPC_DECLSPEC void mpcr_sqr (mpcr_ptr r, mpcr_srcptr s);
 __MPC_DECLSPEC void mpcr_add (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
 __MPC_DECLSPEC void mpcr_sub (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
@@ -200,7 +200,7 @@ __MPC_DECLSPEC void mpcr_sub_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t,
    mpfr_rnd_t rnd);
 __MPC_DECLSPEC void mpcr_div (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
 __MPC_DECLSPEC void mpcr_div_2ui (mpcr_ptr r, mpcr_srcptr s,
-   const unsigned long int e);
+   unsigned long int e);
 __MPC_DECLSPEC int64_t sqrt_int64 (int64_t n);
 __MPC_DECLSPEC void mpcr_sqrt (mpcr_ptr r, mpcr_srcptr s);
 __MPC_DECLSPEC void mpcr_add_rounding_error (mpcr_ptr r, mpfr_prec_t p,
