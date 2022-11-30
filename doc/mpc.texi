@@ -1218,7 +1218,7 @@ in future releases.
 A complex ball of the new type @code{mpcb_t} is defined by a non-zero centre
 @math{c} of the type @code{mpc_t} and a relative radius @math{r} of
 the new type @code{mpcr_t}, and it represents all complex numbers
-@math{z = c (1 + \vartheta)} with @math{|\vartheta| \leq r}, or equivalently
+@math{z = c (1 + ϑ)} with @math{|ϑ| ≤ r}, or equivalently
 the closed circle with centre @math{c} and radius @math{r |c|}.
 The approach of using a relative error (or radius) instead of an absolute
 one simplifies error analyses for multiplicative operations (multiplication,
@@ -1246,12 +1246,12 @@ with the usual trick in the GNU multiprecision libraries of defining the
 main type @code{mpcr_t} as a 1-dimensional array of this struct, and
 variable and constant pointers @code{mpcr_ptr} and @code{mpcr_srcptr}.
 It can contain the special values infinity or zero, or floating point
-numbers encoded as @code{mant}*2^@code{exp} for a positive mantissa
-@code{mant} and an arbitrary (usually negative) exponent @code{exp}.
+numbers encoded as @math{m⋅2@sup{e}} for a positive mantissa
+@math{m} and an arbitrary (usually negative) exponent @math{e}.
 Normalised finite radii use 31 bits for the mantissa, that is,
-@math{2^{30} \leq}@code{mant}@math{\leq 2^{31} - 1}.
+@math{2@sup{30}≤m≤2@sup{31} - 1}.
 The special values infinity and 0 are encoded through the sign of
-@code{mant}, but should be tested for and set using dedicated functions.
+@math{m}, but should be tested for and set using dedicated functions.
 
 @cindex @code{mpc-impl.h}
 The following functions are declared in @code{mpc-impl.h}
@@ -1295,8 +1295,8 @@ than any finite real number.
 @deftypefunx void mpcr_set_one (mpcr_ptr @var{r})
 @deftypefunx void mpcr_set (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 @deftypefunx void mpcr_set_ui_2si (mpcr_ptr @var{r}, uint64_t @var{mant}, int64_t @var{exp})
-Set @var{r} to infinity, zero, 1, @var{s} or @var{mant}*2^@var{exp},
-respectively.
+Set @var{r} to infinity, zero, 1, @var{s} or
+@var{mant}⋅2@sup{@var{exp}}, respectively.
 @end deftypefun
 
 
@@ -1307,8 +1307,8 @@ Set @var{r} to the maximum of @var{s} and @var{t}.
 
 @deftypefun int64_t mpcr_get_exp (mpcr_srcptr @var{r})
 Assuming that @var{r} is neither infinity nor 0, return its exponent
-@math{e} when writing @math{r = m \cdot 2^e} with
-@math{1/2 \leq m < 1}. (Notice that this is @emph{not} the same as the
+@math{e} when writing @math{r = m⋅2@sup{e}} with
+@math {1/2 ≤ m < 1}. (Notice that this is @emph{not} the same as the
 field @code{exp} in the struct representing a radius, but that instead it
 is independent of the implementation.)
 Otherwise the behaviour is undefined.
@@ -1326,13 +1326,14 @@ behaviour will probably change in the future.
 @deftypefunx void mpcr_sub (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_mul (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
 @deftypefunx void mpcr_div (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
-@deftypefunx void mpcr_mul_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
-@deftypefunx void mpcr_div_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, mpcr_srcptr @var{t})
+@deftypefunx void mpcr_mul_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, const unsigned long int @var{t})
+@deftypefunx void mpcr_div_2ui (mpcr_ptr @var{r}, mpcr_srcptr @var{s}, const unsigned long int @var{t})
 @deftypefunx void mpcr_sqr (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 @deftypefunx void mpcr_sqrt (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
 Set @var{r} to the sum, difference, product or quotient of @var{s} and
-@var{t}, or to the product of @var{s} by 2^@var{t} or to the quotient of
-@var{s} by 2^@var{t}, or to the square or the square root of @var{s}.
+@var{t}, or to the product of @var{s} by 2@sup{@var{t}} or to the
+quotient of @var{s} by 2@sup{@var{t}},
+or to the square or the square root of @var{s}.
 If any of the arguments is infinity, or if a difference is negative,
 the result is infinity.
 @end deftypefun
@@ -1358,8 +1359,8 @@ in direction @var{rnd}, which may be one of @code{MPC_RNDU} or
 
 
 @deftypefun void mpcr_add_rounding_error (mpcr_ptr @var{r}, mpfr_prec_t @var{p}, mpfr_rnd_t @var{rnd})
-Set @var{r} to @math{r + (1 + r) 2^{-p}} if @var{rnd} equals
-@code{MPFR_RNDN}, and to @math{r + (1 + r) 2^{1-p}} otherwise.
+Set @var{r} to @math{r + (1 + r) 2@sup{-p}} if @var{rnd} equals
+@code{MPFR_RNDN}, and to @math{r + (1 + r) 2@sup{1-p}} otherwise.
 The idea is that if a (potentially not representable) centre of an ideal
 complex ball of radius @var{r} is rounded to a representable complex
 number at precision @var{p}, this shifts the centre by up to 1/2 ulp
