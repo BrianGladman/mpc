@@ -20,6 +20,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #include <stdio.h>
 #include <math.h>
+#include <inttypes.h> /* for the PRIi64 format modifier */
 #include "mpc-impl.h"
 
 #define MPCR_MANT(r) ((r)->mant)
@@ -411,7 +412,7 @@ void mpcr_out_str (FILE *f, mpcr_srcptr r)
    else if (mpcr_zero_p (r))
       fprintf (f, "0");
    else {
-      fprintf (f, "±(%li, %li)", MPCR_MANT (r), MPCR_EXP (r));
+      fprintf (f, "±(%"PRIi64", %"PRIi64")", MPCR_MANT (r), MPCR_EXP (r));
    }
 }
 
