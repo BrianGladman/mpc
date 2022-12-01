@@ -28,7 +28,6 @@
     <ClCompile Include="..\..\..\tests\comparisons.c" />
     <ClCompile Include="..\..\..\tests\copy_parameter.c" />
     <ClCompile Include="..\..\..\tests\double_rounding.c" />
-    <ClCompile Include="..\..\..\tests\exceptions.c" />
     <ClCompile Include="..\..\..\tests\init_parameters.c" />
     <ClCompile Include="..\..\..\tests\mpfr_flags.c" />
     <ClCompile Include="..\..\..\tests\open_datafile.c" />
