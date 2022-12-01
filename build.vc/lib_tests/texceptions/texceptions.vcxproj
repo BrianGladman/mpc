@@ -18,6 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\tests\texceptions.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AA20FB32-01D1-449B-B6AC-93052A8AD2CB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -157,9 +160,6 @@
       <AdditionalDependencies>$(ProjectDir)..\$(IntDir)test_lib.lib;$(SolutionDir)..\lib\$(IntDir)mpc.lib;$(SolutionDir)..\..\mpfr\lib\$(IntDir)mpfr.lib;$(SolutionDir)..\..\mpir\lib\$(IntDir)mpir.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\tests\texp.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
