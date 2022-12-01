@@ -412,7 +412,7 @@ void mpcr_out_str (FILE *f, mpcr_srcptr r)
    else if (mpcr_zero_p (r))
       fprintf (f, "0");
    else {
-      fprintf (f, "±(%"PRIi64", %"PRIi64")", MPCR_MANT (r), MPCR_EXP (r));
+      fprintf (f, "±(%" PRIi64 ", %" PRIi64 ")", MPCR_MANT (r), MPCR_EXP (r));
    }
 }
 

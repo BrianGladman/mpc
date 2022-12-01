@@ -27,7 +27,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #define MPFR_SGN(x) (mpfr_signbit (x) ? -1 : 1)
 
 static void
-foo (int f(mpc_ptr, mpc_srcptr, mpc_rnd_t), char *s)
+foo (int f(mpc_ptr, mpc_srcptr, mpc_rnd_t), const char *s)
 {
   mpc_t z, t;
   mpfr_rnd_t rnd_re, rnd_im;

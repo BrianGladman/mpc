@@ -34,7 +34,7 @@ test_sqrt (void)
       N = n << 30;
       s = sqrt_int64 (n);
       if (s * s < N || (s-1) * (s-1) >= N) {
-         printf ("n %"PRIi64", N %"PRIi64", s %"PRIi64"\n", n, N, s);
+         printf ("n %" PRIi64 ", N %" PRIi64 ", s %" PRIi64 "\n", n, N, s);
          return 1;
       }
    }
