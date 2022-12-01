@@ -124,16 +124,6 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
  AC_MSG_ERROR([gmp.h cannot be found or is unusable.])
 ])
 
-# Check (only in development versions) if the compiler accepts warning
-# flags and add them to CFLAGS
-# Note: don't do this if the user defined CFLAGS, since adding new flags
-# might override the user's settings, see
-# https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-05/msg00009.html
-if test -z "$USER_CFLAGS"; then
-   MPC_C_CHECK_WARNINGCFLAGS
-fi
-
-
 # Checks for header files.
 AC_CHECK_HEADERS([inttypes.h stdint.h sys/time.h])
 MPC_COMPLEX_H
@@ -148,6 +138,8 @@ AC_CHECK_FUNCS([dup dup2],,
         [AC_DEFINE([MPC_NO_STREAM_REDIRECTION],1,[Do not check mpc_out_str on stdout])])
 
 AC_CHECK_LIB([m], [fesetround])
+# Warning: up from autoconf 2.70, the following test fails with C++
+# see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=992981
 AC_CHECK_LIB([gmp], [__gmpz_init],
              [LIBS="-lgmp $LIBS"],
              [AC_MSG_ERROR([libgmp not found or uses a different ABI (including static vs shared).])])

@@ -45,7 +45,7 @@ check_PROGRAMS = tradius tballs teta                                    \
   treimref trootofunity                                                 \
   tset tsin tsin_cos tsinh tsqr tsqrt tstrtoc tsub tsub_fr	        \
   tsub_ui tsum tswap ttan ttanh tui_div tui_ui_sub                      \
-  tget_version exceptions
+  tget_version texceptions
 
 check_LTLIBRARIES=libmpc-tests.la
 libmpc_tests_la_SOURCES = mpc-tests.h check_data.c clear_parameters.c	\

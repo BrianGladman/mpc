@@ -178,7 +178,7 @@ prettify (const char *str, const mpfr_exp_t expo, int base, int special)
 
   *p = '\0';
 
-  sprintf (p, "%+"MPC_EXP_FORMAT_SPEC, x);
+  sprintf (p, "%+" MPC_EXP_FORMAT_SPEC, x);
 
   return pretty;
 }

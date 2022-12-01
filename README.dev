@@ -18,8 +18,11 @@ Required versions:
 Creating a new release
 ----------------------
 
-0) Check the release also works on 32-bit processors, with tcc and clang
-   and with g++.
+0) Check the release also works on 32-bit processors (or configure GMP with
+   ABI=32 on 64-bit processors); and with tcc and clang; and with
+   CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes"
+   If compatibility with a C++ compiler is desired, make sure to use
+   autotools-2.69 and not a later version before checking with g++.
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
    README, src/get_version.c, src/mpc.h (remove suffix "dev" in
    MPC_VERSION_STRING) and Makefile.vc.
