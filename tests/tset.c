@@ -38,9 +38,9 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #define PRINT_ERROR(function_name, precision, a)                \
   do {                                                          \
-    printf ("Error in "function_name" for prec = %lu\n",        \
+    printf ("Error in " function_name " for prec = %lu\n",      \
             (unsigned long int) precision);                     \
-    MPC_OUT(a);                                                     \
+    MPC_OUT(a);                                                 \
     exit (1);                                                   \
   } while (0)
 

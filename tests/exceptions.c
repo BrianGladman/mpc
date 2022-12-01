@@ -1,6 +1,6 @@
 /* exceptions -- test file for exceptions
 
-Copyright (C) 2015 INRIA
+Copyright (C) 2015, 2022 INRIA
 
 This file is part of GNU MPC.
 
@@ -30,7 +30,8 @@ static void
 foo (int f(mpc_ptr, mpc_srcptr, mpc_rnd_t), char *s)
 {
   mpc_t z, t;
-  int rnd_re, rnd_im, rnd;
+  mpfr_rnd_t rnd_re, rnd_im;
+  mpc_rnd_t rnd;
 #define N 5
   mpfr_exp_t exy[N][2] = {{200, 800}, {800, 200}, {-50, 50}, {-10, 1000},
                           {0, 1000}};

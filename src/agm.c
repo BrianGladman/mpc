@@ -226,7 +226,7 @@ mpc_agm (mpc_ptr rop, mpc_srcptr a, mpc_srcptr b, mpc_rnd_t rnd)
       /* angle 0, real values */
       inex_re = mpfr_agm (mpc_realref (rop), mpc_realref (a),
          mpc_realref (b), MPC_RND_RE (rnd));
-      mpfr_set_ui (mpc_imagref (rop), 0, MPC_RNDNN);
+      mpfr_set_ui (mpc_imagref (rop), 0, MPFR_RNDN);
       return MPC_INEX (inex_re, 0);
    }
    else if (mpfr_zero_p (mpc_realref (a))
@@ -235,7 +235,7 @@ mpc_agm (mpc_ptr rop, mpc_srcptr a, mpc_srcptr b, mpc_rnd_t rnd)
       /* angle 0, purely imaginary values */
       inex_im = mpfr_agm (mpc_imagref (rop), mpc_imagref (a),
          mpc_imagref (b), MPC_RND_IM (rnd));
-      mpfr_set_ui (mpc_realref (rop), 0, MPC_RNDNN);
+      mpfr_set_ui (mpc_realref (rop), 0, MPFR_RNDN);
       return MPC_INEX (0, inex_im);
    }
    else
