@@ -28,6 +28,10 @@ implement mul_karatsuba with three multiplications at precision around p,
 instead of two at precision 2*p and one at precision p
 requires analysis of error propagation
 
+From Andreas Enge 1 December 2022:
+think about, implement and document the possibility of having signed
+zeros as real and imaginary parts of results of multiplication
+
 From Andreas Enge and Paul Zimmermann 6 July 2012:
 Improve speed of Im (atan) for x+i*y with small y, for instance by using
 the Taylor series directly. See also the discussion
