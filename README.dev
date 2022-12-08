@@ -19,15 +19,14 @@ Creating a new release
 ----------------------
 
 0) Check the release also works on 32-bit processors (or configure GMP with
-   ABI=32 on 64-bit processors); and with tcc and clang; and with
-   CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes"
+   ABI=32 on 64-bit processors); and with tcc and clang.
    If compatibility with a C++ compiler is desired, make sure to use
    autotools-2.69 and not a later version before checking with g++.
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
-   README, src/get_version.c, src/mpc.h (remove suffix "dev" in
-   MPC_VERSION_STRING) and Makefile.vc.
+   README, src/get_version.c and src/mpc.h (remove suffix "dev" in
+   MPC_VERSION_STRING).
    Check that there are no compiler warnings with
-      CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all" ./configure; make check
+      CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure; make check
 2) Check that NEWS, BUGS and TODO are up to date, and that the minimal
    version numbers of gmp and mpfr in configure.ac, README and
    doc/mpc.texi are correct (and check that make and make check work
@@ -53,6 +52,6 @@ Creating a new release
    git tag VERSION
    git push --tags
 9) After the release, update the version number in configure.ac, README,
-   src/get_version.c, src/mpc.h and Makefile.vc.
+   src/get_version.c and src/mpc.h.
 10) Commit the changes to git.
 
