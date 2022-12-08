@@ -280,7 +280,7 @@ __MPC_DECLSPEC void mpcr_set_inf (mpcr_ptr r);
 __MPC_DECLSPEC void mpcr_set_zero (mpcr_ptr r);
 __MPC_DECLSPEC void mpcr_set_one (mpcr_ptr r);
 __MPC_DECLSPEC void mpcr_set (mpcr_ptr r, mpcr_srcptr s);
-__MPC_DECLSPEC void mpcr_set_ui_2si (mpcr_ptr r, uint64_t mant,
+__MPC_DECLSPEC void mpcr_set_ui64_2si64 (mpcr_ptr r, uint64_t mant,
    int64_t exp);
 __MPC_DECLSPEC void mpcr_max (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t);
 __MPC_DECLSPEC int64_t mpcr_get_exp (mpcr_srcptr r);

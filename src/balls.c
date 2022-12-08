@@ -108,13 +108,13 @@ mpcb_set_c (mpcb_ptr rop, mpc_srcptr op, mpfr_prec_t prec,
        || !mpc_fin_p (op))
        mpcr_set_inf (rop->r);
    else {
-      mpcr_set_ui_2si (relerr_re, err_re,
-         -mpfr_get_prec (mpc_realref (op)));
+      mpcr_set_ui64_2si64 (relerr_re, (uint64_t) err_re,
+         (int64_t) (-mpfr_get_prec (mpc_realref (op))));
          /* prop:relerror of algorithms.tex */
       if (MPC_INEX_RE (inex))
          mpcr_add_rounding_error (relerr_re, prec, MPFR_RNDN);
-      mpcr_set_ui_2si (relerr_im, err_im,
-         -mpfr_get_prec (mpc_imagref (op)));
+      mpcr_set_ui64_2si64 (relerr_im, (uint64_t) err_im,
+         (int64_t) (-mpfr_get_prec (mpc_imagref (op))));
       if (MPC_INEX_IM (inex))
          mpcr_add_rounding_error (relerr_im, prec, MPFR_RNDN);
       mpcr_max (rop->r, relerr_re, relerr_im);
