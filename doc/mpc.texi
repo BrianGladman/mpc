@@ -1351,8 +1351,8 @@ down may be useful to obtain an upper bound when dividing by the result.
 
 @deftypefun void mpcr_c_abs_rnd (mpcr_ptr @var{r}, mpc_srcptr @var{z}, mpfr_rnd_t @var{rnd})
 Set @var{r} to the absolute value of the complex number @var{z}, rounded
-in direction @var{rnd}, which may be one of @code{MPC_RNDU} or
-@code{MPC_RNDD}.
+in direction @var{rnd}, which may be one of @code{MPFR_RNDU} or
+@code{MPFR_RNDD}.
 @end deftypefun
 
 
