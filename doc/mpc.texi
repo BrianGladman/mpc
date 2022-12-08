@@ -1292,7 +1292,7 @@ than any finite real number.
 @deftypefunx void mpcr_set_zero (mpcr_ptr @var{r})
 @deftypefunx void mpcr_set_one (mpcr_ptr @var{r})
 @deftypefunx void mpcr_set (mpcr_ptr @var{r}, mpcr_srcptr @var{s})
-@deftypefunx void mpcr_set_ui_2si (mpcr_ptr @var{r}, uint64_t @var{mant}, int64_t @var{exp})
+@deftypefunx void mpcr_set_ui64_2si64 (mpcr_ptr @var{r}, uint64_t @var{mant}, int64_t @var{exp})
 Set @var{r} to infinity, zero, 1, @var{s} or
 @var{mant}⋅2@sup{@var{exp}}, respectively.
 @end deftypefun

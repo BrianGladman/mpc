@@ -358,7 +358,7 @@ void mpcr_set (mpcr_ptr r, mpcr_srcptr s)
 }
 
 
-void mpcr_set_ui_2si (mpcr_ptr r, uint64_t mant, int64_t exp)
+void mpcr_set_ui64_2si64 (mpcr_ptr r, uint64_t mant, int64_t exp)
    /* Set r to mant*2^exp, rounded up. */
 {
    if (mant == 0)
