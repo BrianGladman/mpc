@@ -38,10 +38,6 @@ Creating a new release
    This updates the files in build-aux.
    Check that the executables in build-aux are not read-only
    (https://sympa.inria.fr/sympa/arc/mpc-discuss/2020-06/msg00000.html).
-   Replace the two occurrences of /gnu/store/.../bin/sh in build-aux/ltmain.sh
-   by /bin/sh.
-   Check build-aux/config.sub contains an entry arm64-*
-   (https://sympa.inria.fr/sympa/arc/mpc-discuss/2022-05/msg00000.html).
 5) Execute
       touch doc/mpc.texi; make distcheck
    This updates doc/version.texi and creates the tarball for distribution.

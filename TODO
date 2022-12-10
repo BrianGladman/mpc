@@ -1,10 +1,6 @@
 From Thomas Henlich on 20 February 2020:
 Implement the cotangent function.
 
-From Andreas Enge 22 July 2016:
-Now that mpfr-3 is the minimum version requirement, support the
-MPFR_RNDA rounding mode.
-
 From Joseph Myers 12 Apr 2015:
 https://sympa.inria.fr/sympa/arc/mpc-discuss/2015-04/msg00009.html
 Try implementing tan z = (sin 2x + i sinh 2y) / (cos 2x + cosh 2y) or
@@ -87,13 +83,6 @@ New functions to implement:
   mpc_erfc, mpc_exp2, mpc_expm1, mpc_log1p, mpc_log2, mpc_lgamma, mpc_tgamma
   https://sympa.inria.fr/sympa/arc/mpc-discuss/2012-03/msg00009.html
   See the article by Pascal Molin (hal.archives-ouvertes.fr/hal-00580855).
-- from Andreas Enge and Philippe Théveny 17 July 2008
-  agm (and complex logarithm with agm ?). For the error analysis, one can
-  start from Theorem 1 of
-    https://www.ams.org/journals/mcom/2011-80-275/S0025-5718-2011-01880-6/S0025-5718-2011-01880-6.pdf
-  and probably the best is to compute AGM(a,b)
-  as a*AGM(1,b/a) with |b/a| <= 1. In such a way, after one step all values
-  are in the same quadrant, and no cancellation occurs any more.
 - implement a root-finding algorithm using the Durand-Kerner method
   (cf http://en.wikipedia.org/wiki/Durand%E2%80%93Kerner_method).
   See also the CEVAL algorithm from Yap and Sagraloff:
