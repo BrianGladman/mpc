@@ -22,7 +22,9 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #define __MPC_TESTS_H
 
 #include "config.h"
+#ifndef DONT_INCLUDE_STDIO
 #include <stdio.h>
+#endif
 #include <ctype.h>
 #include <stdlib.h>
 #include <inttypes.h> /* for the PRIi64 format modifier */
