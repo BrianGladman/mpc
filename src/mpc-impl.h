@@ -27,9 +27,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
-#ifndef DONT_INCLUDE_STDIO
-#include <stdio.h>
-#endif
 #include "mpc.h"
 
 /*

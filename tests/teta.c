@@ -19,7 +19,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
 #include <math.h>
-#include "mpc-impl.h"
+#include "mpc-tests.h"
 
 static void
 mpcb_j_err (mpcb_ptr j, mpc_srcptr z, unsigned long int err_re,

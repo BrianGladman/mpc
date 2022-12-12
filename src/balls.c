@@ -21,6 +21,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include "mpc-impl.h"
 
 
+#ifdef _GMP_H_HAVE_FILE
 void mpcb_out_str (FILE *f, mpcb_srcptr op)
 {
    mpc_out_str (f, 10, 0, op->c, MPC_RNDNN);
@@ -28,6 +29,7 @@ void mpcb_out_str (FILE *f, mpcb_srcptr op)
    mpcr_out_str (f, op->r);
    fprintf (f, "\n");
 }
+#endif
 
 
 void

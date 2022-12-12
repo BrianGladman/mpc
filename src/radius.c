@@ -18,7 +18,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
-#include <stdio.h>
 #include <math.h>
 #include <inttypes.h> /* for the PRIi64 format modifier */
 #include "mpc-impl.h"
@@ -405,6 +404,8 @@ int64_t mpcr_get_exp (mpcr_srcptr r)
    return MPCR_EXP (r) + 31;
 }
 
+
+#ifdef _GMP_H_HAVE_FILE
 void mpcr_out_str (FILE *f, mpcr_srcptr r)
 {
    if (mpcr_inf_p (r))
@@ -415,6 +416,7 @@ void mpcr_out_str (FILE *f, mpcr_srcptr r)
       fprintf (f, "±(%" PRIi64 ", %" PRIi64 ")", MPCR_MANT (r), MPCR_EXP (r));
    }
 }
+#endif
 
 
 static void mpcr_mul_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t,
