@@ -18,16 +18,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
-#define DONT_INCLUDE_STDIO
-#include "mpc-tests.h"
+#include "mpc.h"
 
 int
 main (void)
 {
-  test_start ();
-
-  test_end ();
-
   return 0;
 }
 
