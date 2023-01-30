@@ -1,6 +1,6 @@
 /* radius -- Functions for radii of complex balls.
 
-Copyright (C) 2022 INRIA
+Copyright (C) 2022, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -18,9 +18,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
-#include <stdio.h>
 #include <math.h>
 #include <inttypes.h> /* for the PRIi64 format modifier */
+#include <stdio.h>    /* for FILE */
 #include "mpc-impl.h"
 
 #define MPCR_MANT(r) ((r)->mant)
@@ -408,14 +408,13 @@ int64_t mpcr_get_exp (mpcr_srcptr r)
 void mpcr_out_str (FILE *f, mpcr_srcptr r)
 {
    if (mpcr_inf_p (r))
-      fprintf (f, "∞");
+      fprintf (f, "[@Inf@]");
    else if (mpcr_zero_p (r))
-      fprintf (f, "0");
+      fprintf (f, "[0]");
    else {
-      fprintf (f, "±(%" PRIi64 ", %" PRIi64 ")", MPCR_MANT (r), MPCR_EXP (r));
+      fprintf (f, "[%" PRIi64 " %" PRIi64 "]", MPCR_MANT (r), MPCR_EXP (r));
    }
 }
-
 
 static void mpcr_mul_rnd (mpcr_ptr r, mpcr_srcptr s, mpcr_srcptr t,
     mpfr_rnd_t rnd)

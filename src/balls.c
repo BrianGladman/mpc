@@ -1,6 +1,6 @@
 /* balls -- Functions for complex ball arithmetic.
 
-Copyright (C) 2018, 2020, 2021, 2022 INRIA
+Copyright (C) 2018, 2020, 2021, 2022, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -18,17 +18,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
+#include <limits.h> /* for CHAR_BIT */
+#include <stdio.h>  /* for FILE */
 #include "mpc-impl.h"
-
 
 void mpcb_out_str (FILE *f, mpcb_srcptr op)
 {
    mpc_out_str (f, 10, 0, op->c, MPC_RNDNN);
-   fprintf (f, " ");
    mpcr_out_str (f, op->r);
-   fprintf (f, "\n");
 }
-
 
 void
 mpcb_init (mpcb_ptr rop)
