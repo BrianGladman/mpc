@@ -425,7 +425,7 @@ and the second one for the imaginary part.
 For example @code{MPC_RNDZU} indicates to round the real part towards zero,
 and the imaginary part towards plus infinity.
 
-The @samp{round to nearest} mode works as in the IEEE P754 standard: in case
+The @samp{round to nearest} mode works as in the IEEE 754 standard: in case
 the number to be rounded lies exactly in the middle of two representable
 numbers, it is rounded to the one with the least significant bit set to zero.
 For example, the number 5, which is represented by (101) in binary, is rounded
@@ -482,7 +482,7 @@ operation exactly (with ``infinite precision''), and round the result to
 the destination variable precision with the given rounding mode.
 
 The GNU MPC complex functions are intended to be a smooth extension
-of the IEEE P754 arithmetic. The results obtained on one
+of the IEEE 754 arithmetic. The results obtained on one
 computer should not differ from the results obtained on a computer with a
 different word size.
 
