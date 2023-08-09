@@ -1,6 +1,6 @@
 /* mpc-tests.h -- Tests helper functions.
 
-Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2020, 2022 INRIA
+Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2020, 2022, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -363,5 +363,8 @@ void    next_rnd_mode       (mpc_fun_param_t *params);
 void    set_output_precision    (mpc_fun_param_t *params, mpfr_prec_t prec);
 void    set_input_precision     (mpc_fun_param_t *params, mpfr_prec_t prec);
 void    set_reference_precision (mpc_fun_param_t *params, mpfr_prec_t prec);
+
+/* version printing in random.c */
+void mpc_test_print_libraries (void);
 
 #endif /* __MPC_TESTS_H */
