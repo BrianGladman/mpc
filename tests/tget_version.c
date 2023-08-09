@@ -25,7 +25,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 int
 main (void)
 {
-  mpc_test_print_libraries ();
+  test_start ();
 
   if (strcmp (mpc_get_version (), MPC_VERSION_STRING) != 0)
     {
@@ -34,6 +34,8 @@ main (void)
               mpc_get_version(), MPC_VERSION_STRING);
       exit (1);
     }
+
+  test_end ();
 
   return 0;
 }

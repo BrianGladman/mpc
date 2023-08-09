@@ -144,6 +144,9 @@ test_eta (void)
 int
 main (void)
 {
-   return test_eta ();
+  test_start ();
+  int ret = test_eta ();
+  test_end ();
+  return ret;
 }
 

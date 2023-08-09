@@ -211,6 +211,12 @@ test_agm (void)
 int
 main (void)
 {
-   return test_agm ();
+  test_start ();
+
+  int ret = test_agm ();
+
+  test_end ();
+
+  return ret;
 }
 

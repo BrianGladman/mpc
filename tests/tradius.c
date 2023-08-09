@@ -46,6 +46,9 @@ test_sqrt (void)
 int
 main (void)
 {
-   return test_sqrt ();
+  test_start ();
+  int ret = test_sqrt ();
+  test_end ();
+  return ret;
 }
 
