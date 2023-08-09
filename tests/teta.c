@@ -1,6 +1,6 @@
 /* teta -- test file for the Dedekind eta function.
 
-Copyright (C) 2022 INRIA
+Copyright (C) 2022, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -144,9 +144,12 @@ test_eta (void)
 int
 main (void)
 {
+  int ret;
+
   test_start ();
-  int ret = test_eta ();
+  ret = test_eta ();
   test_end ();
+
   return ret;
 }
 
