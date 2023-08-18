@@ -1,6 +1,6 @@
 /* read_description.c -- read parameters from description file
 
-Copyright (C) 2012, 2013, 2014 INRIA
+Copyright (C) 2012, 2013, 2014, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -39,8 +39,8 @@ static const param_typeval_t sparam_typeval[]= {
   { "long"                , NATIVE_L    },
   { "double"              , NATIVE_D    },
   { "long double"         , NATIVE_LD   },
-  { "double _Complex"     , NATIVE_DC   },
-  { "long double _Complex", NATIVE_LDC  },
+  { "double complex"      , NATIVE_DC   },
+  { "long double complex" , NATIVE_LDC  },
   { "intmax_t"            , NATIVE_IM   },
   { "uintmax_t"           , NATIVE_UIM  },
   { "mpz_ptr"             , GMP_Z       },

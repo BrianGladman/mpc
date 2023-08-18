@@ -1,6 +1,6 @@
 /* tset -- Test file for mpc_set_x and mpc_set_x_x functions.
 
-Copyright (C) 2009, 2010, 2011, 2012, 2022 INRIA
+Copyright (C) 2009, 2010, 2011, 2012, 2022, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -287,8 +287,8 @@ check_set (void)
 
 #if defined HAVE_COMPLEX_H
       {
-        double _Complex c = 1.0 - 2.0*I, d;
-        long double _Complex lc = c, ld;
+        double complex c = 1.0 - 2.0*I, d;
+        long double complex lc = c, ld;
 
          mpc_set_dc (z, c, MPC_RNDNN);
          if ((d = mpc_get_dc (z, MPC_RNDNN)) != c)

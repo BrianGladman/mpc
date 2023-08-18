@@ -168,8 +168,8 @@ typedef enum {
   NATIVE_L,            /* signed long */
   NATIVE_D,            /* double */
   NATIVE_LD,           /* long double */
-  NATIVE_DC,           /* double _Complex */
-  NATIVE_LDC,          /* long double _Complex */
+  NATIVE_DC,           /* double complex */
+  NATIVE_LDC,          /* long double complex */
   NATIVE_IM,           /* intmax_t */
   NATIVE_UIM,          /* uintmax_t */
   NATIVE_STRING,       /* char* */
@@ -241,8 +241,8 @@ typedef union {
   uintmax_t            uim;
 #endif
 #ifdef _Complex_I
-  double _Complex      dc;
-  long double _Complex ldc;
+  double complex       dc;
+  long double complex  ldc;
 #endif
   char *               string;
   string_info_t        string_info;

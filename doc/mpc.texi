@@ -593,8 +593,8 @@ with the given rounding mode @var{rnd}.
 @deftypefunx int mpc_set_sj (mpc_t @var{rop}, intmax_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_set_d (mpc_t @var{rop}, double @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_set_ld (mpc_t @var{rop}, long double @var{op}, mpc_rnd_t @var{rnd})
-@deftypefunx int mpc_set_dc (mpc_t @var{rop}, double _Complex @var{op}, mpc_rnd_t @var{rnd})
-@deftypefunx int mpc_set_ldc (mpc_t @var{rop}, long double _Complex @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx int mpc_set_dc (mpc_t @var{rop}, double complex @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx int mpc_set_ldc (mpc_t @var{rop}, long double complex @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_set_z (mpc_t @var{rop}, const mpz_t @var{op} mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_set_q (mpc_t @var{rop}, const mpq_t @var{op} mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_set_f (mpc_t @var{rop}, const mpf_t @var{op} mpc_rnd_t @var{rnd})
@@ -653,8 +653,8 @@ third auxiliary variable.
 The following functions are available only if @code{<complex.h>}
 is included @emph{before} @file{mpc.h}.
 
-@deftypefun double _Complex mpc_get_dc (const mpc_t @var{op}, mpc_rnd_t @var{rnd})
-@deftypefunx {long double _Complex} mpc_get_ldc (mpc_t @var{op}, mpc_rnd_t @var{rnd})
+@deftypefun double complex mpc_get_dc (const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx {long double complex} mpc_get_ldc (mpc_t @var{op}, mpc_rnd_t @var{rnd})
 Convert @var{op} to a C complex number, using the rounding mode @var{rnd}.
 @end deftypefun
 
