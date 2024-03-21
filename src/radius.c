@@ -18,7 +18,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see http://www.gnu.org/licenses/ .
 */
 
-#include <math.h>
+#include <math.h>     /* for frexp */
 #include <inttypes.h> /* for the PRIi64 format modifier */
 #include <stdio.h>    /* for FILE */
 #include "mpc-impl.h"
