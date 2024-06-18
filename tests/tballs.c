@@ -1,6 +1,6 @@
 /* tballs -- test file for complex ball arithmetic.
 
-Copyright (C) 2018, 2020, 2021, 2022, 2023 INRIA
+Copyright (C) 2018, 2020, 2021, 2022, 2023, 2024 INRIA
 
 This file is part of GNU MPC.
 
@@ -116,19 +116,11 @@ mpc_mpcb_agm (mpc_ptr rop, mpc_srcptr opa, mpc_srcptr opb, mpc_rnd_t rnd)
       if (mpcr_inf_p (anp1->r))
          ok = 0;
       else {
-         mpc_init2 (diff, prec);
-         mpc_sub (diff, an->c, bn->c, MPC_RNDZZ);
-            /* FIXME: We would need to round away, but this is not yet
-               implemented. */
-         re_zero = mpfr_zero_p (mpc_realref (diff));
-         if (!re_zero)
-            MPFR_ADD_ONE_ULP (mpc_realref (diff));
-         im_zero = mpfr_zero_p (mpc_imagref (diff));
-         if (!im_zero)
-            MPFR_ADD_ONE_ULP (mpc_imagref (diff));
-
          mpcb_set (res, anp1);
-
+         mpc_init2 (diff, prec);
+         mpc_sub (diff, an->c, bn->c, MPC_RNDAA);
+         re_zero = mpfr_zero_p (mpc_realref (diff));
+         im_zero = mpfr_zero_p (mpc_imagref (diff));
          if (re_zero && im_zero)
             mpcr_set_zero (rab);
          else {
