@@ -1,6 +1,6 @@
 ## tests/Makefile.am -- Process this file with automake to produce Makefile.in
 ##
-## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2021, 2022 INRIA
+## Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2021, 2022, 2024 INRIA
 ##
 ## This file is part of GNU MPC.
 ##
@@ -52,7 +52,8 @@ libmpc_tests_la_SOURCES = mpc-tests.h check_data.c clear_parameters.c	\
   close_datafile.c comparisons.c copy_parameter.c double_rounding.c	\
   init_parameters.c mpfr_flags.c open_datafile.c print_parameter.c	\
   random.c read_data.c read_description.c read_line.c rounding.c	\
-  setprec_parameters.c tpl_gmp.c tpl_mpc.c tpl_mpfr.c tpl_native.c
+  setprec_parameters.c timer.c                                          \
+  tpl_gmp.c tpl_mpc.c tpl_mpfr.c tpl_native.c
 
 DESCRIPTIONS = abs.dsc acos.dsc acosh.dsc add.dsc add_fr.dsc add_si.dsc	\
   add_ui.dsc agm.dsc arg.dsc asin.dsc asinh.dsc atan.dsc atanh.dsc      \

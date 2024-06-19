@@ -1,6 +1,6 @@
 /* mpc.h -- Include file for mpc.
 
-Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2016, 2017, 2018, 2020, 2021, 2022 INRIA
+Copyright (C) 2002, 2003, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2016, 2017, 2018, 2020, 2021, 2022, 2023 INRIA
 
 This file is part of GNU MPC.
 
@@ -260,10 +260,10 @@ __MPC_DECLSPEC int  mpc_set_uj_uj   (mpc_ptr, uintmax_t, uintmax_t, mpc_rnd_t);
 #endif
 
 #ifdef _Complex_I
-__MPC_DECLSPEC int  mpc_set_dc      (mpc_ptr, double _Complex, mpc_rnd_t);
-__MPC_DECLSPEC int  mpc_set_ldc     (mpc_ptr, long double _Complex, mpc_rnd_t);
-__MPC_DECLSPEC double _Complex mpc_get_dc (mpc_srcptr, mpc_rnd_t);
-__MPC_DECLSPEC long double _Complex mpc_get_ldc (mpc_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC int  mpc_set_dc      (mpc_ptr, double complex, mpc_rnd_t);
+__MPC_DECLSPEC int  mpc_set_ldc     (mpc_ptr, long double complex, mpc_rnd_t);
+__MPC_DECLSPEC double complex mpc_get_dc (mpc_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC long double complex mpc_get_ldc (mpc_srcptr, mpc_rnd_t);
 #endif
 
 #ifdef _GMP_H_HAVE_FILE

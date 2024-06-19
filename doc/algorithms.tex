@@ -3139,7 +3139,7 @@ The radius type represents the non-negative real half-axis from~$0$
 to~$\infty$, including this special infinite number. It is implemented
 internally as a non-negative floating point value with a signed 64~bit
 integer mantissa~$m$, normalised to 31 bits, so that two mantissas may be
-multiplied without rounding. The sign is used to encode $r = \infty$
+multiplied without rounding. The sign is used to encode $r = \infty$,
 a zero mantissa encodes~$0$, otherwise a mantissa is always positive.
 The exponent is encoded as a 64~bit integer~$e$ such that (for finite radii)
 $r = m \cdot 2^e$ with $0 \leq m < 2^{31}$.
@@ -3154,7 +3154,7 @@ guarantee that the returned ball is minimal.
 
 In any case, the centre of the resulting ball is obtained by applying
 the corresponding MPC function on the centres of the input balls with
-rounding to nearest. The analyses of \ref {sec:algorithms} then provide
+rounding to nearest. The analyses of \S\ref {sec:algorithms} then provide
 upper bounds on the radius.
 
 Compared to a representation decomposed along the real and imaginary parts,
