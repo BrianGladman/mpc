@@ -104,7 +104,7 @@ mpc_mpcb_agm (mpc_ptr rop, mpc_srcptr opa, mpc_srcptr opb, mpc_rnd_t rnd)
          mpcb_sqrt (bnp1, bnp1);
             /* Be aware of the branch cut! The current function does
                what is needed here. */
-         equal = mpc_cmp (an->c, bn->c) == 0
+         equal = mpc_cmp (anp1->c, bnp1->c) == 0
                  || (   mpc_cmp (an->c, anp1->c) == 0
                      && mpc_cmp (bn->c, bnp1->c) == 0);
          mpcb_set (an, anp1);
