@@ -37,7 +37,11 @@ AC_DEFUN([MPC_COMPLEX_H], [
             [
                AC_LANG_PROGRAM(
                   [[#include <complex.h>]],
-                  [[double complex x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));]]
+                  [[#ifdef _MSC_VER],
+                  [_Dcomplex x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));],
+                  [#else],
+                  [complex double x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));],
+                  [#endif]]
                )
             ]
          )

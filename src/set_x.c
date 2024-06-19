@@ -1,7 +1,7 @@
 /* mpc_set_x -- Set the real part of a complex number
    (imaginary part equals +0 regardless of rounding mode).
 
-Copyright (C) 2008, 2009, 2010, 2011, 2022, 2023 INRIA
+Copyright (C) 2008, 2009, 2010, 2011, 2022, 2023, 2024 INRIA
 
 This file is part of GNU MPC.
 
@@ -79,12 +79,12 @@ mpc_set_sj (mpc_ptr a, intmax_t b, mpc_rnd_t rnd)
 
 #ifdef HAVE_COMPLEX_H
 int
-mpc_set_dc (mpc_ptr a, double complex b, mpc_rnd_t rnd) {
+mpc_set_dc (mpc_ptr a, DOUBLE_COMPLEX b, mpc_rnd_t rnd) {
    return mpc_set_d_d (a, creal (b), cimag (b), rnd);
 }
 
 int
-mpc_set_ldc (mpc_ptr a, long double complex b, mpc_rnd_t rnd) {
+mpc_set_ldc (mpc_ptr a, LONG_DOUBLE_COMPLEX b, mpc_rnd_t rnd) {
    return mpc_set_ld_ld (a, creall (b), cimagl (b), rnd);
 }
 #endif

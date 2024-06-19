@@ -39,8 +39,13 @@ static const param_typeval_t sparam_typeval[]= {
   { "long"                , NATIVE_L    },
   { "double"              , NATIVE_D    },
   { "long double"         , NATIVE_LD   },
-  { "double complex"      , NATIVE_DC   },
-  { "long double complex" , NATIVE_LDC  },
+#ifdef _MSC_VER
+  { "_Dcomplex"           , NATIVE_DC   },
+  { "_Lcomplex"           , NATIVE_LDC  },
+#else
+   { "double _Complex"     , NATIVE_DC   },
+   { "long double _Complex", NATIVE_LDC  },
+#endif
   { "intmax_t"            , NATIVE_IM   },
   { "uintmax_t"           , NATIVE_UIM  },
   { "mpz_ptr"             , GMP_Z       },

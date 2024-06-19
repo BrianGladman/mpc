@@ -609,6 +609,10 @@ For @code{mpc_set_d}, be careful that the input number @var{op} may not be
 exactly representable as a double-precision number (this happens for 0.1 for
 instance), in which case it is first rounded by the C compiler to a
 double-precision number, and then only to a complex number.
+With the Microsoft compiler, which does not provide the standard type
+@code{double complex} or @code{long double complex}, replace
+@code{double _Complex} by @code{_Dcomplex} and
+@code{long double _Complex} by @code{_Lcomplex}.
 @end deftypefun
 
 @deftypefun int mpc_set_ui_ui (mpc_t @var{rop}, unsigned long int @var{op1}, unsigned long int @var{op2}, mpc_rnd_t @var{rnd})
@@ -656,6 +660,10 @@ is included @emph{before} @file{mpc.h}.
 @deftypefun double complex mpc_get_dc (const mpc_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx {long double complex} mpc_get_ldc (mpc_t @var{op}, mpc_rnd_t @var{rnd})
 Convert @var{op} to a C complex number, using the rounding mode @var{rnd}.
+With the Microsoft compiler, which does not provide the standard type
+@code{double complex} or @code{long double complex}, replace
+@code{double _Complex} by @code{_Dcomplex} and
+@code{long double _Complex} by @code{_Lcomplex}.
 @end deftypefun
 
 
