@@ -648,14 +648,8 @@ static void mpcr_f_abs_rnd (mpcr_ptr r, mpfr_srcptr z, mpfr_rnd_t rnd)
       mpcr_set_zero (r);
    else {
       mpfr_init2 (zr, 31);
-      if (rnd == MPFR_RNDU) {
-         mpfr_frexp (&aux, zr, z, MPFR_RNDA);
-         MPCR_EXP (r) = aux;
-      }
-      else {
-         mpfr_frexp (&aux, zr, z, MPFR_RNDZ);
-         MPCR_EXP (r) = aux;
-      }
+      mpfr_frexp (&aux, zr, z, (rnd == MPFR_RNDU ? MPFR_RNDA : MPFR_RNDZ));
+      MPCR_EXP (r) = aux;
       mpfr_mul_2exp (zr, zr, 31, MPFR_RNDN);
       MPCR_EXP (r) -= 31;
       if (neg > 0)
