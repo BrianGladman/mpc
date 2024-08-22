@@ -1,6 +1,6 @@
 # mpc.m4
 #
-# Copyright (C) 2008, 2009, 2010, 2011, 2012, 2014, 2018, 2023 INRIA
+# Copyright (C) 2008, 2009, 2010, 2011, 2012, 2014, 2018, 2023, 2024 INRIA
 #
 # This file is part of GNU MPC.
 #
@@ -37,11 +37,13 @@ AC_DEFUN([MPC_COMPLEX_H], [
             [
                AC_LANG_PROGRAM(
                   [[#include <complex.h>]],
-                  [[#ifdef _MSC_VER],
-                  [_Dcomplex x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));],
-                  [#else],
-                  [complex double x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));],
-                  [#endif]]
+                  [[
+#ifdef _MSC_VER
+   _Dcomplex x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));
+#else
+   complex double x = 1.0 + 2.0 * I; return (creal (x) + cimag (x));
+#endif
+                  ]]
                )
             ]
          )
