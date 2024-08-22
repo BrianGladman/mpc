@@ -271,7 +271,7 @@ __MPC_DECLSPEC int  mpc_set_uj_uj   (mpc_ptr, uintmax_t, uintmax_t, mpc_rnd_t);
 #define LONG_DOUBLE_COMPLEX long double _Complex
 #endif
 
-#ifdef _Complex_I
+#ifdef HAVE_COMPLEX_H
 __MPC_DECLSPEC int  mpc_set_dc      (mpc_ptr, DOUBLE_COMPLEX, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_set_ldc     (mpc_ptr, LONG_DOUBLE_COMPLEX, mpc_rnd_t);
 __MPC_DECLSPEC DOUBLE_COMPLEX mpc_get_dc (mpc_srcptr, mpc_rnd_t);
