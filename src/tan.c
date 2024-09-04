@@ -355,12 +355,12 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
              Since |tanh(2y)| = (1-exp(-4|y|))/(1+exp(-4|y|)),
              we have 1-|tanh(2y)| < 2*exp(-4|y|).
              Thus |im(z)-1| < 2/exp|2y| + 2/exp|4y| < 4/exp|2y| < 4/2^|2y|.
-             If 2^EXP(y) >= p+2, then im(z) rounds to -1 or 1. */
+             If |2y| >= p+3, then im(z) rounds to -1 or 1. */
+          mpfr_prec_t py = mpfr_get_prec (mpc_imagref (rop));
+          mpfr_exp_t ey = mpfr_get_exp (mpc_imagref (op));
           if (ok == 0 && (mpfr_cmp_ui (mpc_imagref(x), 1) == 0 ||
                           mpfr_cmp_si (mpc_imagref(x), -1) == 0) &&
-              mpfr_get_exp (mpc_imagref(op)) >= 0 &&
-              ((size_t) mpfr_get_exp (mpc_imagref(op)) >= 8 * sizeof (mpfr_prec_t) ||
-               ((mpfr_prec_t) 1) << mpfr_get_exp (mpc_imagref(op)) >= mpfr_get_prec (mpc_imagref (rop)) + 2))
+              mpfr_cmpabs_ui (mpc_imagref (op), py / 2 + 2) >= 0)
             {
               /* subtract one ulp, so that we get the correct inexact flag */
               ok = tan_im_cmp_one (op);
