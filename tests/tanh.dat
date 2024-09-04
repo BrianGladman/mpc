@@ -79,3 +79,10 @@
 # IEEE-754 double precision
 + - 53 0x10000000000001p-53  53 0x1FFFFFFFFFFFFFp-53   53 0x1E938CBCEB16DFp-55 53 0x1B1F56FDEEF00Fp-53 N N
 
+# the following inputs are slow in MPC 1.3.1
+# (missing return and ternary values have to be computed)
++ + 24 0 24 0 24 0x1.fa4dc4p+24 24 0x1.82924ep+103 N N
++ + 24 0 24 0 24 0x1.131a1ep+27 24 -0x1.2961ep-69 N N
++ + 24 0 24 0 24 0x1.fb1248p+24 24 0x1.64b61cp-103 N N
++ + 24 0 24 0 24 0x1.48fc5ep+23 24 -0x1.9f7646p-76 N N
++ + 24 0 24 0 24 0x1.09b71ep+24 24 0x1.245a8p+69 N N
