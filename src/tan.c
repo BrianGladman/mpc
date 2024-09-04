@@ -58,7 +58,7 @@ tan_im_cmp_one (mpc_srcptr op)
 
 /* special case where the real part of tan(op) underflows to 0:
    return 1 if 0 < Re(tan(op)) < 2^(emin-2),
-   -1 if -2^(emin-2) < Re(tan(op))| < 0, and 0 if we can't decide.
+   -1 if -2^(emin-2) < Re(tan(op)) < 0, and 0 if we can't decide.
    The real part is sin(2*x)/(cos(2*x) + cosh(2*y)) where op = (x,y),
    thus has the sign of sin(2*x).
 */
@@ -72,11 +72,11 @@ tan_re_cmp_zero (mpc_srcptr op, mpfr_exp_t emin)
   mpfr_mul_2exp (x, mpc_realref (op), 1, MPFR_RNDN);
   mpfr_init2 (s, 32);
   mpfr_init2 (c, 32);
-  mpfr_sin (s, x, MPFR_RNDA);
+  mpfr_sin (s, x, MPFR_RNDA); // use MPFR_RNDA to upper bound |sin(2x)|
   mpfr_mul_2exp (x, mpc_imagref (op), 1, MPFR_RNDN);
-  mpfr_cosh (c, x, MPFR_RNDZ);
-  mpfr_sub_ui (c, c, 1, MPFR_RNDZ);
-  mpfr_div (s, s, c, MPFR_RNDA);
+  mpfr_cosh (c, x, MPFR_RNDZ); // use MPFR_RNDZ to lower bound cosh(2x)
+  mpfr_sub_ui (c, c, 1, MPFR_RNDZ); // subtract 1 to lower bound cosh(2x) + cos(2x)
+  mpfr_div (s, s, c, MPFR_RNDA); // upper bound the ratio
   if (mpfr_zero_p (s) || mpfr_get_exp (s) <= emin - 2)
     ret = mpfr_sgn (s);
   mpfr_clear (s);
