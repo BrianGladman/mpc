@@ -1015,8 +1015,12 @@ and imaginary part 0, with sign being the opposite of that of @var{op2}.
 @end deftypefun
 
 @deftypefun int mpc_exp (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
-Set @var{rop} to the exponential of @var{op},
+@deftypefunx int mpc_exp10 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx int mpc_exp2 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+Set @var{rop} to the natural, base-10 and base-2 exponential of @var{op},
 rounded according to @var{rnd} with the precision of @var{rop}.
+The functions @code{mpc_exp10} and @code{mpc_exp2} currently use a trivial implementation
+calling @code{mpc_pow}.
 @end deftypefun
 
 @deftypefun int mpc_log (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})

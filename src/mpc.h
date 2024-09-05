@@ -220,6 +220,8 @@ __MPC_DECLSPEC int  mpc_cmp         (mpc_srcptr, mpc_srcptr);
 __MPC_DECLSPEC int  mpc_cmp_si_si   (mpc_srcptr, long int, long int);
 __MPC_DECLSPEC int  mpc_cmp_abs     (mpc_srcptr, mpc_srcptr);
 __MPC_DECLSPEC int  mpc_exp         (mpc_ptr, mpc_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC int  mpc_exp10       (mpc_ptr, mpc_srcptr, mpc_rnd_t);
+__MPC_DECLSPEC int  mpc_exp2        (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_log         (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_log10       (mpc_ptr, mpc_srcptr, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_agm         (mpc_ptr, mpc_srcptr, mpc_srcptr, mpc_rnd_t);
