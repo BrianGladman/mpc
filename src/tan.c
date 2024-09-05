@@ -290,6 +290,7 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
             Im(op) was large, in which case the result is
             sign(tan(Re(op)))*0 + sign(Im(op))*I,
             where sign(tan(Re(op))) = sign(Re(x))*sign(Re(y)). */
+      large_im:
           mpfr_set_ui (mpc_realref (rop), 0, MPFR_RNDN);
           if (mpfr_sgn (mpc_realref (x)) * mpfr_sgn (mpc_realref (y)) < 0)
             {
@@ -328,6 +329,9 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 
       /* some parts of the quotient may be exact */
       inex = mpc_div (x, x, y, MPC_RNDZZ);
+      /* If the imaginary part of x is Inf, we are in the same case as above. */
+      if (mpfr_inf_p (mpc_imagref (x)))
+        goto large_im;
       /* OP is no pure real nor pure imaginary, so in theory the real and
          imaginary parts of its tangent cannot be null. However due to
          rounding errors this might happen. Consider for example
