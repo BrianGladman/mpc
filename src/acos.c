@@ -198,7 +198,13 @@ mpc_acos (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     {
       loop ++;
       p += (loop <= 2) ? mpc_ceil_log2 (p) + 3 : p / 2;
-
+      /* when x/y is large (say 2^k), then the real part of asin(x+iy)
+         is near Pi/2, thus we add to p the difference between the
+         exponents of x and y */
+      mpfr_exp_t ex = mpfr_get_exp (mpc_realref (op));
+      mpfr_exp_t ey = mpfr_get_exp (mpc_imagref (op));
+      if (loop == 1 && ex > ey)
+        p += ex - ey;
       mpfr_set_prec (mpc_realref(z1), p);
       mpfr_set_prec (pi_over_2, p);
 
