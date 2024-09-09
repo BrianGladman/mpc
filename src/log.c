@@ -27,7 +27,7 @@ mpc_log (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd){
    mpfr_srcptr x, y;
    mpfr_t v, w;
    mpfr_prec_t prec;
-   int loops;
+   int loop;
    int re_cmp, im_cmp;
    int inex_re, inex_im;
    int err;
@@ -121,7 +121,7 @@ mpc_log (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd){
    /* loop for the real part: 1/2 log (x^2 + y^2), fast, but unsafe */
    /* implementation                                                */
    ok = 0;
-   for (loops = 1; !ok && loops <= 2; loops++) {
+   for (loop = 1; !ok && loop <= 2; loop++) {
       prec += mpc_ceil_log2 (prec) + 4;
       mpfr_set_prec (w, prec);
 
@@ -159,7 +159,9 @@ mpc_log (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd){
          y = mpc_realref (op);
       }
 
+      loop = 0;
       do {
+         MPC_LOOP_NEXT(loop, op);
          prec += mpc_ceil_log2 (prec) + 4;
          mpfr_set_prec (v, prec);
          mpfr_set_prec (w, prec);

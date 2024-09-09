@@ -151,8 +151,10 @@ mpc_exp (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   saved_underflow = mpfr_underflow_p ();
   saved_overflow = mpfr_overflow_p ();
 
+  int loop = 0;
   do
     {
+      MPC_LOOP_NEXT(loop, op);
       prec += prec / 2 + mpc_ceil_log2 (prec) + 5;
 
       mpfr_set_prec (x, prec);

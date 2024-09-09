@@ -424,7 +424,7 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   {
     mpfr_exp_t ex, ey;
 
-    loop ++;
+    MPC_LOOP_NEXT(loop, op);
     p += err - olderr; /* add extra number of lost bits in previous loop */
     olderr = err;
     p += (loop <= 2) ? mpc_ceil_log2 (p) + 3 : p / 2;

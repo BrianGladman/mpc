@@ -157,6 +157,17 @@ do {                                                            \
   printf (");\n");                                              \
 } while (0)
 
+// to debug Ziv's loop, replace if (0) by say if (loop >= 20) (and include stdio.h)
+#define MPC_LOOP_NEXT(loop,op)                                          \
+  do {                                                                  \
+    loop++;                                                             \
+    if (0) {                                                            \
+      fprintf (stderr, "loop=%d in file %s, line %d\n", loop, __FILE__, __LINE__); \
+      mpfr_fprintf (stderr, "op=(%Ra,%Ra)\n", mpc_realref (op), mpc_imagref (op)); \
+      abort ();                                                         \
+    }                                                                   \
+  } while (0)
+
 
 /*
  * Constants
