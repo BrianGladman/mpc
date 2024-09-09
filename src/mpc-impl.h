@@ -24,6 +24,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
    /* to indicate we are inside the library build */
 
 #include "config.h"
+#include <stdio.h>
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -157,7 +158,7 @@ do {                                                            \
   printf (");\n");                                              \
 } while (0)
 
-// to debug Ziv's loop, replace if (0) by say if (loop >= 20) (and include stdio.h)
+// to debug Ziv's loop, replace if (0) by say if (loop >= 20)
 #define MPC_LOOP_NEXT(loop,op)                                          \
   do {                                                                  \
     loop++;                                                             \
