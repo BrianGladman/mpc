@@ -120,7 +120,7 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 {
   mpc_t x, y;
   mpfr_prec_t prec, py;
-  mpfr_exp_t err, ey;
+  mpfr_exp_t err;
   int loop;
   int ok;
   int inex, inex_re, inex_im;
@@ -389,7 +389,6 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
              Thus |im(z)-1| < 2/exp|2y| + 2/exp|4y| < 4/exp|2y| < 4/2^|2y|.
              If |2y| >= p+3, then im(z) rounds to -1 or 1. */
           py = mpfr_get_prec (mpc_imagref (rop));
-          ey = mpfr_get_exp (mpc_imagref (op));
           if (ok == 0 && (mpfr_cmp_ui (mpc_imagref(x), 1) == 0 ||
                           mpfr_cmp_si (mpc_imagref(x), -1) == 0) &&
               mpfr_cmpabs_ui (mpc_imagref (op), py / 2 + 2) >= 0)
