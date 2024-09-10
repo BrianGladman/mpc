@@ -223,6 +223,7 @@ mpc_atan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     mpfr_t a, b, x, y;
     mpfr_prec_t prec, p;
     mpfr_exp_t err, expo;
+    int loop;
     int ok = 0;
     mpfr_t minus_op_re;
     mpfr_exp_t op_re_exp, op_im_exp;
@@ -260,7 +261,7 @@ mpc_atan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     rnd1 = mpfr_sgn (mpc_realref (op)) > 0 ? MPFR_RNDD : MPFR_RNDU;
     rnd2 = mpfr_sgn (mpc_realref (op)) < 0 ? MPFR_RNDU : MPFR_RNDD;
 
-    int loop = 0;
+    loop = 0;
     do
       {
         MPC_LOOP_NEXT(loop, op);

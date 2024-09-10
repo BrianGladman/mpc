@@ -68,6 +68,7 @@ tan_re_cmp_zero (mpc_srcptr op, mpfr_exp_t emin, mpfr_ptr xout, mpfr_prec_t px,
 {
   mpfr_t t, s, c;
   int ret = 0;
+  mpfr_exp_t k, u;
   mpfr_prec_t p = mpfr_get_prec (xout);
 
   mpfr_init2 (t, mpfr_get_prec (mpc_realref (op))); // ensures 2*Re(op) is exact
@@ -80,7 +81,7 @@ tan_re_cmp_zero (mpc_srcptr op, mpfr_exp_t emin, mpfr_ptr xout, mpfr_prec_t px,
   mpfr_mul_2exp (t, mpc_imagref (op), 1, MPFR_RNDN);
   mpfr_cosh (c, t, MPFR_RNDZ); // use MPFR_RNDZ to lower bound cosh(2y)
   // c = cosh(2y)*(1+theta2) with |theta2| < 2^(1-p)
-  mpfr_exp_t k = mpfr_get_exp (c) - 1; // cosh(2y) >= 2^k
+  k = mpfr_get_exp (c) - 1; // cosh(2y) >= 2^k
   mpfr_sub_ui (c, c, 1, MPFR_RNDZ); // subtract 1 to lower bound cosh(2y) + cos(2x)
   /* c = cosh(2y)*(1+theta2) + cos(2x) + eps2 with |eps2| <= 2
      which we can rewrite:
@@ -91,7 +92,7 @@ tan_re_cmp_zero (mpc_srcptr op, mpfr_exp_t emin, mpfr_ptr xout, mpfr_prec_t px,
      |theta3| <= (2^(1-p) + 2^(1-k)) / (1 - 2^-k) <= 2^(2-p) + 2^(2-k) for k >= 1.
               <= 2^(2-min(p,k))
   */
-  mpfr_exp_t u = (p <= k) ? p : k; // u = min(p,k)
+  u = (p <= k) ? p : k; // u = min(p,k)
   mpfr_div (xout, s, c, MPFR_RNDA); // upper bound the ratio
   /* xout = sin(2x)/(cosh(2y)+cos(2x)) * (1+theta1)/(1+theta3)*(1+theta4)
      with |theta4| < 2^(1-p), thus |theta1|, |theta4| < 2^(1-u) and |theta3| < 2^(2-u).
@@ -118,8 +119,9 @@ int
 mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 {
   mpc_t x, y;
-  mpfr_prec_t prec;
-  mpfr_exp_t err;
+  mpfr_prec_t prec, py;
+  mpfr_exp_t err, ey;
+  int loop;
   int ok;
   int inex, inex_re, inex_im;
   mpfr_exp_t saved_emin, saved_emax;
@@ -271,7 +273,7 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 
   err = 7;
 
-  int loop = 0;
+  loop = 0;
   do
     {
       mpfr_exp_t k, exr, eyr, eyi, ezr;
@@ -386,8 +388,8 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
              we have 1-|tanh(2y)| < 2*exp(-4|y|).
              Thus |im(z)-1| < 2/exp|2y| + 2/exp|4y| < 4/exp|2y| < 4/2^|2y|.
              If |2y| >= p+3, then im(z) rounds to -1 or 1. */
-          mpfr_prec_t py = mpfr_get_prec (mpc_imagref (rop));
-          mpfr_exp_t ey = mpfr_get_exp (mpc_imagref (op));
+          py = mpfr_get_prec (mpc_imagref (rop));
+          ey = mpfr_get_exp (mpc_imagref (op));
           if (ok == 0 && (mpfr_cmp_ui (mpc_imagref(x), 1) == 0 ||
                           mpfr_cmp_si (mpc_imagref(x), -1) == 0) &&
               mpfr_cmpabs_ui (mpc_imagref (op), py / 2 + 2) >= 0)
