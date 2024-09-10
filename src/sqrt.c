@@ -209,7 +209,7 @@ mpc_sqrt (mpc_ptr a, mpc_srcptr b, mpc_rnd_t rnd)
 
   do
     {
-      MPC_LOOP_NEXT(loop, b);
+      MPC_LOOP_NEXT(loop, b, a);
       prec += (loop <= 2) ? mpc_ceil_log2 (prec) + 4 : prec / 2;
       mpfr_set_prec (w, prec);
       mpfr_set_prec (t, prec);

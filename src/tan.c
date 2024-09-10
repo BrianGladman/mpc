@@ -278,7 +278,7 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     {
       mpfr_exp_t k, exr, eyr, eyi, ezr;
 
-      MPC_LOOP_NEXT(loop, op);
+      MPC_LOOP_NEXT(loop, op, rop);
 
       ok = 0;
 

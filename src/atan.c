@@ -264,7 +264,7 @@ mpc_atan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     loop = 0;
     do
       {
-        MPC_LOOP_NEXT(loop, op);
+        MPC_LOOP_NEXT(loop, op, rop);
         p += mpc_ceil_log2 (p) + 2;
         mpfr_set_prec (a, p);
         mpfr_set_prec (b, p);

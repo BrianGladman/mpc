@@ -161,8 +161,8 @@ mpc_log (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd){
 
       loop = 0;
       do {
-         MPC_LOOP_NEXT(loop, op);
-         prec += mpc_ceil_log2 (prec) + 4;
+         MPC_LOOP_NEXT(loop, op, rop);
+         prec += (loop <= 2) ? mpc_ceil_log2 (prec) + 4 : prec / 2;
          mpfr_set_prec (v, prec);
          mpfr_set_prec (w, prec);
 

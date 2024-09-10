@@ -23,8 +23,13 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #define __MPC_LIBRARY_BUILD
    /* to indicate we are inside the library build */
 
+// define MPC_DEBUG to enable debug routines
+// #define MPC_DEBUG
+
 #include "config.h"
+#ifdef MPC_DEBUG
 #include <stdio.h>
+#endif
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -158,16 +163,26 @@ do {                                                            \
   printf (");\n");                                              \
 } while (0)
 
-// to debug Ziv's loop, replace if (0) by say if (loop >= 20)
-#define MPC_LOOP_NEXT(loop,op)                                          \
+// to debug Ziv's loop
+#ifndef MPC_DEBUG
+#define MPC_LOOP_NEXT(loop,op,rop)                                      \
+  do {                                                                  \
+  loop++;                                                               \
+  } while (0)
+#else // adjust condition to your needs
+#define MPC_LOOP_NEXT(loop,op,rop)                                      \
   do {                                                                  \
     loop++;                                                             \
-    if (0) {                                                            \
-      fprintf (stderr, "loop=%d in file %s, line %d\n", loop, __FILE__, __LINE__); \
-      mpfr_fprintf (stderr, "op=(%Ra,%Ra)\n", mpc_realref (op), mpc_imagref (op)); \
-      abort ();                                                         \
+      if (loop >= 20) {                                                 \
+        fprintf (stderr, "loop=%d in file %s, line %d\n", loop, __FILE__, __LINE__); \
+        mpfr_fprintf (stderr, "op[%lu,%lu]=(%Ra,%Ra) rop:[%lu,%lu]\n",  \
+                      mpfr_get_prec (mpc_realref (op)), mpfr_get_prec (mpc_imagref (op)), \
+                      mpc_realref (op), mpc_imagref (op),               \
+                      mpfr_get_prec (mpc_realref (rop)), mpfr_get_prec (mpc_imagref (rop))); \
+        abort ();                                                       \
     }                                                                   \
   } while (0)
+#endif
 
 
 /*

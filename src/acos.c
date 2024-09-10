@@ -206,7 +206,7 @@ mpc_acos (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   mpfr_init2 (pi_over_2, p);
   for (;;)
     {
-      MPC_LOOP_NEXT(loop,op);
+      MPC_LOOP_NEXT(loop, op, rop);
       p += (loop <= 2) ? mpc_ceil_log2 (p) + 3 : p / 2;
       mpfr_set_prec (mpc_realref(z1), p);
       mpfr_set_prec (pi_over_2, p);

@@ -155,7 +155,7 @@ mpc_exp (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   loop = 0;
   do
     {
-      MPC_LOOP_NEXT(loop, op);
+      MPC_LOOP_NEXT(loop, op, rop);
       prec += prec / 2 + mpc_ceil_log2 (prec) + 5;
 
       mpfr_set_prec (x, prec);

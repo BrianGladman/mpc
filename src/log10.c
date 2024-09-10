@@ -49,7 +49,7 @@ mpc_log10 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
    prec = MPC_MAX_PREC (rop);
    /* compute log(op)/log(10) */
    while (ok == 0) {
-      MPC_LOOP_NEXT(loop, op);
+      MPC_LOOP_NEXT(loop, op, rop);
       prec += (loop <= 2) ? mpc_ceil_log2 (prec) + 4 : prec / 2;
       mpfr_set_prec (log10, prec);
       mpc_set_prec (log, prec);
