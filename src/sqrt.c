@@ -1,6 +1,6 @@
 /* mpc_sqrt -- Take the square root of a complex number.
 
-Copyright (C) 2002, 2008, 2009, 2010, 2011, 2012, 2020 INRIA
+Copyright (C) 2002, 2008, 2009, 2010, 2011, 2012, 2020, 2024 INRIA
 
 This file is part of GNU MPC.
 

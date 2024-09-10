@@ -1,6 +1,6 @@
 /* mpc_tan -- tangent of a complex number.
 
-Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2020, 2022 INRIA
+Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2020, 2022, 2024 INRIA
 
 This file is part of GNU MPC.
 

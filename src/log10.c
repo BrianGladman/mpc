@@ -1,6 +1,6 @@
 /* mpc_log10 -- Take the base-10 logarithm of a complex number.
 
-Copyright (C) 2012, 2020 INRIA
+Copyright (C) 2012, 2020, 2024 INRIA
 
 This file is part of GNU MPC.
 

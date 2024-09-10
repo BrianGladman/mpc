@@ -1,6 +1,6 @@
 /* mpc_log -- Take the logarithm of a complex number.
 
-Copyright (C) 2008, 2009, 2010, 2011, 2012 INRIA
+Copyright (C) 2008, 2009, 2010, 2011, 2012, 2024 INRIA
 
 This file is part of GNU MPC.
 

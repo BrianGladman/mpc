@@ -1,6 +1,6 @@
 /* mpc_acos -- arccosine of a complex number.
 
-Copyright (C) 2009, 2010, 2011, 2012, 2020 INRIA
+Copyright (C) 2009, 2010, 2011, 2012, 2020, 2024 INRIA
 
 This file is part of GNU MPC.
 

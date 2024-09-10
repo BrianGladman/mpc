@@ -1,6 +1,6 @@
 /* print_parameter.c -- Helper function for parameter printing.
 
-Copyright (C) 2012, 2013, 2014 INRIA
+Copyright (C) 2012, 2013, 2014, 2024 INRIA
 
 This file is part of GNU MPC.
 
