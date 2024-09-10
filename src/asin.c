@@ -401,8 +401,8 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     }
 
    /* Try special code for |x| < 1/2 and |y| < 1/4. */
-   if (mpfr_get_exp (mpc_realref (op)) <= -1
-      && mpfr_get_exp (mpc_imagref (op)) <= -2) {
+   mpfr_exp_t ey0 = mpfr_get_exp (mpc_imagref (op));
+   if (mpfr_get_exp (mpc_realref (op)) <= -1 && ey0 <= -2) {
       if (asin_taylor1 (&inex, rop, op, rnd))
          return inex;
    }
@@ -413,11 +413,19 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   mpfr_set_emax (mpfr_get_emax_max ());
 
   /* regular complex: asin(z) = -i*log(i*z+sqrt(1-z^2)) */
-  p_re = mpfr_get_prec (mpc_realref(rop));
-  p_im = mpfr_get_prec (mpc_imagref(rop));
   rnd_re = MPC_RND_RE(rnd);
   rnd_im = MPC_RND_IM(rnd);
-  p = p_re >= p_im ? p_re : p_im;
+
+  /* for large Re(z) or Im(z), we have a cancellation between i*z and
+     sqrt(1-z^2) */
+  p_re = mpfr_get_prec (mpc_realref(rop));
+  p_im = mpfr_get_prec (mpc_imagref(rop));
+  p = p_re >= p_im ? 2 * p_re : 2 * p_im;
+
+  /* if Re(z)=1 and Im(z) is tiny, we also have a cancellation */
+  if (mpfr_cmp_ui (mpc_realref(rop), 1) == 0 && ey0 < 0)
+    p = -2 * ey0;
+
   mpc_init2 (z1, p);
   olderr = err = 0; /* number of lost bits */
   while (1)

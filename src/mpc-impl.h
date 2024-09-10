@@ -173,7 +173,7 @@ do {                                                            \
 #define MPC_LOOP_NEXT(loop,op,rop)                                      \
   do {                                                                  \
     loop++;                                                             \
-      if (loop >= 20) {                                                 \
+    if (loop >= 10) {                                                   \
         fprintf (stderr, "loop=%d in file %s, line %d\n", loop, __FILE__, __LINE__); \
         mpfr_fprintf (stderr, "op[%lu,%lu]=(%Ra,%Ra) rop:[%lu,%lu]\n",  \
                       mpfr_get_prec (mpc_realref (op)), mpfr_get_prec (mpc_imagref (op)), \
