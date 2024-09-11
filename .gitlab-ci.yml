@@ -1,13 +1,16 @@
 linux_gmp:
-  tags:
-    - ci.inria.fr
-    - small
-  stage: build
-  script:
-    - autoreconf -i
-    - CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
-    - make
-    - make check
-  artifacts:
-    paths:
-      - tests/test-suite.log
+   tags:
+      - ci.inria.fr
+      - small
+   image: debian:stable
+   script:
+      - apt-get update
+      - apt-get install -y autoconf git libtool libmpfr-dev make texinfo
+      - autoreconf -vfi
+      - CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
+      - make
+      - make check
+   artifacts:
+      paths:
+         - config.log
+         - tests/test-suite.log
