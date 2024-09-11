@@ -293,7 +293,7 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   mpfr_rnd_t rnd_re, rnd_im;
   mpc_t z1;
   int inex, inex_re, inex_im, loop = 0;
-  mpfr_exp_t saved_emin, saved_emax, err, olderr;
+  mpfr_exp_t saved_emin, saved_emax, err, olderr, ey0;
 
   /* special values */
   if (mpfr_nan_p (mpc_realref (op)) || mpfr_nan_p (mpc_imagref (op)))
@@ -401,7 +401,7 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
     }
 
    /* Try special code for |x| < 1/2 and |y| < 1/4. */
-   mpfr_exp_t ey0 = mpfr_get_exp (mpc_imagref (op));
+   ey0 = mpfr_get_exp (mpc_imagref (op));
    if (mpfr_get_exp (mpc_realref (op)) <= -1 && ey0 <= -2) {
       if (asin_taylor1 (&inex, rop, op, rnd))
          return inex;
