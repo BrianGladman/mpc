@@ -227,6 +227,7 @@ mpc_sqrt (mpc_ptr a, mpc_srcptr b, mpc_rnd_t rnd)
       inex_w |= mpfr_div_2ui (w, w, 1, MPFR_RNDD);
       inex_w |= mpfr_sqrt (w, w, MPFR_RNDD);
 
+      /* is w representable in the target precision? */
       repr_w = mpfr_min_prec (w) <= prec_w;
       if (!repr_w)
          /* use the usual trick for obtaining the ternary value */
