@@ -1,11 +1,29 @@
-linux_gmp:
+stages:
+   - image
+   - test
+
+build-image:
+   stage: image
    tags:
       - ci.inria.fr
       - small
-   image: debian:stable
+   image: docker:cli
+   before_script:
+      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
    script:
-      - apt-get update
-      - apt-get install -y autoconf git libtool libmpfr-dev make texinfo
+      - docker build -f Dockerfile -t $CI_REGISTRY_IMAGE .
+      - docker push $CI_REGISTRY_IMAGE
+   only:
+      changes:
+         - Dockerfile
+
+debian:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
       - autoreconf -vfi
       - CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
       - make
@@ -14,3 +32,4 @@ linux_gmp:
       paths:
          - config.log
          - tests/test-suite.log
+
