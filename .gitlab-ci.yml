@@ -1,4 +1,7 @@
 linux_gmp:
+  tags:
+    - ci.inria.fr
+    - small
   stage: build
   script:
     - autoreconf -i
@@ -7,6 +10,4 @@ linux_gmp:
     - make check
   artifacts:
     paths:
-      - test-suite.log
-  tags:
-    - linux
+      - tests/test-suite.log
