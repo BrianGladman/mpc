@@ -1,0 +1,12 @@
+linux_gmp:
+  stage: build
+  script:
+    - autoreconf -i
+    - CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
+    - make
+    - make check
+  artifacts:
+    paths:
+      - test-suite.log
+  tags:
+    - linux
