@@ -519,7 +519,7 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 
   /* if Re(z)=1 and Im(z) is tiny, we have a cancellation */
   if (mpfr_cmp_ui (mpc_realref(rop), 1) == 0 && ey0 < 0)
-    p = -2 * ey0;
+    p += -2 * ey0;
 
   mpc_init2 (z1, p);
   olderr = err = 0; /* number of lost bits */

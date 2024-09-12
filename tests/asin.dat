@@ -145,3 +145,5 @@
 - + 2 0x1.8p+0 2 0x1p-40 2 0x1p+0 20 0xf.f802p-84 N N
 # test case that required 8 Ziv loops (up to precision of 2947 bits)
 - + 117 0x1.63c2a68f7672dc51c5533e7204abap+0 117 0x2.c67c415afa0f8efb5a4ca99cdc946p+8 53 0xf.e38444d37e158p+1020 53 0x2.e8d198e14e25ep+1020 N N
+# test case that required 7 Ziv loops
++ + 117 -0x1.9178210c692ab7e8fe73e93224145p+0 117 -0x5.bec0f4d5d9b98027de86848bfea98p+0 53 -0x9.c556066fe22bp+4 53 -0x6.655bac2f12f08p-4 N N
