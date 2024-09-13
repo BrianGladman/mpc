@@ -216,9 +216,9 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
      sqrt(1-t) = 1 - 1/(2t) + eps with |eps| < 1/(6|t|^2).
      We have sqrt(1-z^2) = sqrt(-z^2 * (1 - 1/z^2))
                          = -i*z * sqrt(1 - 1/z^2)
-                         = -i*z * (1 - 1/(2z^2) + eps) with |eps| < 1/(6|z|^4)
+                         = -i*z * [1 - 1/(2z^2) * (1 + eps)] with |eps| < 1/(6|z|^2)
      It follows:
-     i*z + sqrt(1-z^2) = i/(2z) + eps' with |eps'| < 1/(6|z|^3)
+     i*z + sqrt(1-z^2) = i/(2z) * (1 + eps) with |eps| < 1/(6|z|^2)
      If we approximate i*z + sqrt(1-z^2) by i/(2z), the relative error is
      bounded by 1/(6|z|^2).
   */
@@ -229,10 +229,13 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
   ex = (ex >= ey) ? ex : ey;
   // |z| >= 2^(ex-1) thus 6*|z|^2 > 2^(2*ex)
   mpfr_prec_t p = mpfr_get_prec (mpc_realref (t)); // same precision as imaginary part
+  /* the relative error is < 1/(6|z|^2) < 2^(-2*ex),
+     and we want it to be less than 1 ulp(t), thus we want 2 * ex >= p */
   if (p < 4 || 2 * ex < p)
     return 0;
+  mpfr_prec_t extra = 2 * ex - p;
   /* now 2*ex >= p thus the relative error of approximating i*z + sqrt(1-z^2)
-     by i/(2z) is bounded by 2^-p. */
+     by i/(2z) is bounded by 2^(-p-extra). */
   mpc_ui_div (t, 1ul, z, MPC_RNDNN); // 1/z
   mpc_div_2ui (t, t, 1, MPC_RNDNN);   // divide by 2
   // multiply by i
@@ -240,7 +243,7 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
   MPFR_CHANGE_SIGN (mpc_realref (t));
   /* The rounding error for i/(2z) is bounded by 1 ulp() for each of the real
      and imaginary parts, and the approximation error is bounded by
-     2^-p * |t|. */
+     2^(-p-extra) * |t|. */
   ex = mpfr_get_exp (mpc_realref (t));
   ey = mpfr_get_exp (mpc_imagref (t));
   mpfr_exp_t k = (ex >= ey) ? ex - ey : ey - ex; // k = |ex-ey|
@@ -251,7 +254,8 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
        corresponds to a relative error < 2^(1-p), which gives a
        relative error < (1+2^(1-p))^2-1 < 5*2^-p on x^2 and y^2,
        and similarly on x^2+y^2.
-       The approximation error bounded by 2^-p * |x+i*y| converts
+       The approximation error bounded by 2^(-p-extra) * |x+i*y|
+       <= 2^-p * |x+i*y| converts
        to a relative error of (1-2^-p)^2-1 < 2.25*2^-p on x^2+y^2.
        This gives a relative error < 2^(3-p) on x^2+y^2:
        X' = X * (1 + eps) with |eps| < 2^(3-p),
@@ -262,22 +266,25 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
        since p >= 4 we have 3-p <= -1 thus |log(1+eps)| < 1.4 * 2^(3-p).
        The induced error on the real part is thus < 12*2^-p.
      - for the imaginary part, since Im(z) > 0, z is either in the 1st
-       or 4th quadrant, and we can check that i/(2*z) lies in the same
-       quadrant as z, thus atan2(y,x) lies in (-pi/2, pi/2), and in both
+       or 2nd quadrant, and we can check that i/(2*z) lies in 1st or 4th
+       quadrant, thus atan2(y,x) lies in (-pi/2, pi/2), and in both
        cases, atan2(y,x) = atan(y/x).
        The rounding error < 1 ulp() on x and y corresponds to a relative error
        < 2^(1-p), which gives a relative error < (1+2^(1-p))^2-1 < 5*2^-p on
        y/x.
-       The approximation error bounded by 2^-p * |x+i*y| converts
-       to a relative error < 2^(e-ex) * 2^-p on x, and < 2^(e-ey) * 2^-p
-       on y, where ex = EXP(x), ey = EXP(y), and e = MAX(ex,ey).
+       The approximation error bounded by 2^(-p-extra) * |x+i*y| converts
+       to a relative error < 2^(e-ex) * 2^(-p-extra) on x,
+       and < 2^(e-ey) * 2^(-p-extra) on y, where ex = EXP(x), ey = EXP(y),
+       and e = MAX(ex,ey).
        This gives a relative error on y/x which is bounded by
-       (1+2^-p)*(1+2^|ex-ey|*2^-p)-1 < 2.1 * 2^(k-p) with k = |ex-ey|.
+       (1+2^-p)*(1+2^|ex-ey|*2^(-p-extra))-1 < 2.1 * 2^(k-p)
+       with k = max(0,|ex-ey|-extra).
        Thus we get a total relative error bounded by:
        (1+5*2^-p)*(1 + 2.1*2^(k-p))-1 < 2^(k+3-p).
        Since the derivative of atan(t) is less than 1, this corresponds
        to an induced relative error < 2^(k+3-p) on the imaginary part.
   */
+  k = (k >= extra) ? k - extra : 0;
   ex = mpfr_get_exp (mpc_realref (t));
   /* Since the induced error on the real part is < 12*2^-p,
      it is less than 12/2^ex ulp(Re(t)). Thus the error on the real
@@ -509,7 +516,8 @@ mpc_asin (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   mpfr_set_emin (mpfr_get_emin_min ());
   mpfr_set_emax (mpfr_get_emax_max ());
 
-  /* regular complex: asin(z) = -i*log(i*z+sqrt(1-z^2)) */
+  /* regular complex: asin(z) = -i*log(i*z+sqrt(1-z^2))
+     (formula 4.4.26 in Abramowitz & Stegun) */
   rnd_re = MPC_RND_RE(rnd);
   rnd_im = MPC_RND_IM(rnd);
 
