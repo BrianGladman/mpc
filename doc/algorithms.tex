@@ -56,7 +56,7 @@
 
 \title {MPC: Algorithms and Error Analysis}
 \author {Andreas Enge \and Philippe Th\'eveny \and Paul Zimmermann}
-\date {Draft; November 21, 2022}
+\date {Draft; September 20, 2024}
 
 \begin {document}
 \maketitle
@@ -1197,6 +1197,50 @@ for $r' < r$ and to take the limit $r' \to r$.
 We do not need such a result, and instead can apply this approach to upper
 bounds obtained in cases we are interested in.
 \end {remark}
+
+We also need a special case in which the remainder term can be bounded
+trivially.
+
+\begin {theorem}
+\label {th:taylorpositive}
+In the situation of Theorem~\ref {th:taylor}, assume that $c = 0$ and
+$z \in B$. Write
+$c_n = f^{(n)} (0) / n!$ and
+$f_N (z) = \sum_{n=0}^N c_n z^n$.
+Assume that the $c_n$ for $n > N$ are real and either all non-negative,
+or all non-positive. Then
+\[
+f (z) = f_N (z) + R_N
+\]
+with
+\[
+|R_N| \leq \frac {|f (r) - f_N (r)|}{r^{N+1}} \, |z|^{N+1}.
+\]
+\end {theorem}
+
+\begin {proof}
+By definition, we have $R_N = g_N (z)$ with
+$g_N (z) = \sum_{n = N+1}^\infty c_n z^n$, so that
+$|R_N| \leq \sum_{n=N+1}^\infty |c_n| \, |z|^n$,
+or
+$|R_N| \leq C_N |z|^{N+1}$
+with
+\[
+C_N = \frac {\sum_{n=N+1}^\infty |c_n| \, |z|^n}{|z|^{N+1}}
+    = \sum_{n=N+1}^\infty |c_n| \, |z|^{n - (N+1)}.
+\]
+Since all the occurring $c_n$ are either non-negative or non-positive,
+the left-hand expression shows that
+\[
+C_N = \frac {|g_N (|z|)|}{|z|^{N+1}}
+    = \frac {|f (|z|) - f_N (|z|)|}{|z|^{N+1}}.
+\]
+The right-hand expression shows that it is a real power-series with
+non-negative coefficients, so it is increasing as a real function and
+for $z \in B$ bounded above by its value in~$r$, which implies the
+desired formula.
+\end {proof}
+
 
 
 
