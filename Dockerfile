@@ -13,5 +13,6 @@ RUN dpkg --add-architecture i386 && \
       libgmp-dev:i386 \
       libgmp10:i386 \
       libmpfr-dev:i386 \
-      libmpfr6:i386
+      libmpfr6:i386 \
+      clang
 

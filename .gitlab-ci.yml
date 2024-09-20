@@ -44,3 +44,15 @@ debian-32:
       - CFLAGS="-m32 -Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
       - make
       - make check
+
+debian-clang:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
+      - autoreconf -vfi
+      - CC=clang CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
+      - make
+      - make check
