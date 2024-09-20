@@ -117,9 +117,22 @@ mpc_log (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd){
 
    prec = MPC_PREC_RE(rop);
    mpfr_init2 (w, 2);
-   /* let op = x + iy; log = 1/2 log (x^2 + y^2) + i atan2 (y, x)   */
-   /* loop for the real part: 1/2 log (x^2 + y^2), fast, but unsafe */
-   /* implementation                                                */
+   /* Let op = x + iy; log = 1/2 log (x^2 + y^2) + i atan2 (y, x)
+      Loop for the real part: 1/2 log (x^2 + y^2).
+      At precision p, this has a complexity of M(p)log(p) + O (M(p))
+      since it requires only one real logarithm, while the following,
+      alternative implementation uses two real logarithms with a complexity
+      of 2*M(p)log(p) + O (M(p)).
+      On the other hand, the computation of x^2 + y^2 may cause a spurious
+      overflow although the logarithm is always representable; this
+      explains the need for the later implementation.
+      Timings on a laptop yield the following time in s for the full
+      mpc_log function with x=\pi and y=e:
+               first     second implementation
+      p=10^3  0.000240   0.000211
+        10^4  0.002226   0.002451
+        10^5  0.074965   0.090478
+        10^6  2.000513   2.470727 */
    ok = 0;
    for (loop = 1; !ok && loop <= 2; loop++) {
       prec += mpc_ceil_log2 (prec) + 4;
