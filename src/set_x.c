@@ -21,10 +21,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
 #include "config.h"
 
-#ifdef HAVE_COMPLEX_H
-# include <complex.h>
-#endif
-
 #include "mpc-impl.h"
 
 #define MPC_SET_X(real_t, z, real_value, rnd)     \

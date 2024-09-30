@@ -30,10 +30,6 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 # endif
 #endif
 
-#ifdef HAVE_COMPLEX_H
-# include <complex.h>
-#endif
-
 #include "mpc-tests.h"
 
 #define PRINT_ERROR(function_name, precision, a)                \
