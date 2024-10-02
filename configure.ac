@@ -21,7 +21,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([mpc],[1.3.2dev],[mpc-discuss@inria.fr])
-AC_CONFIG_SRCDIR([src/mpc-impl.h])
+AC_CONFIG_SRCDIR([src/mpc-impl.h.in])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
 
@@ -227,5 +227,5 @@ AC_DEFINE_UNQUOTED([MPC_GCC_VERSION], ["$GCC_VERSION"], [Version of gcc])
 # Looks for short git hash if the version string contains "dev"
 MPC_GITVERSION
 
-AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile doc/Makefile tools/Makefile tools/bench/Makefile tools/mpcheck/Makefile])
+AC_CONFIG_FILES([src/mpc.h src/mpc-impl.h Makefile src/Makefile tests/Makefile doc/Makefile tools/Makefile tools/bench/Makefile tools/mpcheck/Makefile])
 AC_OUTPUT

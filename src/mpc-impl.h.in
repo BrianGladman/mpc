@@ -26,6 +26,13 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 // define MPC_DEBUG to enable debug routines
 // #define MPC_DEBUG
 
+#if @HAVE_COMPLEX_H@
+#define HAVE_COMPLEX_H
+#include <complex.h>
+#else
+#undef HAVE_COMPLEX_H
+#endif
+
 #include "config.h"
 #ifdef MPC_DEBUG
 #include <stdio.h>
