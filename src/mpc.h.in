@@ -25,10 +25,10 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include "gmp.h"
 #include "mpfr.h"
 
-#if @HAVE_COMPLEX_H@
-#define HAVE_COMPLEX_H
+#if @MPC_HAVE_COMPLEX_H@
+#define _MPC_HAVE_COMPLEX_H
 #else
-#undef HAVE_COMPLEX_H
+#undef _MPC_HAVE_COMPLEX_H
 #endif
 
 /* Define MPC version number */
@@ -279,7 +279,7 @@ __MPC_DECLSPEC int  mpc_set_uj_uj   (mpc_ptr, uintmax_t, uintmax_t, mpc_rnd_t);
 #define LONG_DOUBLE_COMPLEX long double _Complex
 #endif
 
-#if defined (HAVE_COMPLEX_H) && defined (_Complex_I)
+#if defined (_MPC_HAVE_COMPLEX_H) && defined (_Complex_I)
 __MPC_DECLSPEC int  mpc_set_dc      (mpc_ptr, DOUBLE_COMPLEX, mpc_rnd_t);
 __MPC_DECLSPEC int  mpc_set_ldc     (mpc_ptr, LONG_DOUBLE_COMPLEX, mpc_rnd_t);
 __MPC_DECLSPEC DOUBLE_COMPLEX mpc_get_dc (mpc_srcptr, mpc_rnd_t);

@@ -26,7 +26,7 @@
 #
 # DESCRIPTION
 #
-# Check whether complex.h is usable; if yes, define HAVE_COMPLEX_H.
+# Check whether complex.h is usable; if yes, define MPC_HAVE_COMPLEX_H.
 #
 AC_DEFUN([MPC_COMPLEX_H], [
    AC_CHECK_HEADER(
@@ -55,17 +55,17 @@ AC_DEFUN([MPC_COMPLEX_H], [
             [MPC_CONFTEST],
             [
                AC_MSG_RESULT([yes])
-               AC_SUBST([HAVE_COMPLEX_H], [1])
+               AC_SUBST([MPC_HAVE_COMPLEX_H], [1])
             ],
             [
                AC_MSG_RESULT([no, build without support for C complex numbers])
-               AC_SUBST([HAVE_COMPLEX_H], [0])
+               AC_SUBST([MPC_HAVE_COMPLEX_H], [0])
             ]
          )
       ],
       [
          AC_MSG_RESULT([no, build without support for C complex numbers])
-         AC_SUBST([HAVE_COMPLEX_H], [0])
+         AC_SUBST([MPC_HAVE_COMPLEX_H], [0])
       ]
    )
 ])

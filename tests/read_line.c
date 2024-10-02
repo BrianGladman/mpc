@@ -45,7 +45,7 @@ read_param  (mpc_datafile_context_t* datafile_context,
 
     case NATIVE_DC:
     case NATIVE_LDC:
-#ifdef HAVE_COMPLEX_H
+#ifdef _MPC_HAVE_COMPLEX_H
       /* TODO */
       fprintf (stderr, "read_param: type not implemented.\n");
       exit (1);

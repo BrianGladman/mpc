@@ -57,7 +57,7 @@ copy_parameter (mpc_fun_param_t *params, int index_dest, int index_src)
 
     case NATIVE_DC:
     case NATIVE_LDC:
-#ifdef HAVE_COMPLEX_H
+#ifdef _MPC_HAVE_COMPLEX_H
       /* TODO */
       fprintf (stderr, "copy_parameter: type not implemented.\n");
       exit (1);

@@ -27,7 +27,7 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 #include <string.h>
 #include "mpc-impl.h"
 
-#ifdef HAVE_COMPLEX_H
+#ifdef _MPC_HAVE_COMPLEX_H
 DOUBLE_COMPLEX
 mpc_get_dc (mpc_srcptr op, mpc_rnd_t rnd) {
    return I * mpfr_get_d (mpc_imagref (op), MPC_RND_IM (rnd))

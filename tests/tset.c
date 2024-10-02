@@ -1,6 +1,6 @@
 /* tset -- Test file for mpc_set_x and mpc_set_x_x functions.
 
-Copyright (C) 2009, 2010, 2011, 2012, 2022, 2023 INRIA
+Copyright (C) 2009, 2010, 2011, 2012, 2022, 2023, 2024 INRIA
 
 This file is part of GNU MPC.
 
@@ -91,7 +91,7 @@ check_set (void)
       if (mpfr_cmp (mpc_realref(z), fr) != 0 || mpfr_cmp_si (mpc_imagref(z), 0) != 0)
         PRINT_ERROR ("mpc_set_d", prec, z);
 
-#if defined HAVE_COMPLEX_H
+#if defined _MPC_HAVE_COMPLEX_H
       mpc_set_dc (z, I*1.23456789+1.23456789, MPC_RNDNN);
       if (mpfr_cmp (mpc_realref(z), fr) != 0 || mpfr_cmp (mpc_imagref(z), fr) != 0)
         PRINT_ERROR ("mpc_set_c", prec, z);
@@ -116,7 +116,7 @@ check_set (void)
       if (mpfr_cmp (mpc_realref(z), fr) != 0 || mpfr_cmp (mpc_imagref(z), fr) != 0)
         PRINT_ERROR ("mpc_set_ld_ld", prec, z);
 
-#if defined HAVE_COMPLEX_H
+#if defined _MPC_HAVE_COMPLEX_H
       mpc_set_ldc (z, I*1.23456789L+1.23456789L, MPC_RNDNN);
       if (mpfr_cmp (mpc_realref(z), fr) != 0 || mpfr_cmp (mpc_imagref(z), fr) != 0)
         PRINT_ERROR ("mpc_set_lc", prec, z);
@@ -281,7 +281,7 @@ check_set (void)
       }
 #endif /* _MPC_H_HAVE_INTMAX_T */
 
-#if defined HAVE_COMPLEX_H
+#if defined _MPC_HAVE_COMPLEX_H
       {
         DOUBLE_COMPLEX c = 1.0 - 2.0*I, d;
         LONG_DOUBLE_COMPLEX lc = c, ld;
