@@ -1142,7 +1142,97 @@ We even have $\epsilon \leq \epsilon_1$ for $\epsilon_1 \leq 1$,
 since $1 - \sqrt{1-x}$ is bounded by $x$
 for $0 < x \leq 1$, which comes from $1 - x \leq \sqrt{1-x}$.
 
+\paragraph{Special case for $z$ near the real axis.}
+Assume $z = x + iy$ with $|y/x| < 2^{-k}$ for $k \ge 1$, and $x > 0$.
+We assume the input error $\epsilon$ on $z$ is bounded relatively
+on both the real and imaginary parts:
+$z' = z + \epsilon$ with $|\Re(\epsilon)| < 2^{-p} |x|$ and
+$|\Im(\epsilon)| < 2^{-p} |y|$, for $p \ge 1$.
+In this case we can obtain a finer bound for the induced error
+on each of the real and imaginary parts.
 
+\begin{lemma} \label{lem:sqrtaux}
+  Let $u$ be a complex number with $|u| \le 1/2$, then we have:
+  \[ |\Re(\sqrt{1+u})-1| \le 0.6 |u|, \quad |\Im(\sqrt{1+u})| \le 0.8 |\Im(u)|. \]
+\end{lemma}
+Note the bound for the real part is in terms of $|u|$, while that for the imaginary
+part is in terms of $|\Im(u)|$.
+
+\begin{proof}
+  This is easy by ``graphical'' analysis. The worst case for both the real part
+  and the imaginary part is when $u$ approaches $-1/2$.
+\begin{comment}
+sage: k=7; r=1/2
+sage: for j in [0..2*k]:
+....:     z=n(r*exp(i*j*pi/k))
+....:     print(j,z,abs(real(sqrt(1+z)-1))/abs(z))
+0 0.500000000000000 0.449489742783178
+1 0.450484433951210 + 0.216941869558779*I 0.415409947736925
+2 0.311744900929367 + 0.390915741234015*I 0.315383224097579
+3 0.111260466978157 + 0.487463956090912*I 0.156263064927417
+4 -0.111260466978157 + 0.487463956090912*I 0.0494175466565054
+5 -0.311744900929367 + 0.390915741234015*I 0.279663363756074
+6 -0.450484433951210 + 0.216941869558779*I 0.489831708673434
+7 -0.500000000000000 0.585786437626905
+8 -0.450484433951210 - 0.216941869558779*I 0.489831708673434
+9 -0.311744900929367 - 0.390915741234015*I 0.279663363756075
+10 -0.111260466978157 - 0.487463956090912*I 0.0494175466565054
+11 0.111260466978157 - 0.487463956090912*I 0.156263064927417
+12 0.311744900929367 - 0.390915741234015*I 0.315383224097579
+13 0.450484433951210 - 0.216941869558779*I 0.415409947736925
+14 0.500000000000000 0.449489742783178
+sage: k=1001
+sage: for j in [1..k-1]:
+....:     z=n(r*exp(i*j*pi/k))
+....:     print(j,z,abs(imag(sqrt(1+z)))/abs(imag(z)))
+...
+1000 -0.499997537528331 + 0.00156922452357623*I 0.707104169363970
+\end{comment}
+\end{proof}
+
+Now $\sqrt{z'} = \sqrt{z} \cdot \sqrt{1+\epsilon/z}$.
+Define $u := \epsilon/z$:
+$|\epsilon| \le \sqrt{2^{-2p} (x^2 + y^2)} = 2^{-p} |z|$,
+thus $|u| \le 2^{-p}$.
+Applying Lemma~\ref{lem:sqrtaux}
+yields $|\Re(\sqrt{1+u})-1| \le 0.6 |u|$ and
+$|\Im(\sqrt{1+u})| \le 0.8 |\Im(u)|$.
+Now if $z = r e^{i\alpha}$ in polar coordinates,
+$\sqrt{z} = \sqrt{r} e^{i\alpha/2}$, and it follows that
+$|\Im(\sqrt{z})/\Re(\sqrt{z})| = |\tan(\alpha/2)| \le |\tan(\alpha)|
+\le |\Im(z)/\Re(z)| < 2^{-k}$.
+If $\sqrt{z} = a+ib$ and $\sqrt{1+u} = (1+c)+id$, we obtain
+$|b/a| < 2^{-k}$, $|c| \le 0.6 \cdot 2^{-p}$, $|d| \le 0.8 |\Im(u)|$.
+
+Let $\epsilon = \epsilon_x + i \epsilon_y$, then
+\[ \epsilon/z = (\epsilon_x + i \epsilon_y)/(x + iy) =
+  (\epsilon_x + i \epsilon_y)(x-iy)/|z|^2
+  = \frac{\epsilon_x x + \epsilon_y y}{|z|^2}
+  + i \frac{-\epsilon_x y + \epsilon_y x}{|z|^2}. \]
+Therefore $\Im(u) = (-\epsilon_x y + \epsilon_y x)/|z|^2$,
+and $|\Im(u)| \le 2^{-p+1} |x| |y|/|z|^2$.
+Since $|y/x| < 2^{-k}$, $|\Im(u)| \le 2^{-p-k+1}$,
+thus $|d| \le 0.8 \cdot 2^{-p-k+1}$.
+
+When multiplying $\sqrt{z}$ by $\sqrt{1+u} = (1+c)+id$, we get:
+\[ \sqrt{z + \epsilon} = \sqrt{z} + \sqrt{z}  (c + i d). \]
+The induced error is thus:
+\[ \sqrt{z}  (c + i d) = (a + ib) (c + i d). \]
+Its real part is bounded by:
+\[ |ac| + |bd| \le (0.6 \cdot 2^{-p} + 0.8 \cdot 2^{-p-2k+1}) |a|
+  \le 2^{-p} \cdot |a|, \]
+amd its imaginary part is bounded by:
+\[ |ad| + |bc| \le (0.8 \cdot 2^{-p-k+1} + 0.6 \cdot 2^{-p-k}) |a|
+  < 2.2 \cdot 2^{-p-k} \cdot |a|. \]
+We have proven the following lemma.
+\begin{lemma} \label{lem:sqrt}
+  Assume $z = x + iy$ with $|y/x| < 2^{-k}$, $k \ge 1$ and $x > 0$.
+  Let $z' = z + \epsilon$ with $|\Re(\epsilon)| < 2^{-p} |x|$
+  and $|\Im(\epsilon)| < 2^{-p} |y|$, for $p \ge 1$.
+  Then $\sqrt{z'} = \sqrt{z} + \tau$ with:
+  \[ |\Re(\tau)| \le 2^{-p} |\Re(\sqrt{z})|, \quad
+     |\Im(\tau)| \le 2^{-p-k+1} |\Im(\sqrt{z})|. \]
+\end{lemma}
 
 \section {Complex analysis}
 
