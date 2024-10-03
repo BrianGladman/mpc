@@ -227,5 +227,10 @@ AC_DEFINE_UNQUOTED([MPC_GCC_VERSION], ["$GCC_VERSION"], [Version of gcc])
 # Looks for short git hash if the version string contains "dev"
 MPC_GITVERSION
 
+# If the environment variable MPC_DEBUG is non-empty, add compiler flags.
+if test $MPC_DEBUG ; then
+   CFLAGS="$CFLAGS -Werror"
+fi
+
 AC_CONFIG_FILES([src/mpc.h src/mpc-impl.h Makefile src/Makefile tests/Makefile doc/Makefile tools/Makefile tools/bench/Makefile tools/mpcheck/Makefile])
 AC_OUTPUT
