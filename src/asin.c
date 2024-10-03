@@ -222,18 +222,21 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
      If we approximate i*z + sqrt(1-z^2) by i/(2z), the relative error is
      bounded by 1/(6|z|^2).
   */
+  mpfr_exp_t ex, ey, k;
+  mpfr_prec_t p, extra, errx, erry;
+  int ok;
   MPC_ASSERT(mpfr_signbit (mpc_imagref (z)) == 0); // Im(z) > 0
-  mpfr_exp_t ex = mpfr_get_exp (mpc_realref (z));
-  mpfr_exp_t ey = mpfr_get_exp (mpc_imagref (z));
+  ex = mpfr_get_exp (mpc_realref (z));
+  ey = mpfr_get_exp (mpc_imagref (z));
   MPC_ASSERT(ex >= 0 || ey >= 0);
   ex = (ex >= ey) ? ex : ey;
   // |z| >= 2^(ex-1) thus 6*|z|^2 > 2^(2*ex)
-  mpfr_prec_t p = mpfr_get_prec (mpc_realref (t)); // same precision as imaginary part
+  p = mpfr_get_prec (mpc_realref (t)); // same precision as imaginary part
   /* the relative error is < 1/(6|z|^2) < 2^(-2*ex),
      and we want it to be less than 1 ulp(t), thus we want 2 * ex >= p */
   if (p < 4 || 2 * ex < p)
     return 0;
-  mpfr_prec_t extra = 2 * ex - p;
+  extra = 2 * ex - p;
   /* now 2*ex >= p thus the relative error of approximating i*z + sqrt(1-z^2)
      by i/(2z) is bounded by 2^(-p-extra). */
   mpc_ui_div (t, 1ul, z, MPC_RNDNN); // 1/z
@@ -246,7 +249,7 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
      2^(-p-extra) * |t|. */
   ex = mpfr_get_exp (mpc_realref (t));
   ey = mpfr_get_exp (mpc_imagref (t));
-  mpfr_exp_t k = (ex >= ey) ? ex - ey : ey - ex; // k = |ex-ey|
+  k = (ex >= ey) ? ex - ey : ey - ex; // k = |ex-ey|
   mpc_log (t, t, MPC_RNDNN);
   /* We have log(x+i*y) = 1/2 log(x^2+y^2) + i*atan2(y,x).
      We analyze separately the induced error on each part:
@@ -290,17 +293,17 @@ mpc_asin_large_pos (mpc_srcptr rop, mpc_ptr t, mpc_srcptr z, mpc_rnd_t rnd)
      it is less than 12/2^ex ulp(Re(t)). Thus the error on the real
      part is less than (1/2 + 12/2^ex) ulp(Re(t)) < 2^(5-ex) ulp(Re(t)).
   */
-  mpfr_prec_t errx = (ex >= 5) ? 0 : 5 - ex;
+  errx = (ex >= 5) ? 0 : 5 - ex;
   ey = mpfr_get_exp (mpc_imagref (t));
   /* Since the induced relative error on the imaginary part is < 2^(k+3-p),
      it is < 2^(k+3) ulp(Im(t)), and the error on the imaginary part
      is less than (1/2 + 2^(k+3)) ulp(Im(t)) < 2^(k+4) ulp(Im(t)). */
-  mpfr_prec_t erry = k + 4;
+  erry = k + 4;
   /* multiply by -i */
   mpfr_swap (mpc_realref (t), mpc_imagref (t));
   MPFR_CHANGE_SIGN (mpc_imagref (t));
-  int ok = mpfr_can_round (mpc_realref (t), p - erry, MPFR_RNDN, MPFR_RNDZ,
-                           mpfr_get_prec (mpc_realref (rop)) + (MPC_RND_RE(rnd) == MPFR_RNDN));
+  ok = mpfr_can_round (mpc_realref (t), p - erry, MPFR_RNDN, MPFR_RNDZ,
+                       mpfr_get_prec (mpc_realref (rop)) + (MPC_RND_RE(rnd) == MPFR_RNDN));
   ok = ok && mpfr_can_round (mpc_imagref (t), p - errx, MPFR_RNDN, MPFR_RNDZ,
                              mpfr_get_prec (mpc_imagref (rop)) + (MPC_RND_IM(rnd) == MPFR_RNDN));
   return ok;
