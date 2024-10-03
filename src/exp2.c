@@ -24,9 +24,10 @@ int
 mpc_exp2 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 {
   mpc_t two;
+  int ret;
   mpc_init2 (two, MPFR_PREC_MIN); // 1 bit is enough to store 2 exactly
   mpc_set_ui (two, 2, MPC_RNDNN);
-  int ret = mpc_pow (rop, two, op, rnd);
+  ret = mpc_pow (rop, two, op, rnd);
   mpc_clear (two);
   return ret;
 }

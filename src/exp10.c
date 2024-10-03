@@ -24,9 +24,10 @@ int
 mpc_exp10 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 {
   mpc_t ten;
+  int ret;
   mpc_init2 (ten, 4); // 4 bits is enough to store 10 exactly
   mpc_set_ui (ten, 10, MPC_RNDNN);
-  int ret = mpc_pow (rop, ten, op, rnd);
+  ret = mpc_pow (rop, ten, op, rnd);
   mpc_clear (ten);
   return ret;
 }
