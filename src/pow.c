@@ -187,8 +187,6 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
   int sa, sb, sc, sd;
   unsigned long int t;
   int ret = -2;
-  int sign_rex = mpfr_signbit (mpc_realref(x));
-  int sign_imx = mpfr_signbit (mpc_imagref(x));
   int x_imag = mpfr_zero_p (mpc_realref(x));
   int z_is_y = 0;
   mpfr_t copy_of_y;
