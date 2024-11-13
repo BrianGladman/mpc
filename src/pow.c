@@ -49,9 +49,11 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
    Case 3: b = 0. Then d is necessarily zero, thus it suffices to check
    whether c = a^2, i.e., if c is a square.
+
+   sc and sd are the signs of c and d.
 */
 static int
-mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d)
+mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d, int sc, int sd)
 {
   if (mpz_cmp_ui (d, 0) == 0) /* case a = 0 or b = 0 */
     {
@@ -62,6 +64,8 @@ mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d)
       if (mpz_perfect_square_p (b)) /* case 2 above */
         {
           mpz_sqrt (b, b);
+          if (sd < 0)
+            mpz_neg (b, b); /* sqrt(-b^2 - 0*i) = 0 - i*b */
           mpz_set_ui (a, 0);
           return 1; /* c + i*d = (0 + i*b)^2 */
         }
@@ -175,6 +179,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
 {
   mpfr_exp_t ec, ed, ey;
   mpz_t my, a, b, c, d, u;
+  int sc, sd;
   unsigned long int t;
   int ret = -2;
   int sign_rex = mpfr_signbit (mpc_realref(x));
@@ -212,6 +217,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
     }
   else
     ec = mpfr_get_z_exp (c, mpc_realref(x));
+  sc = mpfr_signbit (mpc_realref(x)) ? -1 : 1;
   if (mpfr_zero_p (mpc_imagref(x)))
     {
       mpz_set_ui (d, 0);
@@ -223,7 +229,12 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
       if (x_imag)
         ec = ed;
     }
-  /* x = c*2^ec + I * d*2^ed */
+  sd = mpfr_signbit (mpc_imagref(x)) ? -1 : 1;
+
+  /* x = c*2^ec + I * d*2^ed, where sc/sd are the signs of c, d
+     (only valuable when c or d is zero, since we lost the sign bit
+     in the conversion to integer) */
+
   /* equalize the exponents of x */
   if (ec < ed)
     {
@@ -238,6 +249,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
         goto end;
       ec = ed;
     }
+
   /* now ec=ed and x = (c + I * d) * 2^ec */
 
   /* divide by two if possible */
@@ -277,7 +289,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
           ec --;
         }
       /* now ec is even */
-      if (mpc_perfect_square_p (a, b, c, d) == 0)
+      if (mpc_perfect_square_p (a, b, c, d, sc, sd) == 0)
         break;
       mpz_swap (a, c);
       mpz_swap (b, d);

@@ -471,3 +471,6 @@
 
 # bug reported by Joseph Myers (07 Apr 2015)
 + - 2 -0x3p1073741819 2 0x3p1073741819 2 1 2 2 2 0x1p1000 2 0 Z Z
+
+# bug found and fixed on November 13, 2024
+? ? 2 +0 2 -2 2 -4 2 -0 2 0.5 2 +0 N N
