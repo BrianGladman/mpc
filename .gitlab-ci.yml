@@ -1,0 +1,58 @@
+stages:
+   - image
+   - test
+
+build-image:
+   stage: image
+   tags:
+      - ci.inria.fr
+      - small
+   image: docker:cli
+   before_script:
+      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+   script:
+      - docker build -f Dockerfile -t $CI_REGISTRY_IMAGE .
+      - docker push $CI_REGISTRY_IMAGE
+   only:
+      changes:
+         - Dockerfile
+
+debian:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
+      - autoreconf -vfi
+      - MPC_DEBUG=1 CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
+      - make
+      - make check
+   artifacts:
+      paths:
+         - config.log
+         - tests/test-suite.log
+
+debian-32:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
+      - autoreconf -vfi
+      - MPC_DEBUG=1 CFLAGS="-m32 -Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
+      - make
+      - make check
+
+debian-clang:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
+      - autoreconf -vfi
+      - MPC_DEBUG=1 CC=clang CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
+      - make
+      - make check

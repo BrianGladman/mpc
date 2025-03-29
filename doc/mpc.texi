@@ -12,7 +12,7 @@
 This manual is for GNU MPC, a library for multiple precision complex arithmetic,
 version @value{VERSION} of @value{UPDATED-MONTH}.
 
-Copyright @copyright{} 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022, 2023 INRIA
+Copyright @copyright{} 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022, 2023, 2024 INRIA
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -609,6 +609,10 @@ For @code{mpc_set_d}, be careful that the input number @var{op} may not be
 exactly representable as a double-precision number (this happens for 0.1 for
 instance), in which case it is first rounded by the C compiler to a
 double-precision number, and then only to a complex number.
+With the Microsoft compiler, which does not provide the standard type
+@code{double complex} or @code{long double complex}, replace
+@code{double _Complex} by @code{_Dcomplex} and
+@code{long double _Complex} by @code{_Lcomplex}.
 @end deftypefun
 
 @deftypefun int mpc_set_ui_ui (mpc_t @var{rop}, unsigned long int @var{op1}, unsigned long int @var{op2}, mpc_rnd_t @var{rnd})
@@ -656,6 +660,10 @@ is included @emph{before} @file{mpc.h}.
 @deftypefun double complex mpc_get_dc (const mpc_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx {long double complex} mpc_get_ldc (mpc_t @var{op}, mpc_rnd_t @var{rnd})
 Convert @var{op} to a C complex number, using the rounding mode @var{rnd}.
+With the Microsoft compiler, which does not provide the standard type
+@code{double complex} or @code{long double complex}, replace
+@code{double _Complex} by @code{_Dcomplex} and
+@code{long double _Complex} by @code{_Lcomplex}.
 @end deftypefun
 
 
@@ -1007,8 +1015,12 @@ and imaginary part 0, with sign being the opposite of that of @var{op2}.
 @end deftypefun
 
 @deftypefun int mpc_exp (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
-Set @var{rop} to the exponential of @var{op},
+@deftypefunx int mpc_exp10 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx int mpc_exp2 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+Set @var{rop} to the natural, base-10 and base-2 exponential of @var{op},
 rounded according to @var{rnd} with the precision of @var{rop}.
+The functions @code{mpc_exp10} and @code{mpc_exp2} currently use a trivial implementation
+calling @code{mpc_pow}.
 @end deftypefun
 
 @deftypefun int mpc_log (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})

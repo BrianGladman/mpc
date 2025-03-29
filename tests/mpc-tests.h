@@ -256,8 +256,8 @@ typedef union {
   uintmax_t            uim;
 #endif
 #ifdef _Complex_I
-  double complex       dc;
-  long double complex  ldc;
+  DOUBLE_COMPLEX       dc;
+  LONG_DOUBLE_COMPLEX  ldc;
 #endif
   char *               string;
   string_info_t        string_info;

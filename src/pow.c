@@ -49,9 +49,12 @@ along with this program. If not, see http://www.gnu.org/licenses/ .
 
    Case 3: b = 0. Then d is necessarily zero, thus it suffices to check
    whether c = a^2, i.e., if c is a square.
+
+   *sc and *sd are the input signs of c and d, update them as output with
+   the signs of a and b (in case of an exact square).
 */
 static int
-mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d)
+mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d, int *sc, int *sd)
 {
   if (mpz_cmp_ui (d, 0) == 0) /* case a = 0 or b = 0 */
     {
@@ -62,7 +65,11 @@ mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d)
       if (mpz_perfect_square_p (b)) /* case 2 above */
         {
           mpz_sqrt (b, b);
+          if (*sd < 0)
+            mpz_neg (b, b); /* sqrt(-b^2 - 0*i) = +0 - i*b */
           mpz_set_ui (a, 0);
+          *sc = 1; /* a = +0 */
+          /* we don't set *sd, since it had the correct sign */
           return 1; /* c + i*d = (0 + i*b)^2 */
         }
     }
@@ -82,8 +89,10 @@ mpc_perfect_square_p (mpz_t a, mpz_t b, mpz_t c, mpz_t d)
               if (mpz_perfect_square_p (a))
                 {
                   mpz_sqrt (a, a);
+                  *sc = 1; /* a > 0 */
                   mpz_tdiv_q_2exp (b, d, 1); /* d/2 */
                   mpz_divexact (b, b, a); /* d/(2a) */
+                  /* sign of b is that of d */
                   return 1;
                 }
             }
@@ -175,10 +184,9 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
 {
   mpfr_exp_t ec, ed, ey;
   mpz_t my, a, b, c, d, u;
+  int sa, sb, sc, sd;
   unsigned long int t;
   int ret = -2;
-  int sign_rex = mpfr_signbit (mpc_realref(x));
-  int sign_imx = mpfr_signbit (mpc_imagref(x));
   int x_imag = mpfr_zero_p (mpc_realref(x));
   int z_is_y = 0;
   mpfr_t copy_of_y;
@@ -212,6 +220,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
     }
   else
     ec = mpfr_get_z_exp (c, mpc_realref(x));
+  sc = mpfr_signbit (mpc_realref(x)) ? -1 : 1;
   if (mpfr_zero_p (mpc_imagref(x)))
     {
       mpz_set_ui (d, 0);
@@ -223,7 +232,12 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
       if (x_imag)
         ec = ed;
     }
-  /* x = c*2^ec + I * d*2^ed */
+  sd = mpfr_signbit (mpc_imagref(x)) ? -1 : 1;
+
+  /* x = c*2^ec + I * d*2^ed, where sc/sd are the signs of c, d
+     (only valuable when c or d is zero, since we lost the sign bit
+     in the conversion to integer) */
+
   /* equalize the exponents of x */
   if (ec < ed)
     {
@@ -238,6 +252,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
         goto end;
       ec = ed;
     }
+
   /* now ec=ed and x = (c + I * d) * 2^ec */
 
   /* divide by two if possible */
@@ -277,7 +292,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
           ec --;
         }
       /* now ec is even */
-      if (mpc_perfect_square_p (a, b, c, d) == 0)
+      if (mpc_perfect_square_p (a, b, c, d, &sc, &sd) == 0)
         break;
       mpz_swap (a, c);
       mpz_swap (b, d);
@@ -319,6 +334,7 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
       /* replace (c,d) by (c/(c^2+d^2), -d/(c^2+d^2)) */
       mpz_neg (d, d);
       ec = -ec - (mpfr_exp_t) t;
+      sd = -sd; /* only the sign of d changes */
       mpz_neg (my, my);
     }
 
@@ -328,7 +344,9 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
      We first compute [(c + I * d) * 2^ec]^my, then square ey times. */
   t = mpz_sizeinbase (my, 2) - 1;
   mpz_set (a, c);
+  sa = sc;
   mpz_set (b, d);
+  sb = sd;
   ed = ec;
   /* invariant: (a + I*b) * 2^ed = ((c + I*d) * 2^ec)^trunc(my/2^t) */
   while (t-- > 0)
@@ -338,15 +356,30 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
       mpz_mul (u, a, b);
       mpz_mul (a, a, a);
       mpz_submul (a, b, b);
+      /* The case a=0 cannot happen when the initial x is real or imaginary,
+         which is the only case where the sign of zeros matters.
+         Thus the sign of a (in case a=0) does not really matter. */
       mpz_mul_2exp (b, u, 1);
+      sb = sa * sb;
+      sa = mpz_cmp_ui (a, 0) >= 0 ? +1 : -1;
       ed *= 2;
       if (mpz_tstbit (my, t)) /* multiply by c + I*d */
         {
+          int ta = sa * sc > 0 && sb * sd < 0;
+          int tb = sb * sc > 0 && sa * sd < 0;
           mpz_mul (u, a, c);
           mpz_submul (u, b, d); /* ac-bd */
           mpz_mul (b, b, c);
           mpz_addmul (b, a, d); /* bc+ad */
           mpz_swap (a, u);
+          if (mpz_cmp_ui (a, 0) != 0)
+            sa = mpz_cmp_ui (a, 0) > 0 ? +1 : -1;
+          else
+            sa = (ta) ? +1 : -1;
+          if (mpz_cmp_ui (b, 0) != 0)
+            sb = mpz_cmp_ui (b, 0) > 0 ? +1 : -1;
+          else
+            sa = (tb) ? +1 : -1;
           ed += ec;
         }
       /* remove powers of two in (a,b) */
@@ -380,23 +413,28 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
 
   while (ey-- > 0)
     {
-      unsigned long sa, sb;
+      unsigned long ta, tb;
 
       /* square a + I*b */
       mpz_mul (u, a, b);
       mpz_mul (a, a, a);
       mpz_submul (a, b, b);
       mpz_mul_2exp (b, u, 1);
+      sb = sa * sb;
+      /* a cannot be zero here when the initial x is real or imaginary,
+         which is the only case where the initial signs of zero do matter,
+         thus sa does not matter here when a=0. */
+      sa = mpz_cmp_ui (a, 0) >= 0 ? +1 : -1;
       ed *= 2;
 
       /* divide by largest 2^n possible, to avoid many loops for e.g.,
          (2+2*I)^16777216 */
-      sa = mpz_scan1 (a, 0);
-      sb = mpz_scan1 (b, 0);
-      sa = (sa <= sb) ? sa : sb;
-      mpz_tdiv_q_2exp (a, a, sa);
-      mpz_tdiv_q_2exp (b, b, sa);
-      ed += (mpfr_exp_t) sa;
+      ta = mpz_scan1 (a, 0);
+      tb = mpz_scan1 (b, 0);
+      ta = (ta <= tb) ? ta : tb;
+      mpz_tdiv_q_2exp (a, a, ta);
+      mpz_tdiv_q_2exp (b, b, ta);
+      ed += (mpfr_exp_t) ta;
 
       if (   (mpfr_prec_t) mpz_sizeinbase (a, 2) > maxprec
           || (mpfr_prec_t) mpz_sizeinbase (b, 2) > maxprec)
@@ -404,7 +442,11 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
     }
 
   ret = mpfr_set_z (mpc_realref(z), a, MPC_RND_RE(rnd));
+  if (mpz_cmp_ui (a, 0) == 0 && sa < 0)
+    mpfr_neg (mpc_realref(z), mpc_realref(z), MPC_RND_RE(rnd));
   inex_im = mpfr_set_z (mpc_imagref(z), b, MPC_RND_IM(rnd));
+  if (mpz_cmp_ui (b, 0) == 0 && sb < 0)
+    mpfr_neg (mpc_imagref(z), mpc_imagref(z), MPC_RND_IM(rnd));
   ret = MPC_INEX(ret, inex_im);
   mpfr_mul_2si (mpc_realref(z), mpc_realref(z), ed, MPC_RND_RE(rnd));
   mpfr_mul_2si (mpc_imagref(z), mpc_imagref(z), ed, MPC_RND_IM(rnd));
@@ -416,9 +458,6 @@ mpc_pow_exact (mpc_ptr z, mpc_srcptr x, mpfr_srcptr y, mpc_rnd_t rnd,
   mpz_clear (c);
   mpz_clear (d);
   mpz_clear (u);
-
-  if (ret >= 0 && x_imag)
-    fix_sign (z, sign_rex, sign_imx, (z_is_y) ? copy_of_y : y);
 
   if (z_is_y)
     mpfr_clear (copy_of_y);

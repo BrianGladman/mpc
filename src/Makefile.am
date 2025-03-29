@@ -32,6 +32,6 @@ libmpc_la_SOURCES = mpc-impl.h abs.c acos.c acosh.c add.c add_fr.c         \
   set_prec.c set_str.c set_x.c set_x_x.c sin.c sin_cos.c sinh.c sqr.c      \
   sqrt.c strtoc.c sub.c sub_fr.c sub_ui.c sum.c swap.c tan.c tanh.c        \
   uceil_log2.c ui_div.c ui_ui_sub.c \
-  radius.c balls.c
+  radius.c balls.c exp10.c exp2.c
 
 libmpc_la_LIBADD = @LTLIBOBJS@

@@ -1,3 +1,6 @@
+From Paul Zimmermann on 9 September 2024:
+Implement mpc_cbrt.
+
 From Thomas Henlich on 20 February 2020:
 Implement the cotangent function.
 
