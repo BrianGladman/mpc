@@ -41,6 +41,8 @@ stamp-h1
 /doc/mpc.html/
 /doc/stamp-vti
 
+/src/mpc.h
+/src/mpc-impl.h
 /src/libmpc.la
 
 /tests/libmpc-tests.la
