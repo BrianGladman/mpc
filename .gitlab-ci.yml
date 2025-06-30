@@ -28,6 +28,7 @@ debian:
       - MPC_DEBUG=1 CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
       - make
       - make check
+      - cat tests/test-suite.log
    artifacts:
       paths:
          - config.log
