@@ -2268,6 +2268,53 @@ or the real part
 (for $y_1$ divisible by~$2$, but not by~$4$)
 cannot be determined.
 
+\paragraph{Sign of the imaginary part of $x^y$ when $x$ and $y$ are real.}
+(Warning: this paragraph was written after the above, and might be
+partly incompatible with it.)
+Assume $x = (a,b)$ and $y = (c,d)$ with $a, c \neq 0$ and $b, d = \pm 0$.
+Assume the imaginary part of $z := x^y$ is zero, which happens when
+either $a > 0$, or when $a < 0$ and $c$ is an integer.
+The rule we follow is the following: when we replace $b$ and $d$ by tiny
+values $\varepsilon_b$ and $\varepsilon_d$ of the same sign as $b$ and $d$
+respectively, if we always obtain the same sign for $\Re(z)$ when
+$\varepsilon_b$ and $\varepsilon_d$ vary, then we return a zero of that sign;
+otherwise, if we obtain different signs for $\Re(z)$ when
+$\varepsilon_b$ and $\varepsilon_d$ vary, we return a positive zero.
+
+This rule yields the following 16 cases, depending on the signs of
+$a, b, c, d$, where in the last 8 cases with $a < 0$, $c$ is necessarily an
+integer for $\Re(z)$ to be zero:
+\begin{itemize}
+\item $a > 0, b = +0, c > 0, d = +0$: depending on $a$ and $c$,
+  we can get either always $+0$, or $\pm 0$, thus we return $+0$;
+\item $a > 0, b = +0, c > 0, d = -0$: same as the above case;
+\item $a > 0, b = +0, c < 0, d = +0$: return $-0$ when $|a|\le 1$,
+  $+0$ otherwise;
+\item $a > 0, b = +0, c < 0, d = -0$: return $+0$ when $|a| < 1$,
+  $-0$ otherwise;
+\item $a > 0, b = -0, c > 0, d = +0$: return $-0$ when $|a| \le 1$,
+  $+0$ otherwise;
+\item $a > 0, b = -0, c > 0, d = -0$: return $+0$ when $|a| < 1$,
+  $-0$ otherwise;
+\item $a > 0, b = -0, c < 0, d = +0$: always return $+0$;
+\item $a > 0, b = -0, c < 0, d = -0$: always return $+0$;
+\item $a < 0, b = +0, c > 0, d = +0$: return $-0$ if $|a| \le 1$ and
+  $c$ even, $+0$ otherwise;
+\item $a < 0, b = +0, c > 0, d = -0$: return $-0$ if $|a| \ge 1$ and
+  $c$ even, $+0$ otherwise;
+\item $a < 0, b = +0, c < 0, d = +0$: return $-0$ if $|a| \ge 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = +0, c < 0, d = -0$: return $-0$ if $|a| \le 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = -0, c > 0, d = +0$: return $-0$ if $|a| \ge 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = -0, c > 0, d = -0$: return $-0$ if $|a| \le 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = -0, c < 0, d = +0$: return $-0$ if $|a| \le 1$ and
+  $c$ even, $+0$ otherwise;
+\item $a < 0, b = -0, c < 0, d = -0$: return $-0$ if $|a| \ge 1$ and
+  $c$ even, $+0$ otherwise.
+\end{itemize}
 
 \subsection {\texttt {mpc\_pow\_ui}}
 \label {ssec:mpcpowui}
