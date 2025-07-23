@@ -472,8 +472,9 @@
 # bug reported by Joseph Myers (07 Apr 2015)
 + - 2 -0x3p1073741819 2 0x3p1073741819 2 1 2 2 2 0x1p1000 2 0 Z Z
 
-# bug found and fixed on November 13, 2024
-# Re((-4,eps1)^(0.5,eps2)) gives both signs depending on eps1 and eps2:
+# bug founds and fixed on November 13, 2024
+# Re((-4,eps1)^(0.5,eps2)) gives both signs depending on eps1 and eps2
+# in that case we choose the + sign:
 0 0 2 +0 2 +2 2 -4 2 +0 2 0.5 2 +0 N N
 # Re((-4,eps1)^(0.5,-eps2)) gives only + depending on eps1 and eps2:
 0 0 2 +0 2 +2 2 -4 2 +0 2 0.5 2 -0 N N

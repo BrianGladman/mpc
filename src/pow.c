@@ -163,6 +163,38 @@ fix_sign (mpc_ptr z, int sign_eps, int sign_a, mpfr_srcptr y)
   mpz_clear (my);
 }
 
+/* fix the sign of Im(z) when both x and y are real
+   s1 = signbit(Re(x)), s2 = signbit(Im(x)),
+   s3 = signbit(Re(y)), s4 = signbit(Im(y)) */
+static void
+fix_sign_real (mpc_ptr z, int s1, int s2, int s3, int s4)
+{
+  /* Re(x) Im(x) Re(y) Im(y) Im(z)
+      +     +     +     +     +
+      +     +     +     -    +/-
+      +     +     -     +    +/-
+      +     +     -     -     -
+      +     -     +     +    +/-
+      +     -     +     -     -
+      +     -     -     +     +
+      +     -     -     -    +/-
+      -     +     +     +     +
+      -     +     +     -     +
+      -     +     -     +     -
+      -     +     -     -     -
+      -     -     +     +     -
+      -     -     +     -     -
+      -     -     -     +     +
+      -     -     -     -     + */
+  int s; /* signbit of Im(z) (0 for sign(Im(z))=+1, 1 for sign(Im(z))=-1) */
+  if (s1 == 0)
+    s = (s2 != s3 && s4 == 1) ? 1 : 0;
+  else
+    s = (s2 == s3) ? 0 : 1;
+  if (mpfr_signbit (mpc_imagref (z)) != s)
+    mpfr_neg (mpc_imagref (z), mpc_imagref (z), MPFR_RNDN);
+}
+
 /* If x^y is exactly representable (with maybe a larger precision than z),
    round it in z and return the (mpc) inexact flag in [0, 10].
 
@@ -629,10 +661,11 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
       if (y_real && (mpfr_integer_p (mpc_realref(y)) ||
                      mpfr_cmp_ui (mpc_realref(x), 0) >= 0))
         {
-          int s1, s2;
-          s1 = mpfr_signbit (mpc_realref (y));
+          int s1, s2, s3, s4;
+          s1 = mpfr_signbit (mpc_realref (x));
           s2 = mpfr_signbit (mpc_imagref (x));
-
+          s3 = mpfr_signbit (mpc_realref (y));
+          s4 = mpfr_signbit (mpc_imagref (y));
           ret = mpfr_pow (mpc_realref(z), mpc_realref(x), mpc_realref(y), MPC_RND_RE(rnd));
           inex_im = mpfr_set_ui (mpc_imagref(z), 0, MPC_RND_IM(rnd));
           ret = MPC_INEX(ret, inex_im);
@@ -645,8 +678,7 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
              Note that the sign must also be set explicitly when rnd=RNDD
              because mpfr_set_ui(z_i, 0, rnd) always sets z_i to +0.
           */
-          if (MPC_RND_IM(rnd) == MPFR_RNDD || s1 != s2)
-            mpfr_neg (mpc_imagref(z), mpc_imagref(z), MPC_RND_IM(rnd));
+          fix_sign_real (z, s1, s2, s3, s4);
           goto end;
         }
 
