@@ -2342,10 +2342,10 @@ or     $a = 1$ without a restriction on $\epsilon_d$.
 Now assume that $a < 0$ and $c$ is an integer. Then
 \begin {eqnarray*}
 \log (a + \epsilon_b i)
-& = & \log (|a|) + \log \big( -1 + (\epsilon_b/|a|) i \big) \\
-& = & \log (|a|) + \sign (\epsilon_b) \pi i
+& = & \log |a| + \log \big( -1 + (\epsilon_b/|a|) i \big) \\
+& = & \log |a| + \sign (\epsilon_b) \pi i
   + \log \big( 1 - (\epsilon_b/|a|) i \big) \\
-& = & \log (|a|) + \sign (\epsilon_b) \pi i
+& = & \log |a| + \sign (\epsilon_b) \pi i
 + \delta_b + \tilde \delta_b i
 \end {eqnarray*}
 with
@@ -2359,14 +2359,14 @@ We then compute as above
 \Im (z)
 = R
 \sin \left( c \big( \sign (\epsilon_b) \pi + \tilde \delta_b \big)
-+ \big( \log (|a|) + \delta_b \big) \epsilon_d \right).
++ \big( \log |a| + \delta_b \big) \epsilon_d \right).
 \]
 If $c$ is an even integer, then we can argue as before since
 \[
 \sign (\Im (z))
-= \sign \left( - \frac {c}{|a|} \, \epsilon_b + \log (|a|) \, \epsilon_d \right)
+= \sign \left( - \frac {c}{|a|} \, \epsilon_b + \log |a| \, \epsilon_d \right)
 \]
-and return $-0$ if and only if
+and return $-0$ for $\Im(z)$ if and only if
 $\epsilon_b$ has the same sign as~$c$, and
 either $|a| > 1$ and $\epsilon_d < 0$,
 or     $|a| < 1$ and $\epsilon_d > 0$,
