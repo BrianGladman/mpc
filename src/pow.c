@@ -690,11 +690,11 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
           s4 = mpfr_signbit (mpc_imagref (y));
           cmp = mpfr_cmpabs_ui (mpc_realref (x), 1);
           if (mpfr_cmp_ui (mpc_realref(x), 0) < 0) { /* Re(y) is integer */
-            mpz_t t;
-            mpz_init (t);
-            mpfr_get_z (t, mpc_realref(y), MPFR_RNDN);
-            even = mpz_even_p (t);
-            mpz_clear (t);
+            mpz_t yint;
+            mpz_init (yint);
+            mpfr_get_z (yint, mpc_realref(y), MPFR_RNDN);
+            even = mpz_even_p (yint);
+            mpz_clear (yint);
           }
           ret = mpfr_pow (mpc_realref(z), mpc_realref(x), mpc_realref(y), MPC_RND_RE(rnd));
           inex_im = mpfr_set_ui (mpc_imagref(z), 0, MPC_RND_IM(rnd));
