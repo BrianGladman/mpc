@@ -1,6 +1,6 @@
 /* mpc_pow -- Raise a complex number to the power of another complex number.
 
-Copyright (C) 2009, 2010, 2011, 2012, 2014, 2015, 2016, 2018, 2020, 2022 INRIA
+Copyright (C) 2009, 2010, 2011, 2012, 2014, 2015, 2016, 2018, 2020, 2022, 2024, 2025 INRIA
 
 This file is part of GNU MPC.
 
