@@ -232,5 +232,16 @@ if test $MPC_DEBUG ; then
    CFLAGS="$CFLAGS -Werror"
 fi
 
-AC_CONFIG_FILES([src/mpc.h src/mpc-impl.h Makefile src/Makefile tests/Makefile doc/Makefile tools/Makefile tools/bench/Makefile tools/mpcheck/Makefile])
+AC_CONFIG_FILES([
+    src/mpc.h
+    src/mpc-impl.h
+    mpc.pc
+    Makefile
+    src/Makefile
+    tests/Makefile
+    doc/Makefile
+    tools/Makefile
+    tools/bench/Makefile
+    tools/mpcheck/Makefile
+])
 AC_OUTPUT
