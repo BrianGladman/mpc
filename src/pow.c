@@ -679,17 +679,17 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
 
       /* x^y is real when:
          (a) x is real and y is integer
-         (b) x is real non-negative and y is real */
-      if (y_real && (mpfr_integer_p (mpc_realref(y)) ||
-                     mpfr_cmp_ui (mpc_realref(x), 0) >= 0))
+         (b) x is real non-negative and y is real
+         (and we are in the case where x is real) */
+      int s1 = mpfr_signbit (mpc_realref (x));
+      if (y_real && (mpfr_integer_p (mpc_realref(y)) || s1 == 0))
         {
-          int s1, s2, s3, s4, cmp, even = 0;
-          s1 = mpfr_signbit (mpc_realref (x));
+          int s2, s3, s4, cmp, even = 0;
           s2 = mpfr_signbit (mpc_imagref (x));
           s3 = mpfr_signbit (mpc_realref (y));
           s4 = mpfr_signbit (mpc_imagref (y));
           cmp = mpfr_cmpabs_ui (mpc_realref (x), 1);
-          if (mpfr_cmp_ui (mpc_realref(x), 0) < 0) { /* Re(y) is integer */
+          if (s1 != 0) { /* x is negative, so Re(y) is integer */
             mpz_t yint;
             mpz_init (yint);
             mpfr_get_z (yint, mpc_realref(y), MPFR_RNDN);
