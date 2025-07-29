@@ -5,8 +5,8 @@
 
 *~
 *.o
-*.in
-!mpc.pc.in
+Makefile.in
+config.h.in
 *.lo
 *.log
 
