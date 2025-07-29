@@ -162,6 +162,7 @@ AC_LINK_IFELSE(
 # In particular fat builds are broken in GMP 5.0.0
 # (at least on 64-bit Core 2 under GNU/Linux),
 # see http://gmplib.org/list-archives/gmp-bugs/2011-August/002345.html.
+# Note: if we increase the minimal GMP version, also do in mpc.pc.in
 AC_MSG_CHECKING(for recent GMP)
 AC_COMPILE_IFELSE(
         [AC_LANG_SOURCE(
@@ -180,6 +181,7 @@ error
 
 # Check for a recent MPFR: we require MPFR 4.1.0
 # The same remark as above for GMP applies.
+# Note: if we increase the minimal MPFR version, also do in mpc.pc.in
 AC_MSG_CHECKING(for recent MPFR)
 AC_COMPILE_IFELSE(
         [AC_LANG_SOURCE(
