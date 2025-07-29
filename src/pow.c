@@ -644,6 +644,8 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
 
   if (x_real) /* case x real */
     {
+      int s1, s2;
+
       if (mpfr_zero_p (mpc_realref(x))) /* x is zero */
         {
           /* special values: exp(y*log(x)) */
@@ -658,7 +660,6 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
       /* Special case 1^y = 1 */
       if (mpfr_cmp_ui (mpc_realref(x), 1) == 0)
         {
-          int s1, s2;
           s1 = mpfr_signbit (mpc_realref (y));
           s2 = mpfr_signbit (mpc_imagref (x));
 
@@ -681,10 +682,10 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
          (a) x is real and y is integer
          (b) x is real non-negative and y is real
          (and we are in the case where x is real) */
-      int s1 = mpfr_signbit (mpc_realref (x));
+      s1 = mpfr_signbit (mpc_realref (x));
       if (y_real && (mpfr_integer_p (mpc_realref(y)) || s1 == 0))
         {
-          int s2, s3, s4, cmp, even = 0;
+          int s3, s4, cmp, even = 0;
           s2 = mpfr_signbit (mpc_imagref (x));
           s3 = mpfr_signbit (mpc_realref (y));
           s4 = mpfr_signbit (mpc_imagref (y));
