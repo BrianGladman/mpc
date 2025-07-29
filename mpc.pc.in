@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+includedir=@includedir@
+libdir=@libdir@
+
+Name: GNU MPC
+Description: A complex floating-point library with exact rounding
+URL: https://www.multiprecision.org/mpc/
+Version: @VERSION@
+Requires: mpfr >= 4.2.0
+Requires.private: gmp >= 6.2.1
+Cflags: -I${includedir}
+Libs: -L${libdir} -lmpc
