@@ -156,13 +156,16 @@ AC_LINK_IFELSE(
         AC_MSG_ERROR([libmpfr not found or uses a different ABI (including static vs shared).])
         ])
 
+# Set variable for substitution in mpc.pc
+AC_SUBST(REQUIRES_GMP_VERSION, [5.0.0])     
+
 # Check for a recent GMP
 # We only guarantee that with a *functional* and recent enough GMP version,
 # MPC will compile; we do not guarantee that GMP will compile.
 # In particular fat builds are broken in GMP 5.0.0
 # (at least on 64-bit Core 2 under GNU/Linux),
 # see http://gmplib.org/list-archives/gmp-bugs/2011-August/002345.html.
-# Note: if we increase the minimal GMP version, also do in mpc.pc.in
+# Note: if we increase the minimal version, also do in REQUIRES_GMP_VERSION
 AC_MSG_CHECKING(for recent GMP)
 AC_COMPILE_IFELSE(
         [AC_LANG_SOURCE(
@@ -179,9 +182,12 @@ error
         AC_MSG_ERROR([GMP version >= 5.0.0 required])
         ])
 
-# Check for a recent MPFR: we require MPFR 4.1.0
+# Set variable for substitution in mpc.pc
+AC_SUBST(REQUIRES_MPFR_VERSION, [4.1.0])
+
+# Check for a recent MPFR
 # The same remark as above for GMP applies.
-# Note: if we increase the minimal MPFR version, also do in mpc.pc.in
+# Note: if we increase the minimal version, also do in REQUIRES_MPFR_VERSION
 AC_MSG_CHECKING(for recent MPFR)
 AC_COMPILE_IFELSE(
         [AC_LANG_SOURCE(
