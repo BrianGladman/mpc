@@ -7,7 +7,6 @@ Name: GNU MPC
 Description: A complex floating-point library with exact rounding
 URL: https://www.multiprecision.org/mpc/
 Version: @VERSION@
-Requires: mpfr >= @REQUIRES_MPFR_VERSION@
-Requires.private: gmp >= @REQUIRES_GMP_VERSION@
+Requires.private: mpfr >= @REQUIRES_MPFR_VERSION@, gmp >= @REQUIRES_GMP_VERSION@
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmpc
