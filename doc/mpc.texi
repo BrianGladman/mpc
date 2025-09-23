@@ -1036,8 +1036,9 @@ calling @code{mpc_pow}.
 @end deftypefun
 
 @deftypefun int mpc_log (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx int mpc_log2 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_log10 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
-Set @var{rop} to the natural and base-10 logarithm of @var{op} respectively,
+Set @var{rop} to the natural, base-2 and base-10 logarithm of @var{op} respectively,
 rounded according to @var{rnd} with the precision of @var{rop}.
 The principal branch is chosen, with the branch cut on the negative real axis,
 so that the imaginary part of the result lies in
@@ -1046,6 +1047,13 @@ so that the imaginary part of the result lies in
 @end iftex
 @ifnottex
 ]-Pi , Pi]
+@end ifnottex
+,
+@iftex
+@math{]-\pi/\log(2) , \pi/\log(2)]}
+@end iftex
+@ifnottex
+]-Pi/log(2) , Pi/log(2)]
 @end ifnottex
 and
 @iftex
