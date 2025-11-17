@@ -150,7 +150,7 @@
     </Midl>
     <ClCompile>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\mpir\dll\$(IntDir);..\..\..\mpfr\src;..\..\src;..\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\mpir\dll\$(IntDir);..\..\..\mpfr\src;..\..\src;..\;..\...\..\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN64;NDEBUG;_CONSOLE;__MPC_WITHIN_MPC;__GMP_LIBGMP_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

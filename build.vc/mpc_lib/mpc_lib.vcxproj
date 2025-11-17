@@ -153,7 +153,7 @@
     </Midl>
     <ClCompile>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\mpir\lib\$(IntDir);..\..\..\mpfr\src;..\..\src;..\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\mpir\lib\$(IntDir);..\..\..\mpfr\src;..\..\src;..\;..\..\..\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
