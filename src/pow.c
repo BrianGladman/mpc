@@ -1,6 +1,6 @@
 /* mpc_pow -- Raise a complex number to the power of another complex number.
 
-Copyright (C) 2009, 2010, 2011, 2012, 2014, 2015, 2016, 2018, 2020, 2022 INRIA
+Copyright (C) 2009, 2010, 2011, 2012, 2014, 2015, 2016, 2018, 2020, 2022, 2024, 2025 INRIA
 
 This file is part of GNU MPC.
 
@@ -161,6 +161,60 @@ fix_sign (mpc_ptr z, int sign_eps, int sign_a, mpfr_srcptr y)
 
  end:
   mpz_clear (my);
+}
+
+/* fix the sign of Im(z) when both x and y are real
+   s1 = signbit(Re(x)), s2 = signbit(Im(x)),
+   s3 = signbit(Re(y)), s4 = signbit(Im(y))
+   cmp = mpfr_cmpabs (Re(x), 1)
+   even = 1 iff Re(y) is even (only used when Re(x) < 0)
+   See algorithms.tex */
+static void
+fix_sign_real (mpc_ptr z, int s1, int s2, int s3, int s4, int cmp, int even)
+{
+  /* Re(x) Im(x) Re(y) Im(y) Im(z)
+  (a) +     +     +     +     +
+  (b) +     +     +     -     +
+  (c) +     +     -     +     - when |Re(x)| <= 1, + otherwise
+  (d) +     +     -     -     + when |Re(x)| <  1, - otherwise
+  (e) +     -     +     +     - when |Re(x)| <= 1, + otherwise
+  (f) +     -     +     -     + when |Re(x)| <  1, - otherwise
+  (g) +     -     -     +     +
+  (h) +     -     -     -     +
+  (i) -     +     +     +     - when |Re(x)| <= 1 and Re(y) even, + otherwise
+  (j) -     +     +     -     - when |Re(x)| >= 1 and Re(y) even, + otherwise
+  (k) -     +     -     +     - when |Re(x)| >= 1 and Re(y)  odd, + otherwise
+  (l) -     +     -     -     - when |Re(x)| <= 1 and Re(y)  odd, + otherwise
+  (m) -     -     +     +     - when |Re(x)| >= 1 and Re(y)  odd, + otherwise
+  (n) -     -     +     -     - when |Re(x)| <= 1 and Re(y)  odd, + otherwise
+  (o) -     -     -     +     - when |Re(x)| <= 1 and Re(y) even, + otherwise
+  (p) -     -     -     -     - when |Re(x)| >= 1 and Re(y) even, + otherwise
+  */
+  int s; /* signbit of Im(z) (0 for sign(Im(z))=+1, 1 for sign(Im(z))=-1) */
+  if (s1 == 0) {
+    if (s2 == s3)     /* rules (a), (b), (g), (h) */
+      s = 0;
+    else if (s4 == 0) /* rules (c) and (e) */
+      s = (cmp <= 0) ? 1 : 0;
+    else              /* rules (d) and (f) */
+      s = (cmp < 0) ? 0 : 1;
+    }
+  else {
+    if (even) {
+      if (s4 == 0)    /* rules (i) and (o) */
+        s = (cmp <= 0) ? 1 : 0;
+      else            /* rules (j) and (p) */
+        s = (cmp >= 0) ? 1 : 0;
+    }
+    else {
+      if (s4 == 0)    /* rules (k) and (m) */
+        s = (cmp >= 0) ? 1 : 0;
+      else            /* rules (l) and (n) */
+        s = (cmp <= 0) ? 1 : 0;
+    }
+  }
+  if (mpfr_signbit (mpc_imagref (z)) != s)
+    mpfr_neg (mpc_imagref (z), mpc_imagref (z), MPFR_RNDN);
 }
 
 /* If x^y is exactly representable (with maybe a larger precision than z),
@@ -590,6 +644,8 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
 
   if (x_real) /* case x real */
     {
+      int s1, s2;
+
       if (mpfr_zero_p (mpc_realref(x))) /* x is zero */
         {
           /* special values: exp(y*log(x)) */
@@ -604,7 +660,6 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
       /* Special case 1^y = 1 */
       if (mpfr_cmp_ui (mpc_realref(x), 1) == 0)
         {
-          int s1, s2;
           s1 = mpfr_signbit (mpc_realref (y));
           s2 = mpfr_signbit (mpc_imagref (x));
 
@@ -625,28 +680,30 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
 
       /* x^y is real when:
          (a) x is real and y is integer
-         (b) x is real non-negative and y is real */
-      if (y_real && (mpfr_integer_p (mpc_realref(y)) ||
-                     mpfr_cmp_ui (mpc_realref(x), 0) >= 0))
+         (b) x is real non-negative and y is real
+         (and we are in the case where x is real) */
+      s1 = mpfr_signbit (mpc_realref (x));
+      if (y_real && (mpfr_integer_p (mpc_realref(y)) || s1 == 0))
         {
-          int s1, s2;
-          s1 = mpfr_signbit (mpc_realref (y));
+          int s3, s4, cmp, even = 0;
           s2 = mpfr_signbit (mpc_imagref (x));
-
+          s3 = mpfr_signbit (mpc_realref (y));
+          s4 = mpfr_signbit (mpc_imagref (y));
+          cmp = mpfr_cmpabs_ui (mpc_realref (x), 1);
+          if (s1 != 0) { /* x is negative, so Re(y) is integer */
+            mpz_t yint;
+            mpz_init (yint);
+            mpfr_get_z (yint, mpc_realref(y), MPFR_RNDN);
+            even = mpz_even_p (yint);
+            mpz_clear (yint);
+          }
           ret = mpfr_pow (mpc_realref(z), mpc_realref(x), mpc_realref(y), MPC_RND_RE(rnd));
           inex_im = mpfr_set_ui (mpc_imagref(z), 0, MPC_RND_IM(rnd));
           ret = MPC_INEX(ret, inex_im);
 
-          /* the sign of the zero imaginary part is known in some cases
-             (see algorithm.tex). In such cases we have (x +s*0i)^(y+/-0i)
-             = x^y + s*sign(y)*0i where s = +/-1.
-             We extend here this rule to fix the sign of the zero part.
-
-             Note that the sign must also be set explicitly when rnd=RNDD
-             because mpfr_set_ui(z_i, 0, rnd) always sets z_i to +0.
-          */
-          if (MPC_RND_IM(rnd) == MPFR_RNDD || s1 != s2)
-            mpfr_neg (mpc_imagref(z), mpc_imagref(z), MPC_RND_IM(rnd));
+          /* the choice of the sign of the zero imaginary part is detailed
+             in algorithm.tex. */
+          fix_sign_real (z, s1, s2, s3, s4, cmp, even);
           goto end;
         }
 

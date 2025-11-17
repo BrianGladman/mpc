@@ -2268,6 +2268,153 @@ or the real part
 (for $y_1$ divisible by~$2$, but not by~$4$)
 cannot be determined.
 
+\paragraph{Sign of the imaginary part of $x^y$ when $x$ and $y$ are real.}
+(Warning: this paragraph was written after the above, and might be
+partly incompatible with it.)
+Assume $x = a + i b$ and $y = c + i d$ with $a, c \neq 0$ and $b, d = \pm 0$.
+Assume the imaginary part of $z := x^y$ is zero, which happens when
+either $a > 0$, or when $a < 0$ and $c$ is an integer.
+The rule we follow is the following: We replace $b$ and $d$ by tiny
+values $\varepsilon_b$ and $\varepsilon_d$ of the same sign as $b$ and $d$
+and consider the sign of $\Im(z)$. If for sufficiently small
+$\varepsilon_b$ and $\varepsilon_d$ we consistently obtain the same sign
+for $\Im(z)$, then we return a zero of that sign;
+otherwise, if there are arbitrarily small values of
+$\varepsilon_b$ and $\varepsilon_d$ leading to different signs
+for $\Im(z)$, we return a positive zero (as our closest approximation
+of an unsigned zero).
+
+Since the logarithm function has a branch cut along the negative real
+axis, the sign of~$a$ plays a crucial role. Assume first that $a > 0$.
+Then
+\[
+\log (a + \epsilon_b i)
+= \log (a) + \log \big( 1 + (\epsilon_b/a) i \big)
+= \log (a) + \delta_b + \tilde \delta_b i
+\]
+with real values
+\[
+\delta_b \approx \epsilon_b^2 / (2 a^2)
+\text { and }
+\tilde\delta_b \approx \epsilon_b / a
+\]
+since
+$\log (1 + X) \approx X - X^2/2$;
+here $\approx$ is to be understood in the sense that if both sides are
+sufficiently close to (but different from)~$0$, they have the same sign.
+Then
+\[
+\Im \big( (c + \epsilon_d i) \log (a + \epsilon_b i) \big)
+=
+c \tilde \delta_b + (\log (a) + \delta_b) \epsilon_d.
+\]
+Using $\exp (r + s i) = \exp (r) (\cos (s) + i \sin (s))$
+for real~$r$, $s$ we obtain
+\[
+\Im (z)
+= R
+\sin \left( c \tilde \delta_b + (\log (a) + \delta_b) \epsilon_d \right)
+\]
+with a real value $R$ close to $a^c > 0$, thus positive and bounded
+away from~$0$.
+Since $\sign (\sin (X)) = \sign (X)$ for $X$ close to~$0$,
+we obtain
+\begin {eqnarray*}
+\sign (\Im (z))
+& = & \sign \left( c \tilde \delta_b + (\log (a) + \delta_b) \epsilon_d \right) \\
+& = & \sign \left( \frac {c}{a} \, \epsilon_b + \log (a) \, \epsilon_d
++ \frac {\log (a)}{2 a^2} \epsilon_b^2 \epsilon_d \right) \\
+& = & \sign \left( \frac {c}{a} \, \epsilon_b + \log (a) \, \epsilon_d \right)
+\end {eqnarray*}
+for $\epsilon_b$, $\epsilon_d$ sufficiently close to~$0$.
+Since we assume nothing about the relative magnitudes of $\epsilon_b$ and
+$\epsilon_d$, the sign is only constant when
+$\frac {c}{a} \, \epsilon_b$ and $\log (a) \, \epsilon_d$ have the same sign;
+and we return $-0$ for $\Im (z)$ if and only if the sign is
+constantly~$-1$, that is, both terms are negative
+(or one is negative and one is exactly~$0$).
+This happens if and only if $\epsilon_b$ has the opposite sign of~$c$
+and additionally,
+either $a > 1$ and $\epsilon_d < 0$,
+or     $a < 1$ and $\epsilon_d > 0$,
+or     $a = 1$ without a restriction on $\epsilon_d$.
+
+Now assume that $a < 0$ and $c$ is an integer. Then
+\begin {eqnarray*}
+\log (a + \epsilon_b i)
+& = & \log |a| + \log \big( -1 + (\epsilon_b/|a|) i \big) \\
+& = & \log |a| + \sign (\epsilon_b) \pi i
+  + \log \big( 1 - (\epsilon_b/|a|) i \big) \\
+& = & \log |a| + \sign (\epsilon_b) \pi i
++ \delta_b + \tilde \delta_b i
+\end {eqnarray*}
+with
+\[
+\delta_b \approx \epsilon_b^2 / (2 a^2)
+\text { and }
+\tilde\delta_b \approx - \epsilon_b / |a|.
+\]
+We then compute as above
+\[
+\Im (z)
+= R
+\sin \left( c \big( \sign (\epsilon_b) \pi + \tilde \delta_b \big)
++ \big( \log |a| + \delta_b \big) \epsilon_d \right).
+\]
+If $c$ is an even integer, then we can argue as before since
+\[
+\sign (\Im (z))
+= \sign \left( - \frac {c}{|a|} \, \epsilon_b + \log |a| \, \epsilon_d \right)
+\]
+and return $-0$ for $\Im(z)$ if and only if
+$\epsilon_b$ has the same sign as~$c$, and
+either $|a| > 1$ and $\epsilon_d < 0$,
+or     $|a| < 1$ and $\epsilon_d > 0$,
+or     $a = -1$ without any restriction on $\epsilon_d$.
+
+If $c$ is an odd integer, then we use
+$\sign (\sin (X + \pi)) = - \sign (X)$ close to~$0$, and
+return $-0$  if and only if
+$\epsilon_b$ has the opposite sign of~$c$, and
+either $|a| > 1$ and $\epsilon_d > 0$,
+or     $|a| < 1$ and $\epsilon_d < 0$,
+or     $a = -1$ without any restriction on $\epsilon_d$.
+
+
+This rule yields the following 16 cases, depending on the signs of
+$a, b, c, d$, where in the last 8 cases with $a < 0$, $c$ is necessarily an
+integer for $\Im(z)$ to be zero:
+\begin{itemize}
+\item $a > 0, b = +0, c > 0, d = +0$: depending on $a$ and $c$,
+  we can get either always $+0$, or $\pm 0$, thus we return $+0$;
+\item $a > 0, b = +0, c > 0, d = -0$: same as the above case;
+\item $a > 0, b = +0, c < 0, d = +0$: return $-0$ when $|a|\le 1$,
+  $+0$ otherwise;
+\item $a > 0, b = +0, c < 0, d = -0$: return $+0$ when $|a| < 1$,
+  $-0$ otherwise;
+\item $a > 0, b = -0, c > 0, d = +0$: return $-0$ when $|a| \le 1$,
+  $+0$ otherwise;
+\item $a > 0, b = -0, c > 0, d = -0$: return $+0$ when $|a| < 1$,
+  $-0$ otherwise;
+\item $a > 0, b = -0, c < 0, d = +0$: always return $+0$;
+\item $a > 0, b = -0, c < 0, d = -0$: always return $+0$;
+\item $a < 0, b = +0, c > 0, d = +0$: return $-0$ if $|a| \le 1$ and
+  $c$ even, $+0$ otherwise;
+\item $a < 0, b = +0, c > 0, d = -0$: return $-0$ if $|a| \ge 1$ and
+  $c$ even, $+0$ otherwise;
+\item $a < 0, b = +0, c < 0, d = +0$: return $-0$ if $|a| \ge 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = +0, c < 0, d = -0$: return $-0$ if $|a| \le 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = -0, c > 0, d = +0$: return $-0$ if $|a| \ge 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = -0, c > 0, d = -0$: return $-0$ if $|a| \le 1$ and
+  $c$ odd, $+0$ otherwise;
+\item $a < 0, b = -0, c < 0, d = +0$: return $-0$ if $|a| \le 1$ and
+  $c$ even, $+0$ otherwise;
+\item $a < 0, b = -0, c < 0, d = -0$: return $-0$ if $|a| \ge 1$ and
+  $c$ even, $+0$ otherwise.
+\end{itemize}
 
 \subsection {\texttt {mpc\_pow\_ui}}
 \label {ssec:mpcpowui}

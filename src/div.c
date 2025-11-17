@@ -246,15 +246,16 @@ mpc_div (mpc_ptr a, mpc_srcptr b, mpc_srcptr c, mpc_rnd_t rnd)
    int tmpsgn;
    mpfr_exp_t saved_emin, saved_emax;
 
-   /* According to the C standard G.3, there are three types of numbers:   */
-   /* finite (both parts are usual real numbers; contains 0), infinite     */
-   /* (at least one part is a real infinity) and all others; the latter    */
-   /* are numbers containing a nan, but no infinity, and could reasonably  */
-   /* be called nan.                                                       */
-   /* By G.5.1.4, infinite/finite=infinite; finite/infinite=0;             */
-   /* all other divisions that are not finite/finite return nan+i*nan.     */
-   /* Division by 0 could be handled by the following case of division by  */
-   /* a real; we handle it separately instead.                             */
+   /* According to the C standard G.3, there are three types of numbers:
+      finite (both parts are usual real numbers; contains 0), infinite
+      (at least one part is a real infinity) and all others; the latter
+      are numbers containing a nan, but no infinity, and could reasonably
+      be called nan.
+      By G.5.1.4, infinite/finite=infinite; finite/infinite=0;
+      all other divisions that are not finite/finite return nan+i*nan.
+      Division by 0 could be handled by the following case of division by
+      a real; we handle it separately instead. See also
+      https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1399.htm */
    if (mpc_zero_p (c)) /* both Re(c) and Im(c) are zero */
       return mpc_div_zero (a, b, c, rnd);
    else if (mpc_inf_p (b) && mpc_fin_p (c)) /* either Re(b) or Im(b) is infinite

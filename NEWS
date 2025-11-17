@@ -2,7 +2,10 @@ Changes in version xxx:
   - Add support for non-standard complex types (_Dcomplex, _Lcomplex)
     under Windows
   - Fixed wrong values and slowness of mpc_tan and mpc_tanh for large imaginary part.
-  - New functions: mpc_exp10, mpc_exp2
+  - New functions: mpc_exp10, mpc_exp2, mpc_log2.
+  - Agree on and implement the sign of the imaginary part of x^y when
+    x and y are real.
+  - Generate the pkg-config file mpc.pc
 
 Changes in version 1.3.1, released in December 2022:
   - Bug fix: It is again possible to include mpc.h without including

@@ -5,13 +5,15 @@
 
 *~
 *.o
-*.in
+Makefile.in
+config.h.in
 *.lo
 *.log
 
 .deps
 .libs
 Makefile
+mpc.pc
 
 aclocal.m4
 autom4te.cache
@@ -41,6 +43,8 @@ stamp-h1
 /doc/mpc.html/
 /doc/stamp-vti
 
+/src/mpc.h
+/src/mpc-impl.h
 /src/libmpc.la
 
 /tests/libmpc-tests.la

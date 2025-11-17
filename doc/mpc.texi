@@ -431,6 +431,12 @@ numbers, it is rounded to the one with the least significant bit set to zero.
 For example, the number 5, which is represented by (101) in binary, is rounded
 to (100)=4 with a precision of two bits, and not to (110)=6.
 
+A useful macro is @code{MPC_RND(r1,r2)}, which from two MPFR rounding
+modes @code{r1} for the real part and @code{r2} for the imaginary part,
+constructs the corresponding MPC rounding mode.
+Similarly, for an MPC rounding mode @code{r}, @code{MPC_RND_RE(r)} and
+@code{MPC_RND_IM(r)} yield the corresponding MPFR rounding modes for the
+real and imaginary part, respectively.
 
 @anchor{return-value}
 @section Return Value
@@ -1012,6 +1018,12 @@ For @code{mpc_pow_d}, @code{mpc_pow_ld}, @code{mpc_pow_si}, @code{mpc_pow_ui},
 the imaginary part of @var{op2} is considered as +0.
 When both @var{op1} and @var{op2} are zero, the result has real part 1,
 and imaginary part 0, with sign being the opposite of that of @var{op2}.
+When both @var{op1} and @var{op2} have real or imaginary part 0, and similarly
+for the result, we use the following rule:
+when we replace both 0 inputs by tiny values of the same sign,
+if the sign of the 0 part in the result does not depend on the relative value
+of these tiny values, we use that sign.
+Otherwise, we fix the zero part in the result to +0.
 @end deftypefun
 
 @deftypefun int mpc_exp (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
@@ -1024,8 +1036,9 @@ calling @code{mpc_pow}.
 @end deftypefun
 
 @deftypefun int mpc_log (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
+@deftypefunx int mpc_log2 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_log10 (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
-Set @var{rop} to the natural and base-10 logarithm of @var{op} respectively,
+Set @var{rop} to the natural, base-2 and base-10 logarithm of @var{op} respectively,
 rounded according to @var{rnd} with the precision of @var{rop}.
 The principal branch is chosen, with the branch cut on the negative real axis,
 so that the imaginary part of the result lies in
@@ -1034,6 +1047,13 @@ so that the imaginary part of the result lies in
 @end iftex
 @ifnottex
 ]-Pi , Pi]
+@end ifnottex
+,
+@iftex
+@math{]-\pi/\log(2) , \pi/\log(2)]}
+@end iftex
+@ifnottex
+]-Pi/log(2) , Pi/log(2)]
 @end ifnottex
 and
 @iftex
