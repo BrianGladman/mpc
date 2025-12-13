@@ -957,6 +957,8 @@ Set @var{rop} to the dot product of the elements in the arrays @var{op1} and
 @deftypefunx int mpc_ui_div (mpc_t @var{rop}, unsigned long int @var{op1}, const mpc_t @var{op2}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_fr_div (mpc_t @var{rop}, const mpfr_t @var{op1}, const mpc_t @var{op2}, mpc_rnd_t @var{rnd})
 Set @var{rop} to @var{op1}/@var{op2} rounded according to @var{rnd}.
+For @code{mpc_fr_div}, the first operand @var{op1} is converted to a complex
+number with imaginary part +0, and then @code{mpc_div} is called.
 @end deftypefun
 
 @deftypefun int mpc_conj (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})
