@@ -92,12 +92,31 @@ test_special (void)
 
 #include "tgeneric.tpl"
 
+static void
+check_divby0_exc (void)
+{
+  mpc_t z;
+
+  mpc_init2 (z, 53);
+  mpc_set_d_d (z, 0.0, 0.0, MPC_RNDNN);
+  mpfr_clear_flags ();
+  mpc_ui_div (z, 1, z, MPC_RNDNN);
+  if (!mpfr_divby0_p ()) {
+    printf ("Missing division-by-zero exception\n");
+    exit (1);
+  }
+  mpfr_clear_flags ();
+  mpc_clear (z);
+}
+
 int
 main (void)
 {
   test_start ();
 
   test_special ();
+
+  check_divby0_exc ();
 
   tgeneric_template ("ui_div.dsc", 2, 1024, 7, 4096);
 

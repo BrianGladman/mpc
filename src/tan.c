@@ -121,7 +121,6 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   mpc_t x, y;
   mpfr_prec_t prec, py;
   mpfr_exp_t err;
-  int loop;
   int ok;
   int inex, inex_re, inex_im;
   mpfr_exp_t saved_emin, saved_emax;
@@ -273,12 +272,9 @@ mpc_tan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 
   err = 7;
 
-  loop = 0;
   do
     {
       mpfr_exp_t k, exr, eyr, eyi, ezr;
-
-      MPC_LOOP_NEXT(loop, op, rop);
 
       ok = 0;
 

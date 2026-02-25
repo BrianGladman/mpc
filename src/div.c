@@ -33,6 +33,7 @@ mpc_div_zero (mpc_ptr a, mpc_srcptr z, mpc_srcptr w, mpc_rnd_t rnd)
    mpfr_mul (mpc_realref (a), infty, mpc_realref (z), MPC_RND_RE (rnd));
    mpfr_mul (mpc_imagref (a), infty, mpc_imagref (z), MPC_RND_IM (rnd));
    mpfr_clear (infty);
+   mpfr_set_divby0 ();
    return MPC_INEX (0, 0); /* exact */
 }
 

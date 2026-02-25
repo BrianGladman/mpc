@@ -25,7 +25,6 @@ mpc_exp (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
 {
   mpfr_t x, y, z;
   mpfr_prec_t prec;
-  int loop;
   int ok = 0;
   int inex_re, inex_im;
   int saved_underflow, saved_overflow;
@@ -152,10 +151,8 @@ mpc_exp (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
   saved_underflow = mpfr_underflow_p ();
   saved_overflow = mpfr_overflow_p ();
 
-  loop = 0;
   do
     {
-      MPC_LOOP_NEXT(loop, op, rop);
       prec += prec / 2 + mpc_ceil_log2 (prec) + 5;
 
       mpfr_set_prec (x, prec);

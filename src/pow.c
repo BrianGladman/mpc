@@ -574,7 +574,7 @@ is_odd (mpfr_srcptr y, mpfr_exp_t k)
 int
 mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
 {
-  int ret = -2, loop, x_real, x_imag, y_real, z_real = 0, z_imag = 0,
+  int ret = -2, x_real, x_imag, y_real, z_real = 0, z_imag = 0,
      ramified = 0;
   mpc_t t, u;
   mpfr_prec_t p, pr, pi, maxprec;
@@ -762,7 +762,7 @@ mpc_pow (mpc_ptr z, mpc_srcptr x, mpc_srcptr y, mpc_rnd_t rnd)
   pi += MPC_RND_IM(rnd) == MPFR_RNDN;
   maxprec = MPC_MAX_PREC (z);
   x_imag = mpfr_zero_p (mpc_realref(x));
-  for (loop = 0;; loop++)
+  for (;;)
     {
       int ret_exp;
       mpfr_exp_t dr, di;

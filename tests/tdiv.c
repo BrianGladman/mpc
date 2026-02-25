@@ -68,12 +68,44 @@ bug20200206 (void)
   mpfr_set_emax (emax);
 }
 
+static void
+check_divby0_exc (void)
+{
+  mpc_t z, nz;
+  struct {
+    double re, im;
+  } data[] = {{+0.0, +0.0},
+              {+0.0, -0.0},
+              {-0.0, +0.0},
+              {-0.0, -0.0}};
+
+  mpc_init2 (z, 53);
+  mpc_init2 (nz, 53);
+  mpc_set_d_d (nz, 1.0, 0.0, MPC_RNDNN);
+  for (size_t i = 0; i < 4; i++) {
+    mpc_set_d_d (z, data[i].re, data[i].im, MPC_RNDNN);
+    mpfr_clear_flags ();
+    mpc_div (z, nz, z, MPC_RNDNN);
+    if (!mpfr_divby0_p ()) {
+      printf ("Missing division-by-zero exception for (%la,%la)\n",
+              data[i].re, data[i].im);
+      exit (1);
+    }
+  }
+  mpfr_clear_flags ();
+  mpc_clear (z);
+  mpc_clear (nz);
+}
+
 int
 main (void)
 {
   test_start ();
 
   bug20200206 ();
+
+  check_divby0_exc ();
+
   data_check_template ("div.dsc", "div.dat");
 
   tgeneric_template ("div.dsc", 2, 1024, 7, 4096);

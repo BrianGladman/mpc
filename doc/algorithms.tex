@@ -2268,7 +2268,8 @@ or the real part
 (for $y_1$ divisible by~$2$, but not by~$4$)
 cannot be determined.
 
-\paragraph{Sign of the imaginary part of $x^y$ when $x$ and $y$ are real.}
+\paragraph{Sign of the imaginary part of $x^y$ when
+$x$, $y$ and $x^y$ are real.}
 (Warning: this paragraph was written after the above, and might be
 partly incompatible with it.)
 Assume $x = a + i b$ and $y = c + i d$ with $a, c \neq 0$ and $b, d = \pm 0$.
@@ -2415,6 +2416,68 @@ integer for $\Im(z)$ to be zero:
 \item $a < 0, b = -0, c < 0, d = -0$: return $-0$ if $|a| \ge 1$ and
   $c$ even, $+0$ otherwise.
 \end{itemize}
+
+
+\paragraph{Sign of the real part of $x^y$ when
+$x$ and $y$ are real and $x^y$ is purely imaginary.}
+(Warning: this paragraph was written after the above, and might be
+partly incompatible with it.)
+Again assume that $x = a + i b$ and $y = c + i d$ with $a, c \neq 0$
+and $b, d = \pm 0$. The real part of $z := x^y$ is zero when
+$a < 0$ and $c$ is a half-integer, but not an integer.
+Again we replace $b$ by an arbitrarily small~$\epsilon_b$ of the same
+sign as~$b$, and $d$ by an aribtrarily small~$\epsilon_d$ of the same
+sign as~$d$ and compute as in the case $x<0$ real and $y$ an integer above
+that
+\[
+\Re (z)
+= R
+\cos \left( 2 c \sign b (\pi / 2)
++  \big( c \tilde \delta_b
++ \log |a| \epsilon_d + \delta_b \epsilon_d \big) \right).
+\]
+with $R \approx |a|^c > 0$,
+$\delta_b \approx \epsilon_b^2 (2 a^2) > 0$ and
+$\tilde\delta_b \approx -\epsilon_b / |a|$ of sign opposite to
+that of~$b$.
+
+Assume that $2c \sign b$, which is an integer, is congruent to~$1$
+modulo~$4$; then the cosine function makes a sign change from positive
+to negative around the considered argument, and we assign $-0$ to~$\Re (z)$
+if and only if $c \tilde \delta_b$ is positive and $\log |a| \epsilon_d$
+is non-negative,
+which happens if and only if $c$ and $b$ have opposite signs,
+and either $|a| < 1$ and $\sign (d) = -1$,
+    or     $|a| > 1$ and $\sign (d) = +1$,
+    or      $a = -1$.
+When $b$ and $c$ have opposite signs, we have $2 c \sign b = - 2 |c|$,
+and the congruence condition becomes that $2 |c| \equiv 3 \pmod 4$.
+
+If $2c \sign b$ is congruent to~$3$ modulo~$4$, then the cosine function
+makes a sign change from negative to positive, and we assign $-0$
+to~$\Re (z)$ if and only if $c \tilde \delta_b$ is negative, that is,
+$c$ and $b$ have the same sign; and $\log |a| \epsilon_d$ is non-positive,
+that is,
+either $|a| < 1$ and $\sign (d) = +1$,
+or     $|a| > 1$ and $\sign (d) = -1$,
+or      $a = -1$.
+Note that the congruence condition again becomes $2 |c| \equiv 3 \pmod 4$.
+
+So to summarise, $\Re (z) = -0$ if and only if
+$2 |c| \equiv 3 \pmod 4$ and one of the following conditions holds:
+\begin {itemize}
+\item
+$a = -1$;
+\item
+$\sign b = \sign c$, $|a| < 1$ and $\sign (d) = +1$;
+\item
+$\sign b = \sign c$, $|a| > 1$ and $\sign (d) = -1$;
+\item
+$\sign b = -\sign c$, $|a| < 1$ and $\sign (d) = -1$;
+\item
+$\sign b = -\sign c$, $|a| > 1$ and $\sign (d) = +1$.
+\end {itemize}
+
 
 \subsection {\texttt {mpc\_pow\_ui}}
 \label {ssec:mpcpowui}
