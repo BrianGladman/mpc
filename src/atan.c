@@ -135,7 +135,7 @@ mpc_atan (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
              atan(+/-0 -i) = +/-0 -i*inf */
           mpfr_set_zero (mpc_realref (rop), s_re ? -1 : +1);
           mpfr_set_inf  (mpc_imagref (rop), s_im ? -1 : +1);
-          mpfr_set_divby0 ();
+          mpfr_set_divby0 (); /* per the ISO C99 (G.6.2.3, The catanh functions) */
         }
       else
         {

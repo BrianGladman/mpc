@@ -71,10 +71,10 @@ test_special (void)
   mpc_set_ui_ui (a, 4, 0, MPC_RNDNN);
   mpc_ui_div (b, 1, a, MPC_RNDNN);
   if (mpfr_cmp_ui_2exp (mpc_realref(b), 1, -2) != 0 ||
-      mpfr_cmp_ui (mpc_imagref(b), 0) != 0 || mpfr_signbit (mpc_imagref(b)) != 0)
+      mpfr_cmp_ui (mpc_imagref(b), 0) != 0 || mpfr_signbit (mpc_imagref(b)) != 1)
     {
       printf ("1/(4,0) failed\n");
-      printf ("expected (1/4,0)\n");
+      printf ("expected (1/4,-0)\n");
       printf ("got      ");
       mpc_out_str (stdout, 10, 0, b, MPC_RNDNN);
       printf ("\n");

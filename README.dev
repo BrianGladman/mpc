@@ -11,7 +11,7 @@ $ make
 $ make check
 
 Required versions:
-* autoconf >= 2.61
+* autoconf >= 2.69
 * automake >= 1.11.6
 * libtool >= 2.4.3
 
@@ -23,7 +23,7 @@ Creating a new release
    If compatibility with a C++ compiler is desired, make sure to use
    autotools-2.69 and not a later version before checking with g++.
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
-   README, src/get_version.c and src/mpc.h (remove suffix "dev" in
+   README, src/get_version.c and src/mpc.h.in (remove suffix "dev" in
    MPC_VERSION_STRING).
    Check that there are no compiler warnings with
       CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure; make check
@@ -48,6 +48,6 @@ Creating a new release
    git tag VERSION
    git push --tags
 9) After the release, update the version number in configure.ac, README,
-   src/get_version.c and src/mpc.h.
+   src/get_version.c and src/mpc.h.in.
 10) Commit the changes to git.
 

@@ -56,3 +56,19 @@ debian-clang:
       - MPC_DEBUG=1 CC=clang CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure
       - make
       - make check
+
+debian-valgrind:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
+      - autoreconf -vfi
+      - MPC_DEBUG=1 CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wdeclaration-after-statement -Wshadow -Wstrict-prototypes -Wmissing-prototypes" ./configure --enable-valgrind-tests
+      - make
+      - make check || (cat tests/test-suite.log && false)
+   artifacts:
+      paths:
+         - config.log
+         - tests/test-suite.log

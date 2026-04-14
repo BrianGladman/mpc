@@ -1,6 +1,6 @@
 /* mpc_log2 -- base-2 logarithm of a complex number.
 
-Copyright (C) 2012, 2020, 2024, 2025 INRIA
+Copyright (C) 2012, 2020, 2024, 2025, 2026 INRIA
 
 This file is part of GNU MPC.
 
@@ -56,8 +56,7 @@ mpc_log2 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
       mpc_set_prec (log, prec);
 
       inex = mpc_log (log, op, MPFR_RNDN);
-      /* let y = Im(log), we have y = Im(log(op)) * (1+e1) with |e1| < u
-         for u = 2^-p */
+      /* error <= k1 = 1/2 ulp for the real and the imaginary part */
 
       if (!mpfr_number_p (mpc_imagref (log)) || mpfr_zero_p (mpc_imagref (log))) {
          /* no need to divide by log(2) */
@@ -67,14 +66,12 @@ mpc_log2 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
       else {
          special_im = 0;
          mpfr_const_log2 (log2, MPFR_RNDN);
-         /* log2 = log(2) * (1+e2) with |e2| < u */
+         /* error <= k2 = 1/2 ulp */
          mpfr_div (mpc_imagref (log), mpc_imagref (log), log2, MPFR_RNDN);
-         /* let y1 = Im(log), we have y1 = y/log2 * (1+e3) with |e3| < u
-            thus y1 = Im(log(op))/log(2) * (1+e1)*(1+e3)/(1+e2)
-                    = Im(log(op))/log(2) * (1+e4) with |e4| < 3.13 u
-                    since p >= 5 thus the relative error on y1 is bounded
-                    by 3.13 u, thus less than 4 ulps, which translates into
-                    prec-2 in mpfr_can_round() */
+         /* by the generic error of division
+            (eq:proprealdiv in algorithms.tex), +1/2 ulp for final rounding:
+            error <= (2 (k1+k2) / (1 - k2 2^(1-prec))) + 1/2 ulp
+                  <= 4 ulp for prec >= 2 */
          ok = mpfr_can_round (mpc_imagref (log), prec - 2,
                   MPFR_RNDN, MPFR_RNDZ,
                   MPC_PREC_IM(rop) + (MPC_RND_IM (rnd) == MPFR_RNDN));
@@ -97,7 +94,7 @@ mpc_log2 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
          
          /* Special code to deal with cases where the real part of log2(x+i*y)
             is exact, like x=y=1. Since Re(log2(x+i*y)) = log2(x^2+y^2)/2
-            this happens whenever x^2+y^2 is a nonnegative power of 2.
+            this happens whenever x^2+y^2 is a power of 2.
             Without loss of generality we can assume x = u/2^e and y = v/2^e
             with u, v, e integers. We obtain u^2+v^2 = 2^s for s integer.
             The only solutions are (up to sign):
@@ -111,35 +108,37 @@ mpc_log2 (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd)
             if exactly one is odd, and u^2+v^2 = 2 mod 4 if both are odd.
             Thus by induction u'=u/2 and v'=v/2 are solutions of u'^2+v'^2 = 2^(s-2).
          */
-         if (!ok && mpfr_zero_p (mpc_realref (op)) && is_power_of_two (mpc_imagref (op))) {
-           /* x=0 and y=2^k */
-           mpfr_exp_t ey = mpfr_get_exp (mpc_imagref (op));
-           /* |y| = 2^(ey-1) thus log2(x^2+y^2)/2 = ey-1 */
-           ok = mpfr_set_si (mpc_realref (log), ey - 1, MPFR_RNDN) == 0;
-           /* if the conversion is not exact, because the working precision is
-              too small, it will be exact for a larger working precision */
-         }
-         if (!ok && mpfr_zero_p (mpc_imagref (op)) && is_power_of_two (mpc_realref (op))) {
-           /* x=2^k and y=0 */
-           mpfr_exp_t ex = mpfr_get_exp (mpc_realref (op));
-           /* |x| = 2^(ex-1) thus log2(x^2+y^2)/2 = ex-1 */
-           ok = mpfr_set_si (mpc_realref (log), ex - 1, MPFR_RNDN) == 0;
-           /* if the conversion is not exact, because the working precision is
-              too small, it will be exact for a larger working precision */
-         }
-         if (!ok && mpfr_cmpabs (mpc_realref (op), mpc_imagref (op)) == 0
-             && is_power_of_two (mpc_realref (op))) {
-           mpfr_exp_t ex = mpfr_get_exp (mpc_realref (op));
-           /* |x| = |y| = 2^(ex-1) thus log2(x^2+y^2)/2 = ex-1/2 */
-           ok = mpfr_set_si (mpc_realref (log), ex, MPFR_RNDN) == 0;
-           ok = ok && mpfr_mul_2ui (mpc_realref (log), mpc_realref (log), 1,
-                                    MPFR_RNDN) == 0;
-           ok = ok && mpfr_sub_ui (mpc_realref (log), mpc_realref (log), 1,
-                                   MPFR_RNDN) == 0;
-           ok = ok && mpfr_div_2ui (mpc_realref (log), mpc_realref (log), 1,
-                                    MPFR_RNDN) == 0;
-           /* if one operation is not exact, because the working precision is
-              too small, it will be exact for a larger working precision */
+         if (!ok) {
+           if (mpfr_zero_p (mpc_realref (op)) && is_power_of_two (mpc_imagref (op))) {
+             /* x=0 and y=2^k */
+             mpfr_exp_t ey = mpfr_get_exp (mpc_imagref (op));
+             /* |y| = 2^(ey-1) thus log2(x^2+y^2)/2 = ey-1 */
+             ok = mpfr_set_si (mpc_realref (log), ey - 1, MPFR_RNDN) == 0;
+             /* if the conversion is not exact, because the working precision is
+                too small, it will be exact for a larger working precision */
+           }
+           else if (mpfr_zero_p (mpc_imagref (op)) && is_power_of_two (mpc_realref (op))) {
+             /* x=2^k and y=0 */
+             mpfr_exp_t ex = mpfr_get_exp (mpc_realref (op));
+             /* |x| = 2^(ex-1) thus log2(x^2+y^2)/2 = ex-1 */
+             ok = mpfr_set_si (mpc_realref (log), ex - 1, MPFR_RNDN) == 0;
+             /* if the conversion is not exact, because the working precision is
+                too small, it will be exact for a larger working precision */
+           }
+           else if (mpfr_cmpabs (mpc_realref (op), mpc_imagref (op)) == 0
+                    && is_power_of_two (mpc_realref (op))) {
+             mpfr_exp_t ex = mpfr_get_exp (mpc_realref (op));
+             /* |x| = |y| = 2^(ex-1) thus log2(x^2+y^2)/2 = (2 ex - 1) / 2 */
+             ok = (mpfr_set_si (mpc_realref (log), ex, MPFR_RNDN) == 0)
+                  && (mpfr_mul_2ui (mpc_realref (log), mpc_realref (log), 1,
+                                      MPFR_RNDN) == 0)
+                  && (mpfr_sub_ui (mpc_realref (log), mpc_realref (log), 1,
+                                     MPFR_RNDN) == 0)
+                  && (mpfr_div_2ui (mpc_realref (log), mpc_realref (log), 1,
+                                    MPFR_RNDN) == 0);
+             /* if one operation is not exact, because the working precision is
+                too small, it will be exact for a larger working precision */
+           }
          }
       }
    }

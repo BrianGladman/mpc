@@ -12,7 +12,7 @@
 This manual is for GNU MPC, a library for multiple precision complex arithmetic,
 version @value{VERSION} of @value{UPDATED-MONTH}.
 
-Copyright @copyright{} 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022, 2023, 2024, 2025 INRIA
+Copyright @copyright{} 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2016, 2018, 2020, 2022, 2023, 2024, 2025, 2026 INRIA
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -601,10 +601,13 @@ This semantics becomes fuzzy when mixed operations between complex
 and real numbers enter the game. Two different approaches stand out.
 First of all, a real value may first be promoted to a complex value,
 and then the previous rules apply. For instance, with this approach,
-@math{(+0-0i)+0=(+0-0i)+(+0+0i)=+0+0i}, where the sign of the imaginary
+@math{(1-0i)+(+0)=(1-0i)+(+0+0i)=1+0i}, where the sign of the imaginary
 part of the result cannot be determined and is thus set to plus.
 Alternatively, the zero imaginary part of the real number may be
-interpreted as an exact zero; then @math{(+0-0i)+0=+0-0i}.
+interpreted as an exact zero; then @math{(1-0i)+(+0)=1-0i}.
+The C standard appears to follow the second approach, which we thus also
+adopt in MPC.
+
 
 @section Exceptions
 
@@ -1099,8 +1102,9 @@ Set @var{rop} to the dot product of the elements in the arrays @var{op1} and
 @deftypefunx int mpc_ui_div (mpc_t @var{rop}, unsigned long int @var{op1}, const mpc_t @var{op2}, mpc_rnd_t @var{rnd})
 @deftypefunx int mpc_fr_div (mpc_t @var{rop}, const mpfr_t @var{op1}, const mpc_t @var{op2}, mpc_rnd_t @var{rnd})
 Set @var{rop} to @var{op1}/@var{op2} rounded according to @var{rnd}.
-For @code{mpc_fr_div}, the first operand @var{op1} is converted to a complex
-number with imaginary part +0, and then @code{mpc_div} is called.
+The functions @code{mpc_fr_div} and @code{mpc_ui_div} follow the C standard (draft N3685,
+section 6.5.6, paragraph 9) concerning special values and signed zeroes.
+
 @end deftypefun
 
 @deftypefun int mpc_conj (mpc_t @var{rop}, const mpc_t @var{op}, mpc_rnd_t @var{rnd})

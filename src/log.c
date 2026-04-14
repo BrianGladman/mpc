@@ -68,7 +68,7 @@ mpc_log (mpc_ptr rop, mpc_srcptr op, mpc_rnd_t rnd){
          inex_im = mpfr_atan2 (mpc_imagref (rop), mpc_imagref (op), mpc_realref (op),
                                MPC_RND_IM (rnd));
          mpfr_set_inf (mpc_realref (rop), -1);
-         mpfr_set_divby0();
+         mpfr_set_divby0(); /* per the ISO C99 (G.6.3.2, The clog functions) */
          inex_re = 0; /* -Inf is exact */
       }
       else if (re_cmp > 0) {
