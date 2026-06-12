@@ -32,11 +32,17 @@ mpc_dot (mpc_ptr res, const mpc_ptr *x, const mpc_ptr *y,
   unsigned long i;
   mpfr_t re_res;
 
+  /* avoid a compiler warning when n=0 */
+  if (n == 0)
+    {
+      mpc_set_ui_ui (res, 0, 0, rnd);
+      return MPC_INEX(0, 0);
+    }
+
   z = (mpfr_t *) malloc (2 * n * sizeof (mpfr_t));
-  /* warning: when n=0, malloc() might return NULL (e.g., gcc119) */
-  MPC_ASSERT(n == 0 || z != NULL);
+  MPC_ASSERT(z != NULL);
   t = (mpfr_ptr *) malloc (2 * n * sizeof(mpfr_ptr));
-  MPC_ASSERT(n == 0 || t != NULL);
+  MPC_ASSERT(t != NULL);
   for (i = 0; i < 2 * n; i++)
     t[i] = z[i];
   /* we first store in z[i] the value of Re(x[i])*Re(y[i])

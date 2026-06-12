@@ -28,9 +28,15 @@ mpc_sum (mpc_ptr sum, const mpc_ptr *z, unsigned long n, mpc_rnd_t rnd)
   mpfr_ptr *t;
   unsigned long i;
 
+  /* avoid a compiler warning when n=0 */
+  if (n == 0)
+    {
+      mpc_set_ui_ui (sum, 0, 0, rnd);
+      return MPC_INEX(0, 0);
+    }
+
   t = (mpfr_ptr *) malloc (n * sizeof(mpfr_t));
-  /* warning: when n=0, malloc() might return NULL (e.g., gcc119) */
-  MPC_ASSERT(n == 0 || t != NULL);
+  MPC_ASSERT(t != NULL);
   for (i = 0; i < n; i++)
     t[i] = mpc_realref (z[i]);
   inex_re = mpfr_sum (mpc_realref (sum), t, n, MPC_RND_RE (rnd));

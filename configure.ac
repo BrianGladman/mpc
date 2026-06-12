@@ -20,7 +20,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mpc],[1.4.1dev],[mpc-discuss@inria.fr])
+AC_INIT([mpc],[1.4.2dev],[mpc-discuss@inria.fr])
 AC_CONFIG_SRCDIR([src/mpc-impl.h.in])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
@@ -137,8 +137,6 @@ AC_CHECK_FUNCS([gettimeofday localeconv setlocale getrusage])
 AC_CHECK_FUNCS([dup dup2],,
         [AC_DEFINE([MPC_NO_STREAM_REDIRECTION],1,[Do not check mpc_out_str on stdout])])
 
-# Warning: up from autoconf 2.70, the following test fails with C++
-# see https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=992981
 AC_CHECK_LIB([gmp], [__gmpz_init],
              [LIBS="-lgmp $LIBS"],
              [AC_MSG_ERROR([libgmp not found or uses a different ABI (including static vs shared).])])

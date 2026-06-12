@@ -10,6 +10,7 @@ RUN dpkg --add-architecture i386 && \
       make \
       texinfo \
       gcc-multilib \
+      g++ \
       libgmp-dev:i386 \
       libgmp10:i386 \
       libmpfr-dev:i386 \

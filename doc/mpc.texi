@@ -34,7 +34,7 @@ entitled ``GNU Free Documentation License.''
 
 @dircategory GNU Packages
 @direntry
-* mpc: (mpc)Multiple Precision Complex Library.
+* mpc: (mpc).                 Multiple Precision Complex Library.
 @end direntry
 
 
@@ -1001,11 +1001,11 @@ Set @var{rop} to the value of the imaginary part of @var{op} rounded in the
 direction @var{rnd}.
 @end deftypefn
 
-@deftypefn Macro mpfr_t mpc_realref (mpc_t @var{op})
-@deftypefnx Macro mpfr_t mpc_imagref (mpc_t @var{op})
+@deftypefn Macro mpfr_ptr mpc_realref (mpc_t @var{op})
+@deftypefnx Macro mpfr_ptr mpc_imagref (mpc_t @var{op})
 Return a reference to the real part and imaginary part of @var{op},
 respectively. The @code{mpfr} functions can be used on the result of these
-macros (note that the @code{mpfr_t} type is itself a pointer).
+macros.
 @end deftypefn
 
 @deftypefn Function int mpc_arg (mpfr_t @var{rop}, const mpc_t @var{op}, mpfr_rnd_t @var{rnd})

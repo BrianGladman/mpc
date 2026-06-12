@@ -19,9 +19,8 @@ Creating a new release
 ----------------------
 
 0) Check the release also works on 32-bit processors (or configure GMP with
-   ABI=32 on 64-bit processors); and with tcc and clang.
-   If compatibility with a C++ compiler is desired, make sure to use
-   autotools-2.69 and not a later version before checking with g++.
+   ABI=32 on 64-bit processors); and with tcc and clang; and with
+   --enable-valgrind-tests.
 1) Check the version number in configure.ac ("AC_INIT (mpc, _version_...)"),
    README, src/get_version.c and src/mpc.h.in (remove suffix "dev" in
    MPC_VERSION_STRING).

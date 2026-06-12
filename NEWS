@@ -1,3 +1,6 @@
+Changes in version 1.4.1, released in April 2026:
+  - Bug fix: mpc_fr_div: Fix memory leak introduced in release 1.4.0.
+
 Changes in version 1.4.0 ("Jasminum grandiflorum"), released in March 2026:
   - New functions: mpc_exp10, mpc_exp2, mpc_log2
   - Bug fixes:

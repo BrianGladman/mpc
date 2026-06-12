@@ -57,6 +57,18 @@ debian-clang:
       - make
       - make check
 
+debian-g++:
+   stage: test
+   tags:
+      - ci.inria.fr
+      - small
+   image: $CI_REGISTRY_IMAGE
+   script:
+      - autoreconf -vfi
+      - MPC_DEBUG=1 CC=g++ CFLAGS="-Wuninitialized -fsanitize=undefined -fno-sanitize-recover=all -Wall -Wextra -Wshadow" ./configure
+      - make
+      - make check
+
 debian-valgrind:
    stage: test
    tags:

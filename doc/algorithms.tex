@@ -2559,12 +2559,13 @@ with
 \tilde\delta_b \approx - \epsilon_b / |a|.
 \]
 We then compute as above
-\[
+\begin {equation}
+\label {eq:pow_im}
 \Im (z)
 = R
 \sin \left( c \big( \sign (\epsilon_b) \pi + \tilde \delta_b \big)
 + \big( \log |a| + \delta_b \big) \epsilon_d \right).
-\]
+\end {equation}
 If $c$ is an even integer, then we can argue as before since
 \[
 \sign (\Im (z))
@@ -2630,21 +2631,23 @@ and $b, d = \pm 0$. The real part of $z := x^y$ is zero when
 $a < 0$ and $c$ is a half-integer, but not an integer.
 Again we replace $b$ by an arbitrarily small~$\epsilon_b$ of the same
 sign as~$b$, and $d$ by an arbitrarily small~$\epsilon_d$ of the same
-sign as~$d$ and compute as in the case $x<0$ real and $y$ an integer above
+sign as~$d$ and compute as in the case $a<0$ real and $c$ an integer above
 that
 \[
 \Re (z)
 = R
-\cos \left( 2 c \sign b (\pi / 2)
+\cos \left( 2 c \sign (\epsilon_b) (\pi / 2)
 +  \big( c \tilde \delta_b
 + \log |a| \epsilon_d + \delta_b \epsilon_d \big) \right).
 \]
 with $R \approx |a|^c > 0$,
-$\delta_b \approx \epsilon_b^2 (2 a^2) > 0$ and
+$\delta_b \approx \epsilon_b^2 / (2 a^2) > 0$ and
 $\tilde\delta_b \approx -\epsilon_b / |a|$ of sign opposite to
-that of~$b$.
+that of~$b$;
+in fact this is~\eqref {eq:pow_im} in which the sine function has
+been replaced by the cosine function.
 
-Assume that $2c \sign b$, which is an integer, is congruent to~$1$
+Assume that $2c \sign (\epsilon_b)$, which is an integer, is congruent to~$1$
 modulo~$4$; then the cosine function makes a sign change from positive
 to negative around the considered argument, and we assign $-0$ to~$\Re (z)$
 if and only if $c \tilde \delta_b$ is positive and $\log |a| \epsilon_d$
@@ -2653,10 +2656,10 @@ which happens if and only if $c$ and $b$ have opposite signs,
 and either $|a| < 1$ and $\sign (d) = -1$,
     or     $|a| > 1$ and $\sign (d) = +1$,
     or      $a = -1$.
-When $b$ and $c$ have opposite signs, we have $2 c \sign b = - 2 |c|$,
+When $b$ and $c$ have opposite signs, we have $2 c \sign (\epsilon_b) = - 2 |c|$,
 and the congruence condition becomes that $2 |c| \equiv 3 \pmod 4$.
 
-If $2c \sign b$ is congruent to~$3$ modulo~$4$, then the cosine function
+If $2c \sign (\epsilon_b)$ is congruent to~$3$ modulo~$4$, then the cosine function
 makes a sign change from negative to positive, and we assign $-0$
 to~$\Re (z)$ if and only if $c \tilde \delta_b$ is negative, that is,
 $c$ and $b$ have the same sign; and $\log |a| \epsilon_d$ is non-positive,
